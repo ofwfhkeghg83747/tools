@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Инструменты</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0e1621;color:#fff;font-family:sans-serif;padding-bottom:70px}
+  header{background:#1c2733;padding:14px 16px;font-size:20px;font-weight:bold;color:#4ea4f6;position:sticky;top:0}
+  header span{color:#fff}
+  .screen{display:none;padding:16px}
+  .screen.active{display:block}
+  h2{font-size:18px;margin-bottom:12px}
+  button{width:100%;background:#4ea4f6;color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:600;margin:6px 0;font-family:inherit}
+  button:active{background:#2b6cb0}
+  button.gray{background:#2b3a4a}
+  #status{margin-top:12px;padding:12px;background:#1c2733;border-radius:10px;font-size:13px;color:#b0c0d0;line-height:1.5}
+  video{width:100%;border-radius:12px;margin-top:12px;background:#000;display:none}
+  video.on{display:block}
+  #flashScreen{position:fixed;inset:0;background:#fff;display:none;z-index:999;align-items:center;justify-content:center}
+  #flashScreen.on{display:flex}
+  #flashScreen button{position:absolute;top:20px;right:20px;width:auto;padding:12px 20px;background:#000;border-radius:20px;font-size:14px}
+  .step{background:#1c2733;border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;border-left:4px solid #4ea4f6}
+  .step .n{display:inline-block;width:26px;height:26px;background:#4ea4f6;border-radius:50%;text-align:center;line-height:26px;font-weight:bold;font-size:14px;margin-right:8px}
+  .step .t{font-size:15px;font-weight:600;display:inline}
+  .step .b{font-size:13px;color:#b0c0d0;line-height:1.6;margin-top:10px;display:none}
+  .step.open .b{display:block}
+  .step .b li{margin:4px 0 4px 18px}
+  nav{position:fixed;bottom:0;left:0;right:0;background:#1c2733;display:flex;border-top:1px solid #0e1621}
+  nav div{flex:1;padding:10px 4px;text-align:center;color:#6b7a8a;font-size:11px}
+  nav div .i{font-size:20px;display:block;margin-bottom:2px}
+  nav div.active{color:#4ea4f6}
+</style>
+</head>
+<body>
+
+<header>Инструменты<span>.</span></header>
+
+<div class="screen active" id="s-flash">
+  <h2>🔦 Фонарик</h2>
+  <button onclick="flashOn()">Включить вспышку</button>
+  <button class="gray" onclick="flashOff()">Выключить вспышку</button>
+  <button class="gray" onclick="whiteLight()">Белый экран (лампа)</button>
+  <div id="status">Готово</div>
+</div>
+
+<div class="screen" id="s-camera">
+  <h2>📷 Камера</h2>
+  <button onclick="startCamera()">Включить камеру</button>
+  <button class="gray" onclick="stopCamera()">Выключить</button>
+  <button class="gray" onclick="switchCam()">Переключить камеру</button>
+  <video id="video" autoplay playsinline muted></video>
+  <div id="status-cam">Готово</div>
+</div>
+
+<div class="screen" id="s-pc">
+  <h2>🖥️ Нет изображения</h2>
+  <div id="steps"></div>
+</div>
+
+<div id="flashScreen">
+  <button onclick="closeWhite()">✕ Выключить</button>
+</div>
+
+<nav>
+  <div class="active" onclick="go('flash',this)"><span class="i">🔦</span>Фонарик</div>
+  <div onclick="go('camera',this)"><span class="i">📷</span>Камера</div>
+  <div onclick="go('pc',this)"><span class="i">🖥️</span>Починка</div>
+</nav>
+
+<script>
+var stream=null, track=null, facing='environment';
+
+function go(n, el){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  document.getElementById('s-'+n).classList.add('active');
+  document.querySelectorAll('nav div').forEach(function(d){d.classList.remove('active')});
+  el.classList.add('active');
+}
+
+function msg(id, t){ document.getElementById(id).textContent = t; }
+
+async function ensureCam(){
+  if(stream) return true;
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:facing}});
+    track = stream.getVideoTracks()[0];
+    return true;
+  }catch(e){
+    msg('status','Камера: '+e.message);
+    return false;
+  }
+}
+
+async function flashOn(){
+  if(!await ensureCam()) return;
+  try{
+    var caps = track.getCapabilities ? track.getCapabilities() : {};
+    if(!caps.torch){ msg('status','Вспышка не поддерживается. Нажми «Белый экран».'); return; }
+    await track.applyConstraints({advanced:[{torch:true}]});
+    msg('status','🔦 Фонарик включён');
+  }catch(e){ msg('status','Ошибка: '+e.message); }
+}
+
+async function flashOff(){
+  try{
+    if(track && track.getCapabilities && track.getCapabilities().torch){
+      await track.applyConstraints({advanced:[{torch:false}]});
+    }
+    msg('status','Фонарик выключен');
+  }catch(e){ msg('status','Ошибка: '+e.message); }
+}
+
+function whiteLight(){ document.getElementById('flashScreen').classList.add('on'); }
+function closeWhite(){ document.getElementById('flashScreen').classList.remove('on'); }
+
+async function startCamera(){
+  try{
+    if(stream) stopCamera();
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:facing}});
+    track = stream.getVideoTracks()[0];
+    var v = document.getElementById('video');
+    v.srcObject = stream;
+    v.classList.add('on');
+    msg('status-cam','Камера включена');
+  }catch(e){ msg('status-cam','Ошибка: '+e.message); }
+}
+
+function stopCamera(){
+  if(stream){ stream.getTracks().forEach(function(t){t.stop()}); stream=null; track=null; }
+  var v = document.getElementById('video');
+  v.srcObject = null;
+  v.classList.remove('on');
+  msg('status-cam','Камера выключена');
+}
+
+function switchCam(){
+  facing = (facing==='environment') ? 'user' : 'environment';
+  if(stream) startCamera();
+}
+
+var STEPS = [
+  ['Проверь монитор и кабели','<li>Монитор включён? Кнопка горит?</li><li>Кабель (HDMI/VGA) вставлен плотно?</li><li>Переключи источник (Source) на мониторе</li><li>Попробуй другой кабель или порт</li>'],
+  ['Проверь сам монитор','<li>Отключи кабель от ПК</li><li>Должно появиться «Нет сигнала»</li><li>Если появилось — монитор живой</li><li>Если нет — монитор сломан</li>'],
+  ['Сброс питания (главный фикс)','<li>Выключи компьютер</li><li>Выдерни кабель из розетки</li><li>Зажми кнопку питания на 30 секунд</li><li>Включи обратно</li>'],
+  ['Проверь RAM и видеокарту','<li>Открой корпус</li><li>Вытащи планки RAM, протри ластиком</li><li>Вставь обратно (или по одной)</li><li>Видеокарту вытащи и вставь заново</li>'],
+  ['Сбрось BIOS','<li>Найди батарейку CR2032 на плате</li><li>Вытащи на 5–10 минут</li><li>Вставь обратно и включи</li>'],
+  ['Подключи к встроенной графике','<li>Переключи кабель в порт на материнской плате</li><li>Если картинка появилась — проблема в видеокарте</li>'],
+  ['Безопасный режим','<li>Зажми F8 при включении</li><li>Зашёл — проблема в драйвере</li><li>Удали драйвер видеокарты</li>'],
+  ['Иди к мастеру если','<li>Нет картинки даже в BIOS</li><li>Пищалки издают странные сигналы</li><li>После всех шагов — чёрный экран</li>']
+];
+
+function renderSteps(){
+  var html = '';
+  for(var i=0;i<STEPS.length;i++){
+    html += '<div class="step" onclick="this.classList.toggle(\'open\')">'+
+            '<span class="n">'+(i+1)+'</span>'+
+            '<span class="t">'+STEPS[i][0]+'</span>'+
+            '<div class="b"><ul>'+STEPS[i][1]+'</ul></div></div>';
+  }
+  document.getElementById('steps').innerHTML = html;
+}
+
+renderSteps();
+</script>
+</body>
+</html>
