@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Кумертау • Осенний новостной портал</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;width:100%;overflow-x:hidden}
+body{
+    background:linear-gradient(135deg,#3b1c0a 0%,#6b3a1f 40%,#8b4513 70%,#4a2511 100%);
+    background-attachment:fixed;color:#3a2511;min-height:100vh;
+    display:flex;flex-direction:column;line-height:1.5;font-size:16px;
+}
+body.font-small{font-size:14px}
+body.font-large{font-size:18px}
+body.no-anim *{animation:none!important;transition:none!important}
+
+/* ПРЕЛОАДЕР */
+.preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#3b1c0a 0%,#6b3a1f 40%,#8b4513 70%,#4a2511 100%);z-index:99999;display:flex;justify-content:center;align-items:center;flex-direction:column;transition:opacity .6s ease,visibility .6s}
+.preloader.hidden{opacity:0;visibility:hidden}
+.preloader-leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.preloader-leaf{position:absolute;font-size:2rem;opacity:0;animation:preloaderLeafFall linear infinite;top:-50px}
+@keyframes preloaderLeafFall{0%{transform:translateY(-50px) rotate(0deg);opacity:0}10%{opacity:.7}90%{opacity:.7}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+.preloader-content{text-align:center;z-index:2;position:relative;animation:preloaderPulse 2s ease-in-out infinite}
+@keyframes preloaderPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.preloader-logo{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ffb300);color:#3b1c0a;display:flex;justify-content:center;align-items:center;font-size:3rem;font-weight:900;margin:0 auto 25px;box-shadow:0 0 40px rgba(255,215,0,.6),0 0 80px rgba(255,180,0,.4);animation:preloaderLogoSpin 3s ease-in-out infinite}
+@keyframes preloaderLogoSpin{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(10deg) scale(1.05)}}
+.preloader-title{font-size:2rem;font-weight:900;color:#fff;letter-spacing:6px;margin-bottom:10px;text-shadow:0 0 20px rgba(255,215,0,.8),0 4px 20px rgba(0,0,0,.5);animation:preloaderTitle 1.5s ease-in-out infinite}
+@keyframes preloaderTitle{0%,100%{opacity:1;letter-spacing:6px}50%{opacity:.85;letter-spacing:8px}}
+.preloader-sub{font-size:.85rem;color:#f5d6b8;opacity:.8;letter-spacing:3px;text-transform:uppercase;margin-bottom:40px}
+.preloader-bar{width:220px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;margin:0 auto;box-shadow:inset 0 2px 4px rgba(0,0,0,.3)}
+.preloader-bar-fill{height:100%;width:0;background:linear-gradient(90deg,#d35400,#ffb300,#ffd700);border-radius:3px;transition:width .3s ease;box-shadow:0 0 15px rgba(255,215,0,.8)}
+.preloader-percent{font-size:.75rem;color:#f5d6b8;margin-top:12px;letter-spacing:2px;font-weight:600}
+.preloader-leaf-emoji{font-size:2.5rem;margin-top:25px;animation:preloaderLeafPulse 1s ease-in-out infinite;filter:drop-shadow(0 0 15px rgba(255,180,0,.6))}
+@keyframes preloaderLeafPulse{0%,100%{transform:scale(1) rotate(-10deg)}50%{transform:scale(1.2) rotate(10deg)}}
+
+/* ЛИСТЬЯ */
+.leaf-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.falling-leaf{position:absolute;font-size:1.5rem;opacity:.5;animation:leafFall linear infinite;top:-50px}
+@keyframes leafFall{0%{transform:translateY(-50px) rotate(0deg);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+
+/* ШАПКА */
+header{background:linear-gradient(135deg,#4a2511 0%,#6b3a1f 50%,#8b4513 100%);color:#fff;padding:0;box-shadow:0 4px 25px rgba(0,0,0,.4);position:sticky;top:0;z-index:100;border-bottom:3px solid #b87b4d}
+.header-top{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.1);gap:15px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.2rem;letter-spacing:1px}
+.logo-icon{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ffb300);color:#4a2511;display:flex;justify-content:center;align-items:center;font-size:1.4rem;font-weight:900;box-shadow:0 4px 12px rgba(255,215,0,.5);animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 4px 12px rgba(255,215,0,.5)}50%{box-shadow:0 4px 25px rgba(255,215,0,.9)}}
+.logo-text{display:flex;flex-direction:column;line-height:1.1}
+.logo-text .city{font-size:1.15rem;color:#ffd700}
+.logo-text .sub{font-size:.65rem;opacity:.8;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:#f5d6b8}
+
+.header-info{display:flex;gap:10px;align-items:center;font-size:.8rem;flex-wrap:wrap}
+.header-info .item{display:flex;align-items:center;gap:6px}
+.header-info .item .icon{font-size:1.1rem}
+.header-info .item .text{display:flex;flex-direction:column;line-height:1.2}
+.header-info .item .label{font-size:.65rem;opacity:.7;text-transform:uppercase;letter-spacing:1px;color:#f5d6b8}
+.header-info .item .value{font-weight:700;color:#ffd700}
+
+.icon-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;border:2px solid #ffd700;cursor:pointer;font-size:1.1rem;display:flex;justify-content:center;align-items:center;transition:.3s;flex-shrink:0}
+.icon-btn:hover{transform:rotate(90deg) scale(1.1);box-shadow:0 0 20px rgba(255,215,0,.7)}
+.icon-btn.dev{background:linear-gradient(135deg,#2c3e50,#34495e);border-color:#3498db}
+.icon-btn.dev:hover{box-shadow:0 0 20px rgba(52,152,219,.8)}
+
+nav{display:flex;padding:0 15px;overflow-x:auto;gap:5px;background:rgba(0,0,0,.2);scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{padding:12px 20px;background:transparent;border:none;color:rgba(255,255,255,.75);font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.2s}
+nav button:hover{color:#fff;background:rgba(255,255,255,.08)}
+nav button.active{color:#ffd700;border-bottom-color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,.6)}
+
+/* КОНТЕНТ */
+.container{max-width:1200px;margin:0 auto;width:100%;padding:20px 15px;flex:1;position:relative;z-index:1}
+.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+@media (max-width: 900px){.main-grid{grid-template-columns:1fr}}
+
+/* КАРТОЧКА НОВОСТИ */
+.news-card{
+    background:linear-gradient(160deg,#fdf2e9,#f5d6b8);
+    border-radius:18px;overflow:hidden;
+    box-shadow:0 8px 25px rgba(74,37,17,.35),inset 0 2px 5px rgba(255,255,255,.6);
+    border:2px solid #b87b4d;margin-bottom:15px;transition:.3s;
+    position:relative;
+}
+.news-card::before{content:'';position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(211,84,0,.15) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.news-card:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(74,37,17,.5)}
+.news-badge{
+    display:inline-block;padding:4px 12px;border-radius:12px;
+    font-size:.65rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    margin:15px 15px 0;
+    background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;
+    box-shadow:0 2px 8px rgba(211,84,0,.4);
+}
+.news-badge.important{background:linear-gradient(135deg,#e74c3c,#c0392b);animation:badgePulse 1.5s infinite}
+@keyframes badgePulse{0%,100%{box-shadow:0 2px 8px rgba(231,76,60,.4)}50%{box-shadow:0 2px 20px rgba(231,76,60,.9)}}
+.news-content{padding:12px 20px 20px}
+.news-content h2{font-size:1.15rem;color:#6b3a1f;font-weight:800;margin-bottom:10px;line-height:1.3}
+.news-content p{color:#5a3a1e;font-size:.9rem;line-height:1.6;margin-bottom:8px}
+.news-meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(184,123,77,.4);font-size:.75rem;color:#8b5a2b;flex-wrap:wrap;gap:8px}
+.news-meta .date{display:flex;align-items:center;gap:5px}
+
+/* Пусто */
+.empty-news{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:18px;padding:50px 30px;text-align:center;box-shadow:0 8px 25px rgba(74,37,17,.35),inset 0 2px 5px rgba(255,255,255,.6);border:2px dashed #b87b4d;position:relative;overflow:hidden}
+.empty-news::before{content:'🍁';position:absolute;top:-30px;right:-30px;font-size:8rem;opacity:.08;transform:rotate(-15deg)}
+.empty-news .empty-icon{font-size:4.5rem;margin-bottom:15px;opacity:.8;position:relative;z-index:1}
+.empty-news .empty-title{font-size:1.15rem;font-weight:800;color:#6b3a1f;margin-bottom:10px;position:relative;z-index:1}
+.empty-news .empty-text{color:#8b5a2b;font-size:.9rem;line-height:1.6;max-width:400px;margin:0 auto;position:relative;z-index:1}
+
+.sidebar-card{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:18px;padding:18px;box-shadow:0 8px 25px rgba(74,37,17,.35),inset 0 2px 5px rgba(255,255,255,.6);margin-bottom:15px;border:2px solid #b87b4d;position:relative;overflow:hidden}
+.sidebar-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(211,84,0,.15) 0%,transparent 70%);border-radius:50%}
+.sidebar-card h3{font-size:.95rem;color:#6b3a1f;margin-bottom:14px;padding-bottom:10px;border-bottom:2px dashed #b87b4d;font-weight:800;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.sidebar-card h3 .badge{font-size:.65rem;padding:3px 10px;border-radius:12px;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;font-weight:800;box-shadow:0 2px 8px rgba(211,84,0,.4)}
+
+.section{display:none}
+.section.active{display:block;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid #ffd700;display:inline-block;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+
+.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.category-card{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.3s;box-shadow:0 4px 15px rgba(74,37,17,.3),inset 0 2px 5px rgba(255,255,255,.5);border:2px solid #b87b4d}
+.category-card:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 10px 25px rgba(74,37,17,.5);border-color:#d35400}
+.category-card .cat-icon{font-size:2.2rem;margin-bottom:8px}
+.category-card .cat-name{font-size:.85rem;font-weight:700;color:#6b3a1f}
+
+.subscribe-box{background:linear-gradient(135deg,#fff8e1,#ffe4cc);border-radius:12px;padding:15px;border-left:4px solid #d35400;position:relative;z-index:1}
+.subscribe-box input{width:100%;padding:10px;border:2px solid #b87b4d;border-radius:10px;font-family:inherit;font-size:.85rem;margin-bottom:8px;background:#fff;color:#333}
+.subscribe-box input:focus{outline:none;border-color:#d35400;box-shadow:0 0 0 3px rgba(211,84,0,.2)}
+.subscribe-box button{width:100%;padding:11px;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.85rem;transition:.2s}
+.subscribe-box button:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(211,84,0,.5)}
+
+footer{background:linear-gradient(135deg,#2a1508,#4a2511);color:#fff;padding:30px 20px 20px;margin-top:30px;text-align:center;border-top:3px solid #b87b4d;position:relative;z-index:1}
+footer .footer-logo{font-size:1.1rem;font-weight:800;margin-bottom:10px;display:flex;justify-content:center;align-items:center;gap:10px;color:#ffd700}
+footer .footer-text{font-size:.8rem;opacity:.8;line-height:1.6;max-width:600px;margin:0 auto 15px;color:#f5d6b8}
+footer .footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:15px;font-size:.8rem}
+footer .footer-links a{color:#ffd700;text-decoration:none;transition:.2s;cursor:pointer}
+footer .footer-links a:hover{text-decoration:underline}
+footer .copyright{font-size:.7rem;opacity:.5;padding-top:15px;border-top:1px solid rgba(255,215,0,.15);color:#f5d6b8}
+
+/* МОДАЛКА */
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(59,28,10,.85);z-index:9000;display:none;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(8px);overflow-y:auto}
+.modal.active{display:flex;animation:fadeIn .3s}
+.modal-box{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:20px;padding:25px;max-width:450px;width:100%;box-shadow:0 25px 80px rgba(0,0,0,.6),inset 0 2px 5px rgba(255,255,255,.6);border:3px solid #b87b4d;max-height:90vh;overflow-y:auto;position:relative}
+.modal-box h2{color:#6b3a1f;font-size:1.2rem;margin-bottom:18px;padding-bottom:12px;border-bottom:2px dashed #b87b4d;display:flex;align-items:center;gap:10px;font-weight:800}
+.modal-box .close-modal{position:absolute;top:15px;right:15px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.1rem;font-weight:800;display:flex;justify-content:center;align-items:center;transition:.2s;box-shadow:0 4px 12px rgba(231,76,60,.4)}
+.modal-box .close-modal:hover{transform:rotate(90deg) scale(1.1)}
+.setting-group{background:rgba(255,255,255,.5);border-radius:12px;padding:12px 15px;margin-bottom:12px;border:1px solid rgba(184,123,77,.3)}
+.setting-title{font-size:.75rem;color:#8b5a2b;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.setting-toggle{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(184,123,77,.3);font-size:.85rem;color:#4a2511;font-weight:600}
+.setting-toggle:last-child{border-bottom:none}
+.switch{position:relative;width:48px;height:26px;background:#d0c0b0;border-radius:13px;cursor:pointer;transition:.3s;flex-shrink:0}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+.switch.on{background:linear-gradient(135deg,#d35400,#e67e22)}
+.switch.on::after{left:24px;background:#ffd700}
+.setting-select{width:100%;padding:8px 12px;border:2px solid #b87b4d;border-radius:8px;font-family:inherit;font-size:.85rem;background:#fff;color:#4a2511;font-weight:600;cursor:pointer}
+.setting-select:focus{outline:none;border-color:#d35400}
+
+/* КОМАНДНАЯ СТРОКА */
+.terminal{background:#0a0a0a;border-radius:12px;padding:15px;font-family:'Courier New',monospace;color:#0f0;border:2px solid #333;margin-bottom:12px;min-height:150px;max-height:300px;overflow-y:auto;font-size:.8rem;line-height:1.5}
+.terminal .line{margin-bottom:4px;word-wrap:break-word}
+.terminal .line.err{color:#f00}
+.terminal .line.warn{color:#ff0}
+.terminal .line.info{color:#0ff}
+.terminal .line.success{color:#0f0}
+.terminal-input-row{display:flex;gap:8px;margin-bottom:12px}
+.terminal-input{flex:1;background:#0a0a0a;color:#0f0;border:2px solid #333;border-radius:8px;padding:10px;font-family:'Courier New',monospace;font-size:.85rem;outline:none}
+.terminal-input:focus{border-color:#0f0;box-shadow:0 0 10px rgba(0,255,0,.3)}
+.terminal-btn{background:linear-gradient(135deg,#16a085,#1abc9c);color:#fff;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.85rem}
+.terminal-btn:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(22,160,133,.5)}
+
+/* DEV МЕНЮ */
+.dev-menu{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);color:#0f0;border-color:#0f0}
+.dev-menu h2{color:#0f0 !important;border-color:#0f0 !important}
+.dev-menu .close-modal{background:linear-gradient(135deg,#e74c3c,#c0392b)}
+.dev-tabs{display:flex;gap:5px;margin-bottom:15px;flex-wrap:wrap}
+.dev-tab{padding:8px 14px;background:rgba(0,255,0,.1);border:1px solid #0f0;color:#0f0;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.75rem;font-weight:700;transition:.2s}
+.dev-tab.active{background:#0f0;color:#000}
+.dev-tab:hover{background:rgba(0,255,0,.3)}
+.dev-panel{display:none}
+.dev-panel.active{display:block}
+.dev-btn{width:100%;padding:10px;margin-bottom:8px;background:rgba(0,255,0,.1);border:1px solid #0f0;color:#0f0;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;text-align:left;transition:.2s}
+.dev-btn:hover{background:rgba(0,255,0,.25);transform:translateX(3px)}
+.dev-btn.danger{border-color:#f00;color:#f00;background:rgba(255,0,0,.1)}
+.dev-btn.danger:hover{background:rgba(255,0,0,.25)}
+.dev-info{font-size:.7rem;color:#0a0;margin-bottom:10px;font-family:'Courier New',monospace}
+
+/* ЭКРАН ОШИБКИ */
+.error-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99998;display:none;font-family:'Courier New',monospace;color:#0f0;padding:20px;overflow-y:auto}
+.error-screen.active{display:block;animation:errorFlicker .1s infinite}
+@keyframes errorFlicker{0%,100%{opacity:1}50%{opacity:.95}}
+.error-title{font-size:3rem;color:#f00;font-weight:900;text-align:center;margin-bottom:20px;text-shadow:0 0 30px #f00;animation:errorBlink .3s infinite}
+@keyframes errorBlink{0%,100%{opacity:1}50%{opacity:.4}}
+.error-sub{font-size:1.2rem;color:#ff0;text-align:center;margin-bottom:30px}
+.error-log{background:#0a0a0a;border:2px solid #f00;border-radius:8px;padding:15px;font-size:.8rem;max-width:900px;margin:0 auto;max-height:400px;overflow-y:auto}
+.error-log .err-line{margin-bottom:4px;word-wrap:break-word}
+.error-log .err-line.critical{color:#f00;font-weight:bold}
+.error-log .err-line.warning{color:#ff0}
+.error-log .err-line.info{color:#0ff}
+.error-close{display:block;margin:30px auto 0;padding:15px 40px;background:#f00;color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-size:1.1rem;font-weight:900;letter-spacing:3px;box-shadow:0 0 30px #f00;animation:errorBtnPulse 1s infinite}
+@keyframes errorBtnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.error-close:hover{background:#c00}
+
+/* ПАРОЛЬ */
+.password-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:9500;display:none;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(10px)}
+.password-modal.active{display:flex;animation:fadeIn .3s}
+.password-box{
+    background:linear-gradient(135deg,#0a0a0a,#1a1a2e);
+    border:3px solid #0f0;border-radius:20px;padding:30px;
+    max-width:400px;width:100%;text-align:center;
+    box-shadow:0 0 60px rgba(0,255,0,.5);
+    font-family:'Courier New',monospace;
+}
+.password-box .lock-icon{font-size:4rem;margin-bottom:15px;filter:drop-shadow(0 0 20px #0f0)}
+.password-box h2{color:#0f0;font-size:1.1rem;margin-bottom:10px;letter-spacing:3px;text-shadow:0 0 15px #0f0}
+.password-box p{color:#0a0;font-size:.75rem;margin-bottom:20px;letter-spacing:1px}
+.password-input{
+    width:100%;padding:15px;background:#000;color:#0f0;
+    border:2px solid #0f0;border-radius:10px;
+    font-family:'Courier New',monospace;font-size:1.5rem;
+    text-align:center;letter-spacing:8px;outline:none;
+    margin-bottom:15px;text-shadow:0 0 10px #0f0;
+}
+.password-input:focus{box-shadow:0 0 20px rgba(0,255,0,.6)}
+.password-buttons{display:flex;gap:10px}
+.password-buttons button{
+    flex:1;padding:12px;border:none;border-radius:10px;
+    cursor:pointer;font-family:inherit;font-weight:800;
+    font-size:.85rem;letter-spacing:1px;transition:.2s;
+}
+.password-ok{background:linear-gradient(135deg,#0f0,#0a0);color:#000}
+.password-ok:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,255,0,.5)}
+.password-cancel{background:linear-gradient(135deg,#f00,#a00);color:#fff}
+.password-cancel:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,0,0,.5)}
+.password-error{
+    color:#f00;font-size:.8rem;margin-bottom:10px;
+    font-weight:bold;animation:errorBlink .3s infinite;
+    letter-spacing:2px;
+}
+
+/* Уведомления */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;padding:12px 25px;border-radius:14px;font-size:.85rem;font-weight:700;z-index:99999;box-shadow:0 10px 30px rgba(211,84,0,.6);border:2px solid #ffd700;max-width:calc(100vw - 30px);text-align:center;animation:toastIn .3s ease-out}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,30px)}to{opacity:1;transform:translate(-50%,0)}}
+
+@media (max-width: 700px){
+    .header-top{padding:10px 12px;gap:8px}
+    .logo{font-size:1rem;gap:8px}
+    .logo-icon{width:38px;height:38px;font-size:1.1rem}
+    .logo-text .city{font-size:.95rem}
+    .logo-text .sub{font-size:.55rem;letter-spacing:1px}
+    .header-info{gap:8px;font-size:.7rem}
+    .header-info .item .icon{font-size:.95rem}
+    .header-info .item .label{font-size:.55rem}
+    .icon-btn{width:36px;height:36px;font-size:1rem}
+    nav button{padding:10px 14px;font-size:.75rem}
+    .container{padding:15px 10px}
+    .sidebar-card{padding:14px}
+    .empty-news{padding:40px 20px}
+    .empty-news .empty-icon{font-size:3.5rem}
+    .categories-grid{grid-template-columns:repeat(2,1fr)}
+    .preloader-title{font-size:1.5rem;letter-spacing:4px}
+    .preloader-sub{font-size:.75rem}
+    .preloader-logo{width:70px;height:70px;font-size:2.2rem}
+    .preloader-bar{width:170px}
+    .error-title{font-size:2rem}
+    .news-content h2{font-size:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ПРЕЛОАДЕР -->
+<div class="preloader" id="preloader">
+    <div class="preloader-leaves" id="preloaderLeaves"></div>
+    <div class="preloader-content">
+        <div class="preloader-logo">К</div>
+        <div class="preloader-title">КУМЕРТАУ</div>
+        <div class="preloader-sub">Новостной портал</div>
+        <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderBar"></div></div>
+        <div class="preloader-percent" id="preloaderPercent">0%</div>
+        <div class="preloader-leaf-emoji">🍁</div>
+    </div>
+</div>
+
+<!-- ЭКРАН ОШИБКИ -->
+<div class="error-screen" id="errorScreen">
+    <div class="error-title">⚠ FATAL ERROR ⚠</div>
+    <div class="error-sub" id="errorSub">СИСТЕМА ПОВРЕЖДЕНА</div>
+    <div class="error-log" id="errorLog"></div>
+    <button class="error-close" onclick="closeError()">ЗАКРЫТЬ</button>
+</div>
+
+<!-- ПАРОЛЬ -->
+<div class="password-modal" id="passwordModal">
+    <div class="password-box">
+        <div class="lock-icon">🔒</div>
+        <h2>ДОСТУП ЗАПРЕЩЁН</h2>
+        <p>Введите пароль разработчика</p>
+        <div class="password-error" id="passwordError" style="display:none">❌ НЕВЕРНЫЙ ПАРОЛЬ</div>
+        <input type="password" class="password-input" id="passwordInput" placeholder="••••••" maxlength="10" onkeydown="if(event.key==='Enter')checkPassword()">
+        <div class="password-buttons">
+            <button class="password-cancel" onclick="closePassword()">ОТМЕНА</button>
+            <button class="password-ok" onclick="checkPassword()">ВОЙТИ</button>
+        </div>
+    </div>
+</div>
+
+<!-- ЛИСТЬЯ -->
+<div class="leaf-bg" id="leafBg"></div>
+
+<header>
+    <div class="header-top">
+        <div class="logo">
+            <div class="logo-icon">К</div>
+            <div class="logo-text">
+                <span class="city">Кумертау</span>
+                <span class="sub">Осенний новостной портал</span>
+            </div>
+        </div>
+        <div class="header-info">
+            <div class="item">
+                <span class="icon">🕐</span>
+                <div class="text">
+                    <span class="label">Время</span>
+                    <span class="value" id="headerTime">00:00</span>
+                </div>
+            </div>
+            <div class="item">
+                <span class="icon">📅</span>
+                <div class="text">
+                    <span class="label">Дата</span>
+                    <span class="value" id="headerDate">—</span>
+                </div>
+            </div>
+            <button class="icon-btn" onclick="openSettings()" title="Настройки">⚙️</button>
+            <button class="icon-btn dev" onclick="requestDevAccess()" title="Меню разработчика">&lt;/&gt;</button>
+        </div>
+    </div>
+    <nav>
+        <button class="active" onclick="switchTab('home', this)">🏠 Главная</button>
+        <button onclick="switchTab('city', this)">🏙️ Город</button>
+        <button onclick="switchTab('sport', this)">⚽ Спорт</button>
+        <button onclick="switchTab('culture', this)">🎭 Культура</button>
+        <button onclick="switchTab('ads', this)">📢 Объявления</button>
+        <button onclick="switchTab('transport', this)">🚌 Транспорт</button>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="section active" id="home">
+        <div class="main-grid">
+            <div id="newsList">
+                <!-- Новость -->
+                <div class="news-card">
+                    <div class="news-badge important">⚠️ Срочно</div>
+                    <div class="news-content">
+                        <h2>ВНИМАНИЕ ВСЕМ! УДАЛИТЕ ТИКТОК!</h2>
+                        <p>Внимание всем удалите тик-ток если ребёнок сидел за телефоном вирус тик-ток размножение</p>
+                        <div class="news-meta">
+                            <span class="date">📅 Сегодня</span>
+                            <span>⚠️ Важное предупреждение</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div class="sidebar-card">
+                    <h3>📬 Подписка на новости</h3>
+                    <div class="subscribe-box">
+                        <input type="email" id="subscribeEmail" placeholder="Ваш email">
+                        <button onclick="subscribe()">Подписаться</button>
+                    </div>
+                </div>
+                <div class="sidebar-card">
+                    <h3>📢 Объявления</h3>
+                    <div style="text-align:center;padding:20px 10px;color:#8b5a2b;font-size:.8rem">
+                        <div style="font-size:2.5rem;margin-bottom:8px;opacity:.7">📭</div>
+                        Объявлений пока нет
+                    </div>
+                </div>
+                <div class="sidebar-card">
+                    <h3>📊 Статистика сайта</h3>
+                    <div style="font-size:.8rem;color:#4a2511;line-height:2">
+                        <div>👁️ Посещений: <b id="statVisits">0</b></div>
+                        <div>⭐ Версия: <b>1.0.0</b></div>
+                        <div>📅 Работает: <b id="statUptime">0 сек</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="city">
+        <h1 class="section-title">🏙️ Городские новости</h1>
+        <div class="categories-grid">
+            <div class="category-card"><div class="cat-icon">🏛️</div><div class="cat-name">Администрация</div></div>
+            <div class="category-card"><div class="cat-icon">🏗️</div><div class="cat-name">Строительство</div></div>
+            <div class="category-card"><div class="cat-icon">🌳</div><div class="cat-name">Благоустройство</div></div>
+            <div class="category-card"><div class="cat-icon">🚦</div><div class="cat-name">Дороги</div></div>
+            <div class="category-card"><div class="cat-icon">💧</div><div class="cat-name">ЖКХ</div></div>
+            <div class="category-card"><div class="cat-icon">🚨</div><div class="cat-name">Происшествия</div></div>
+        </div>
+        <div class="empty-news"><div class="empty-icon">🍂</div><div class="empty-title">Новости скоро появятся</div><div class="empty-text">В этом разделе будут городские новости Кумертау.</div></div>
+    </div>
+
+    <div class="section" id="sport">
+        <h1 class="section-title">⚽ Спорт</h1>
+        <div class="categories-grid">
+            <div class="category-card"><div class="cat-icon">⚽</div><div class="cat-name">Футбол</div></div>
+            <div class="category-card"><div class="cat-icon">🏀</div><div class="cat-name">Баскетбол</div></div>
+            <div class="category-card"><div class="cat-icon">🏐</div><div class="cat-name">Волейбол</div></div>
+            <div class="category-card"><div class="cat-icon">🏊</div><div class="cat-name">Плавание</div></div>
+            <div class="category-card"><div class="cat-icon">🥊</div><div class="cat-name">Единоборства</div></div>
+            <div class="category-card"><div class="cat-icon">🏆</div><div class="cat-name">Соревнования</div></div>
+        </div>
+        <div class="empty-news"><div class="empty-icon">🍁</div><div class="empty-title">Новости скоро появятся</div><div class="empty-text">Здесь будут спортивные новости города.</div></div>
+    </div>
+
+    <div class="section" id="culture">
+        <h1 class="section-title">🎭 Культура</h1>
+        <div class="empty-news"><div class="empty-icon">🎭</div><div class="empty-title">Новости скоро появятся</div><div class="empty-text">Здесь будут культурные события и афиша Кумертау.</div></div>
+    </div>
+
+    <div class="section" id="ads">
+        <h1 class="section-title">📢 Объявления</h1>
+        <div class="empty-news"><div class="empty-icon">📭</div><div class="empty-title">Объявлений пока нет</div><div class="empty-text">Здесь будут размещаться объявления жителей города.</div></div>
+    </div>
+
+    <div class="section" id="transport">
+        <h1 class="section-title">🚌 Транспорт</h1>
+        <div class="empty-news"><div class="empty-icon">🚌</div><div class="empty-title">Информация скоро появится</div><div class="empty-text">Здесь будет расписание городского транспорта.</div></div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-logo"><div class="logo-icon" style="width:36px;height:36px;font-size:1.1rem">К</div><span>Кумертау • Осенний портал</span></div>
+    <div class="footer-text">Городской информационный портал. Актуальные новости, события и объявления города Кумертау.</div>
+    <div class="footer-links">
+        <a onclick="switchTab('home', document.querySelectorAll('nav button')[0])">Главная</a>
+        <a onclick="switchTab('city', document.querySelectorAll('nav button')[1])">Город</a>
+        <a onclick="switchTab('ads', document.querySelectorAll('nav button')[4])">Объявления</a>
+        <a onclick="requestDevAccess()">Разработчикам</a>
+    </div>
+    <div class="copyright">© 2025 Кумертау. Все права защищены. 🍁</div>
+</footer>
+
+<!-- НАСТРОЙКИ -->
+<div class="modal" id="settingsModal">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeSettings()">✕</button>
+        <h2>⚙️ Настройки</h2>
+        <div class="setting-group">
+            <div class="setting-title">🎨 Внешний вид</div>
+            <div class="setting-toggle"><span>🍂 Анимация листьев</span><div class="switch on" id="swLeaves" onclick="toggleSetting('leaves')"></div></div>
+            <div class="setting-toggle"><span>✨ Анимации интерфейса</span><div class="switch on" id="swAnim" onclick="toggleSetting('anim')"></div></div>
+        </div>
+        <div class="setting-group">
+            <div class="setting-title">📏 Размер шрифта</div>
+            <select class="setting-select" id="fontSelect" onchange="changeFont(this.value)">
+                <option value="small">Маленький</option>
+                <option value="normal" selected>Обычный</option>
+                <option value="large">Большой</option>
+            </select>
+        </div>
+        <div class="setting-group">
+            <div class="setting-title">🔔 Уведомления</div>
+            <div class="setting-toggle"><span>🔊 Звуки</span><div class="switch" id="swSound" onclick="toggleSetting('sound')"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- МЕНЮ РАЗРАБОТЧИКА -->
+<div class="modal" id="devModal">
+    <div class="modal-box dev-menu">
+        <button class="close-modal" onclick="closeDevMenu()">✕</button>
+        <h2>&lt;/&gt; МЕНЮ РАЗРАБОТЧИКА</h2>
+        <div class="dev-info" id="devInfo">Система: OK | Память: — | Время работы: —</div>
+        <div class="dev-tabs">
+            <button class="dev-tab active" onclick="switchDevTab('terminal', this)">💻 Командная строка</button>
+            <button class="dev-tab" onclick="switchDevTab('tools', this)">🔧 Инструменты</button>
+            <button class="dev-tab" onclick="switchDevTab('storage', this)">💾 Данные</button>
+        </div>
+
+        <div class="dev-panel active" id="dev-terminal">
+            <div class="terminal" id="terminalOutput">
+                <div class="line info">Кумертау Terminal v1.0.0</div>
+                <div class="line success">Готов к работе. Введите "help" для списка команд.</div>
+            </div>
+            <div class="terminal-input-row">
+                <input type="text" class="terminal-input" id="terminalInput" placeholder="Введите команду..." onkeydown="if(event.key==='Enter')runCommand()" autocomplete="off">
+                <button class="terminal-btn" onclick="runCommand()">▶</button>
+            </div>
+            <div class="dev-info">Быстрые команды: help, qpoi, clear, info, reset, save, crash</div>
+        </div>
+
+        <div class="dev-panel" id="dev-tools">
+            <button class="dev-btn" onclick="devTool('qpoi')">⚠️ Вызвать команду qpoi (много ошибок)</button>
+            <button class="dev-btn danger" onclick="devTool('crash')">💥 Сбросить систему (краш)</button>
+            <button class="dev-btn" onclick="devTool('clearlogs')">🗑️ Очистить логи</button>
+            <button class="dev-btn" onclick="devTool('fakecrash')">🎭 Фейковый краш</button>
+            <button class="dev-btn" onclick="devTool('stress')">⚡ Стресс-тест</button>
+            <button class="dev-btn danger" onclick="devTool('wipe')">💣 Полная очистка данных</button>
+        </div>
+
+        <div class="dev-panel" id="dev-storage">
+            <div class="dev-info">Все данные хранятся в localStorage браузера:</div>
+            <div id="storageList" style="font-size:.75rem;font-family:'Courier New',monospace;color:#0f0;margin-bottom:10px"></div>
+            <button class="dev-btn" onclick="exportAllData()">📤 Экспорт всех данных (JSON)</button>
+            <button class="dev-btn danger" onclick="clearAllStorage()">🗑️ Очистить localStorage</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ================= ПАРОЛЬ РАЗРАБОТЧИКА ================= */
+const DEV_PASSWORD = '520666';
+let devUnlocked = sessionStorage.getItem('kumertau_dev_unlocked') === 'true';
+
+function requestDevAccess(){
+    if(devUnlocked){
+        openDevMenu();
+        return;
+    }
+    document.getElementById('passwordModal').classList.add('active');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordError').style.display = 'none';
+    setTimeout(()=>document.getElementById('passwordInput').focus(), 100);
+}
+function closePassword(){
+    document.getElementById('passwordModal').classList.remove('active');
+}
+function checkPassword(){
+    const input = document.getElementById('passwordInput').value.trim();
+    const errorEl = document.getElementById('passwordError');
+    if(input === DEV_PASSWORD){
+        devUnlocked = true;
+        sessionStorage.setItem('kumertau_dev_unlocked', 'true');
+        closePassword();
+        playSound('success');
+        openDevMenu();
+    } else {
+        errorEl.style.display = 'block';
+        errorEl.innerText = '❌ НЕВЕРНЫЙ ПАРОЛЬ';
+        document.getElementById('passwordInput').value = '';
+        playSound('error');
+        document.getElementById('passwordInput').style.borderColor = '#f00';
+        setTimeout(()=>{ document.getElementById('passwordInput').style.borderColor = '#0f0'; }, 500);
+    }
+}
+document.getElementById('passwordModal').addEventListener('click', e=>{
+    if(e.target.id === 'passwordModal') closePassword();
+});
+
+/* ================= ПРЕЛОАДЕР ================= */
+function createPreloaderLeaves(){
+    const container = document.getElementById('preloaderLeaves');
+    const leaves = ['🍁','🍂','🍃','🌿','🍁'];
+    for(let i=0;i<20;i++){
+        const leaf = document.createElement('div');
+        leaf.className = 'preloader-leaf';
+        leaf.innerText = leaves[Math.floor(Math.random()*leaves.length)];
+        leaf.style.left = Math.random() * 100 + '%';
+        leaf.style.animationDuration = (3 + Math.random() * 4) + 's';
+        leaf.style.animationDelay = Math.random() * 3 + 's';
+        leaf.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+        container.appendChild(leaf);
+    }
+}
+createPreloaderLeaves();
+
+let progress = 0;
+const progressInterval = setInterval(()=>{
+    progress += Math.random() * 15 + 5;
+    if(progress >= 100){
+        progress = 100;
+        clearInterval(progressInterval);
+        setTimeout(()=>{
+            document.getElementById('preloader').classList.add('hidden');
+            setTimeout(()=>{ document.getElementById('preloader').style.display = 'none'; }, 700);
+        }, 400);
+    }
+    document.getElementById('preloaderBar').style.width = progress + '%';
+    document.getElementById('preloaderPercent').innerText = Math.floor(progress) + '%';
+}, 200);
+
+/* ================= ЛИСТЬЯ ================= */
+function createLeaves(){
+    const bg = document.getElementById('leafBg');
+    const leaves = ['🍁','🍂','🍃','🌿'];
+    for(let i=0;i<15;i++){
+        const leaf = document.createElement('div');
+        leaf.className = 'falling-leaf';
+        leaf.innerText = leaves[Math.floor(Math.random()*leaves.length)];
+        leaf.style.left = Math.random() * 100 + '%';
+        leaf.style.animationDuration = (8 + Math.random() * 10) + 's';
+        leaf.style.animationDelay = Math.random() * 10 + 's';
+        leaf.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+        bg.appendChild(leaf);
+    }
+}
+createLeaves();
+
+/* ================= НАСТРОЙКИ ================= */
+const defaultSettings = { leaves:true, anim:true, sound:false, font:'normal' };
+let settings = JSON.parse(localStorage.getItem('kumertau_settings') || 'null') || {...defaultSettings};
+function saveSettings(){ localStorage.setItem('kumertau_settings', JSON.stringify(settings)); }
+
+function applySettings(){
+    document.getElementById('leafBg').style.display = settings.leaves ? 'block' : 'none';
+    document.getElementById('swLeaves').classList.toggle('on', settings.leaves);
+    document.body.classList.toggle('no-anim', !settings.anim);
+    document.getElementById('swAnim').classList.toggle('on', settings.anim);
+    document.getElementById('swSound').classList.toggle('on', settings.sound);
+    document.getElementById('fontSelect').value = settings.font;
+    document.body.classList.remove('font-small','font-large');
+    if(settings.font === 'small') document.body.classList.add('font-small');
+    if(settings.font === 'large') document.body.classList.add('font-large');
+}
+function toggleSetting(key){
+    settings[key] = !settings[key];
+    saveSettings(); applySettings(); playSound('click');
+}
+function changeFont(value){
+    settings.font = value; saveSettings(); applySettings();
+    showToast('📏 Размер шрифта: ' + (value === 'small' ? 'маленький' : value === 'large' ? 'большой' : 'обычный'));
+}
+function openSettings(){ document.getElementById('settingsModal').classList.add('active'); playSound('click'); }
+function closeSettings(){ document.getElementById('settingsModal').classList.remove('active'); }
+document.getElementById('settingsModal').addEventListener('click', e=>{ if(e.target.id === 'settingsModal') closeSettings(); });
+
+/* ================= ЗВУК ================= */
+let audioCtx = null;
+function initAudio(){
+    if(!audioCtx){try{audioCtx = new (window.AudioContext || window.webkitAudioContext)();}catch(e){}}
+    if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+function playSound(type){
+    if(!settings.sound) return;
+    initAudio(); if(!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    let freq = 600;
+    if(type === 'click') freq = 800;
+    if(type === 'success') freq = 1000;
+    if(type === 'error') freq = 300;
+    osc.frequency.setValueAtTime(freq, now);
+    gain.gain.setValueAtTime(0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.15);
+}
+
+/* ================= НАВИГАЦИЯ ================= */
+function switchTab(tabId, btn){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    if(btn) btn.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+    playSound('click');
+    saveActiveTab(tabId);
+}
+
+/* ================= ЧАСЫ ================= */
+function updateClock(){
+    const now = new Date();
+    const time = now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+    const date = now.toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'});
+    document.getElementById('headerTime').innerText = time;
+    document.getElementById('headerDate').innerText = date.split(' ').slice(0,2).join(' ');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ================= ПОДПИСКА ================= */
+function subscribe(){
+    const email = document.getElementById('subscribeEmail').value.trim();
+    if(!email || !email.includes('@')){ showToast('❌ Введите корректный email'); playSound('error'); return; }
+    localStorage.setItem('kumertau_subscribed', 'true');
+    localStorage.setItem('kumertau_email', email);
+    showToast('✅ Вы подписаны на новости Кумертау!');
+    playSound('success');
+    document.getElementById('subscribeEmail').value = '';
+}
+
+/* ================= УВЕДОМЛЕНИЯ ================= */
+function showToast(text){
+    const old = document.querySelector('.toast');
+    if(old) old.remove();
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerText = text;
+    document.body.appendChild(t);
+    setTimeout(()=>{
+        t.style.transition = 'all .4s';
+        t.style.opacity = '0';
+        t.style.transform = 'translate(-50%, 30px)';
+        setTimeout(()=>t.remove(), 400);
+    }, 2400);
+}
+
+/* ================= МЕНЮ РАЗРАБОТЧИКА ================= */
+function openDevMenu(){
+    document.getElementById('devModal').classList.add('active');
+    updateStorageList();
+    updateDevInfo();
+    printTerminal('Меню разработчика открыто', 'info');
+}
+function closeDevMenu(){ document.getElementById('devModal').classList.remove('active'); }
+document.getElementById('devModal').addEventListener('click', e=>{ if(e.target.id === 'devModal') closeDevMenu(); });
+
+function switchDevTab(tab, btn){
+    document.querySelectorAll('.dev-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.dev-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('dev-' + tab).classList.add('active');
+}
+
+function updateDevInfo(){
+    let mem = '—';
+    if(performance.memory){
+        mem = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) + ' MB';
+    }
+    const uptime = Math.round((Date.now() - startTime) / 1000) + ' сек';
+    document.getElementById('devInfo').innerText = 'Система: OK | Память: ' + mem + ' | Время работы: ' + uptime;
+}
+const startTime = Date.now();
+
+/* ================= КОМАНДНАЯ СТРОКА ================= */
+const terminalOutput = document.getElementById('terminalOutput');
+const terminalInput = document.getElementById('terminalInput');
+
+function printTerminal(text, type = 'info'){
+    const line = document.createElement('div');
+    line.className = 'line ' + type;
+    line.innerText = text;
+    terminalOutput.appendChild(line);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+}
+
+function runCommand(){
+    const cmd = terminalInput.value.trim().toLowerCase();
+    if(!cmd) return;
+    printTerminal('> ' + cmd, 'success');
+    terminalInput.value = '';
+    executeCommand(cmd);
+}
+
+function executeCommand(cmd){
+    const args = cmd.split(' ');
+    const command = args[0];
+
+    switch(command){
+        case 'help':
+            printTerminal('Доступные команды:', 'info');
+            printTerminal('  help     — список команд', 'info');
+            printTerminal('  info     — информация о системе', 'info');
+            printTerminal('  clear    — очистить терминал', 'info');
+            printTerminal('  save     — сохранить данные', 'info');
+            printTerminal('  reset    — сбросить настройки', 'info');
+            printTerminal('  qpoi     — ⚠️ вызывает ошибки', 'warn');
+            printTerminal('  crash    — 💥 сброс системы', 'warn');
+            printTerminal('  errors   — показать список ошибок', 'info');
+            printTerminal('  secret   — секретная команда', 'info');
+            break;
+        case 'info':
+            printTerminal('Система: Кумертау Портал', 'success');
+            printTerminal('Версия: 1.0.0', 'success');
+            printTerminal('Дата: ' + new Date().toLocaleString('ru-RU'), 'success');
+            printTerminal('ОС: ' + navigator.platform, 'success');
+            printTerminal('Посещений: ' + (localStorage.getItem('kumertau_visits') || 0), 'success');
+            break;
+        case 'clear':
+            terminalOutput.innerHTML = '<div class="line success">Терминал очищен</div>';
+            break;
+        case 'save':
+            saveSettings();
+            printTerminal('✅ Настройки сохранены', 'success');
+            break;
+        case 'reset':
+            localStorage.removeItem('kumertau_settings');
+            settings = {...defaultSettings};
+            applySettings();
+            printTerminal('✅ Настройки сброшены', 'success');
+            showToast('🔄 Настройки сброшены');
+            break;
+        case 'errors':
+            printTerminal('Список возможных ошибок:', 'warn');
+            printTerminal('  ERR_001: Переполнение буфера', 'warn');
+            printTerminal('  ERR_002: Ошибка сегментации', 'warn');
+            printTerminal('  ERR_003: Недостаточно памяти', 'warn');
+            printTerminal('  ERR_004: Сбой ядра системы', 'warn');
+            printTerminal('  ERR_005: Потеря соединения', 'warn');
+            break;
+        case 'secret':
+            printTerminal('🔓 Секретная команда найдена!', 'success');
+            printTerminal('🍁 Кумертау — осенний город!', 'success');
+            break;
+        case 'qpoi':
+            printTerminal('⚠️ ЗАПУСК КОМАНДЫ QPOI...', 'warn');
+            setTimeout(()=>triggerQpoi(), 300);
+            break;
+        case 'crash':
+            printTerminal('💥 СБРОС СИСТЕМЫ...', 'err');
+            setTimeout(()=>triggerQpoi(true), 300);
+            break;
+        default:
+            printTerminal('❌ Команда "' + command + '" не найдена. Введите "help".', 'err');
+    }
+}
+
+/* ================= КОМАНДА QPOI ================= */
+const ERROR_MESSAGES = [
+    'ERR_001: Критическая ошибка — переполнение буфера',
+    'ERR_002: Segmentation fault (core dumped)',
+    'ERR_003: Недостаточно оперативной памяти',
+    'ERR_004: Сбой ядра системы — kernel panic',
+    'ERR_005: Потеря соединения с сервером',
+    'ERR_006: Повреждение данных — data corruption',
+    'ERR_007: Неизвестная ошибка 0xDEADBEEF',
+    'ERR_008: Ошибка чтения файла system32.dll',
+    'ERR_009: Не удалось загрузить драйвер',
+    'ERR_010: Превышен лимит подключений',
+    'ERR_011: Ошибка синтаксиса в командной строке',
+    'ERR_012: Стек вызовов переполнен',
+    'ERR_013: Критический сбой в модуле qpoi.exe',
+    'ERR_014: Нарушение прав доступа к памяти',
+    'ERR_015: Отказ оборудования диска C:\\',
+    'ERR_016: Не удалось выполнить операцию',
+    'ERR_017: Сервер не отвечает на запрос',
+    'ERR_018: Ошибка в базе данных SQL',
+    'ERR_019: Повреждён системный реестр',
+    'ERR_020: Фатальная ошибка приложения',
+    'ERR_021: Неизвестный идентификатор процесса',
+    'ERR_022: Файл qpoi.exe не найден',
+    'ERR_023: Ошибка компиляции скрипта',
+    'ERR_024: Превышен тайм-аут ожидания',
+    'ERR_025: Недостаточно прав для выполнения',
+    'ERR_026: Критический сбой файловой системы',
+    'ERR_027: Обнаружен вирус в памяти',
+    'ERR_028: Ошибка SSL-сертификата',
+    'ERR_029: Некорректный ответ от API',
+    'ERR_030: Сбой при загрузке ресурса',
+    'ERR_031: Необработанное исключение в потоке',
+    'ERR_032: Ошибка виртуальной памяти',
+    'ERR_033: Превышен лимит стека',
+    'ERR_034: Сбой в модуле ядра',
+    'ERR_035: Ошибка ввода-вывода',
+    'ERR_036: Отказ жёсткого диска',
+    'ERR_037: Не удалось восстановить сессию',
+    'ERR_038: Критическая ошибка драйвера',
+    'ERR_039: Ошибка сетевого протокола',
+    'ERR_040: Сбой при обновлении',
+    'ERR_041: Недостаточно места на диске',
+    'ERR_042: Ошибка аутентификации',
+    'ERR_043: Превышено время ожидания',
+    'ERR_044: Конфликт версий библиотек',
+    'ERR_045: Ошибка при чтении порта',
+    'ERR_046: Необработанный сигнал SIGSEGV',
+    'ERR_047: Превышен лимит открытых файлов',
+    'ERR_048: Ошибка шифрования',
+    'ERR_049: Повреждён исполняемый файл',
+    'ERR_050: Фатальный сбой qpoi — система нестабильна'
+];
+
+function triggerQpoi(fullCrash = false){
+    playSound('error');
+    const errorScreen = document.getElementById('errorScreen');
+    const errorLog = document.getElementById('errorLog');
+    const errorSub = document.getElementById('errorSub');
+    errorLog.innerHTML = '';
+    errorSub.innerText = fullCrash ? 'ПОЛНЫЙ СБРОС СИСТЕМЫ' : 'КРИТИЧЕСКАЯ ОШИБКА — КОМАНДА QPOI';
+    errorScreen.classList.add('active');
+
+    let i = 0;
+    const total = ERROR_MESSAGES.length;
+    const errorInterval = setInterval(()=>{
+        if(i >= total){
+            clearInterval(errorInterval);
+            setTimeout(()=>{
+                const finalLine = document.createElement('div');
+                finalLine.className = 'err-line critical';
+                finalLine.style.marginTop = '15px';
+                finalLine.style.fontSize = '1rem';
+                finalLine.innerText = '=== СИСТЕМА ПОЛНОСТЬЮ ПОВРЕЖДЕНА ===';
+                errorLog.appendChild(finalLine);
+                errorLog.scrollTop = errorLog.scrollHeight;
+            }, 200);
+            return;
+        }
+        const line = document.createElement('div');
+        const r = Math.random();
+        if(r < 0.5) line.className = 'err-line critical';
+        else if(r < 0.8) line.className = 'err-line warning';
+        else line.className = 'err-line info';
+        line.innerText = '> [' + new Date().toLocaleTimeString('ru-RU') + '] ' + ERROR_MESSAGES[i];
+        errorLog.appendChild(line);
+        errorLog.scrollTop = errorLog.scrollHeight;
+        i++;
+    }, 60);
+
+    if(navigator.vibrate) navigator.vibrate([100,50,100,50,300,100,500]);
+}
+
+function closeError(){
+    document.getElementById('errorScreen').classList.remove('active');
+    printTerminal('Система восстановлена', 'success');
+    playSound('success');
+}
+
+/* ================= ИНСТРУМЕНТЫ DEV ================= */
+function devTool(tool){
+    switch(tool){
+        case 'qpoi':
+            printTerminal('Вызов команды qpoi...', 'warn');
+            triggerQpoi();
+            break;
+        case 'crash':
+            printTerminal('Полный сброс системы...', 'err');
+            triggerQpoi(true);
+            break;
+        case 'clearlogs':
+            terminalOutput.innerHTML = '<div class="line success">Логи очищены</div>';
+            printTerminal('Логи очищены', 'success');
+            break;
+        case 'fakecrash':
+            printTerminal('Фейковый краш...', 'warn');
+            document.body.style.filter = 'invert(1)';
+            setTimeout(()=>{ document.body.style.filter = ''; }, 800);
+            showToast('🎭 Фейковый краш прошёл');
+            break;
+        case 'stress':
+            printTerminal('Запуск стресс-теста...', 'warn');
+            for(let i=0;i<10;i++){
+                setTimeout(()=>printTerminal('STRESS: ' + (i+1) + '/10 — OK', 'success'), i*200);
+            }
+            break;
+        case 'wipe':
+            if(confirm('⚠️ Удалить ВСЕ данные из localStorage?')){
+                localStorage.clear();
+                printTerminal('Все данные удалены', 'err');
+                showToast('🗑️ Все данные удалены');
+            }
+            break;
+    }
+}
+
+/* ================= ХРАНИЛИЩЕ ================= */
+function updateStorageList(){
+    const list = document.getElementById('storageList');
+    list.innerHTML = '';
+    if(localStorage.length === 0){
+        list.innerHTML = '<div style="color:#888">localStorage пуст</div>';
+        return;
+    }
+    for(let i=0;i<localStorage.length;i++){
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        const short = value.length > 40 ? value.slice(0,40) + '...' : value;
+        list.innerHTML += `<div>📁 ${key}: <span style="color:#ff0">${short}</span></div>`;
+    }
+}
+
+function exportAllData(){
+    const data = {};
+    for(let i=0;i<localStorage.length;i++){
+        const key = localStorage.key(i);
+        data[key] = localStorage.getItem(key);
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'kumertau-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click(); URL.revokeObjectURL(url);
+    printTerminal('Данные экспортированы', 'success');
+    showToast('💾 Данные экспортированы');
+}
+
+function clearAllStorage(){
+    if(confirm('⚠️ Очистить весь localStorage? Это удалит все настройки и данные.')){
+        localStorage.clear();
+        updateStorageList();
+        printTerminal('localStorage очищен', 'err');
+        showToast('🗑️ localStorage очищен');
+    }
+}
+
+/* ================= СТАТИСТИКА ================= */
+function updateStats(){
+    let visits = parseInt(localStorage.getItem('kumertau_visits') || '0');
+    visits++;
+    localStorage.setItem('kumertau_visits', visits);
+    document.getElementById('statVisits').innerText = visits;
+
+    setInterval(()=>{
+        const uptime = Math.round((Date.now() - startTime) / 1000);
+        document.getElementById('statUptime').innerText = uptime + ' сек';
+        if(document.getElementById('devModal').classList.contains('active')) updateDevInfo();
+    }, 1000);
+}
+updateStats();
+
+/* ================= СОХРАНЕНИЕ ВКЛАДКИ ================= */
+function saveActiveTab(tabId){
+    localStorage.setItem('kumertau_active_tab', tabId);
+}
+
+/* ================= СТАРТ ================= */
+applySettings();
+
+// Восстанавливаем активную вкладку
+const savedTab = localStorage.getItem('kumertau_active_tab');
+if(savedTab && savedTab !== 'home'){
+    const btn = Array.from(document.querySelectorAll('nav button')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + savedTab + "'"));
+    if(btn){
+        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+        document.getElementById(savedTab).classList.add('active');
+        btn.classList.add('active');
+    }
+}
+
+document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape'){
+        closeSettings();
+        closeDevMenu();
+        closePassword();
+    }
+});
+document.addEventListener('click', ()=>initAudio(), {once: true});
+</script>
+</body>
+</html>
