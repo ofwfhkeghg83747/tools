@@ -2,1828 +2,1296 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Кумертау • Осенний портал + Дневник</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кумертау — 2026 · Ждём зиму</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;width:100%;overflow-x:hidden}
-body{background:linear-gradient(135deg,#3b1c0a 0%,#6b3a1f 40%,#8b4513 70%,#4a2511 100%);background-attachment:fixed;color:#3a2511;min-height:100vh;display:flex;flex-direction:column;line-height:1.5;font-size:16px}
-body.font-small{font-size:14px}
-body.font-large{font-size:18px}
-body.no-anim *{animation:none!important;transition:none!important}
-body.inverted{filter:invert(1)}
-body.hue-rotate{filter:hue-rotate(180deg)}
-body.blur-mode{filter:blur(2px)}
-body.glitch{animation:glitchAnim .1s infinite}
-@keyframes glitchAnim{0%{transform:translate(0)}20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-2px,4px)}80%{transform:translate(2px,-4px)}100%{transform:translate(0)}}
-body.crashed{background:#000!important;filter:invert(1) hue-rotate(90deg)}
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-/* ПРЕЛОАДЕР */
-.preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#3b1c0a 0%,#6b3a1f 40%,#8b4513 70%,#4a2511 100%);z-index:99999;display:flex;justify-content:center;align-items:center;flex-direction:column;transition:opacity .6s ease,visibility .6s}
-.preloader.hidden{opacity:0;visibility:hidden}
-.preloader-leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
-.preloader-leaf{position:absolute;font-size:2rem;opacity:0;animation:preloaderLeafFall linear infinite;top:-50px}
-@keyframes preloaderLeafFall{0%{transform:translateY(-50px) rotate(0deg);opacity:0}10%{opacity:.7}90%{opacity:.7}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
-.preloader-content{text-align:center;z-index:2;position:relative;animation:preloaderPulse 2s ease-in-out infinite}
-@keyframes preloaderPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-.preloader-logo{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ffb300);color:#3b1c0a;display:flex;justify-content:center;align-items:center;font-size:3rem;font-weight:900;margin:0 auto 25px;box-shadow:0 0 40px rgba(255,215,0,.6),0 0 80px rgba(255,180,0,.4);animation:preloaderLogoSpin 3s ease-in-out infinite}
-@keyframes preloaderLogoSpin{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(10deg) scale(1.05)}}
-.preloader-title{font-size:2rem;font-weight:900;color:#fff;letter-spacing:6px;margin-bottom:10px;text-shadow:0 0 20px rgba(255,215,0,.8)}
-.preloader-sub{font-size:.85rem;color:#f5d6b8;opacity:.8;letter-spacing:3px;text-transform:uppercase;margin-bottom:40px}
-.preloader-bar{width:220px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;margin:0 auto}
-.preloader-bar-fill{height:100%;width:0;background:linear-gradient(90deg,#d35400,#ffb300,#ffd700);border-radius:3px;transition:width .3s ease}
-.preloader-percent{font-size:.75rem;color:#f5d6b8;margin-top:12px;letter-spacing:2px;font-weight:600}
-.preloader-leaf-emoji{font-size:2.5rem;margin-top:25px;animation:preloaderLeafPulse 1s ease-in-out infinite}
-@keyframes preloaderLeafPulse{0%,100%{transform:scale(1) rotate(-10deg)}50%{transform:scale(1.2) rotate(10deg)}}
+    :root {
+        --autumn-1: #ff8c42;
+        --autumn-2: #d35400;
+        --autumn-3: #8b2f00;
+        --autumn-4: #ffb347;
+        --neon-cyan: #00e0ff;
+        --neon-green: #00ff88;
+        --neon-red: #ff0033;
+        --neon-yellow: #ffcc00;
+        --bg-dark: #0a0605;
+        --bg-card: rgba(40, 20, 10, 0.6);
+        --text: #ffeedd;
+        --text-dim: #b89988;
+        --font-scale: 1;
+    }
 
-.leaf-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-.falling-leaf{position:absolute;font-size:1.5rem;opacity:.5;animation:leafFall linear infinite;top:-50px}
-@keyframes leafFall{0%{transform:translateY(-50px) rotate(0deg);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+    body.light-theme {
+        --bg-dark: #fff4e0;
+        --bg-card: rgba(255, 255, 255, 0.85);
+        --text: #3a2416;
+        --text-dim: #8b5a2b;
+    }
 
-/* ============ ПРЯМОЙ ЭФИР НТВ — НА САМОМ ВЕРХУ ============ */
-.live-broadcast{
-    position:relative;
-    background:linear-gradient(90deg,#8b0000 0%,#c0392b 50%,#8b0000 100%);
-    background-size:200% 100%;
-    animation:liveGradient 3s linear infinite;
-    color:#fff;
-    padding:14px 20px;
-    display:flex;
-    align-items:center;
-    gap:15px;
-    z-index:200;
-    border-bottom:4px solid #ffd700;
-    box-shadow:0 6px 25px rgba(139,0,0,.6);
-    flex-wrap:wrap;
-}
-@keyframes liveGradient{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+    html, body {
+        background: var(--bg-dark);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        padding-bottom: 100px;
+        font-size: calc(16px * var(--font-scale));
+        transition: background 0.5s, color 0.5s;
+    }
 
-.live-indicator{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    background:rgba(0,0,0,.4);
-    padding:6px 14px;
-    border-radius:20px;
-    font-weight:900;
-    font-size:.8rem;
-    letter-spacing:2px;
-    border:2px solid #fff;
-    flex-shrink:0;
-}
-.live-dot{
-    width:10px;height:10px;border-radius:50%;
-    background:#ff0000;
-    box-shadow:0 0 15px #ff0000,0 0 30px #ff0000;
-    animation:livePulse 1s infinite;
-}
-@keyframes livePulse{
-    0%,100%{transform:scale(1);opacity:1}
-    50%{transform:scale(1.4);opacity:.6}
-}
-.live-text{
-    font-size:1rem;
-    font-weight:900;
-    letter-spacing:1px;
-    text-shadow:0 2px 8px rgba(0,0,0,.5);
-    flex:1;
-    min-width:200px;
-    text-align:center;
-    animation:liveTextPulse 2s ease-in-out infinite;
-}
-@keyframes liveTextPulse{0%,100%{opacity:1}50%{opacity:.85}}
+    /* 🍂 Осенний фон */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+            radial-gradient(circle at 15% 15%, rgba(255, 140, 66, 0.25) 0%, transparent 40%),
+            radial-gradient(circle at 85% 30%, rgba(211, 84, 0, 0.25) 0%, transparent 40%),
+            radial-gradient(circle at 50% 90%, rgba(139, 47, 0, 0.3) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+        transition: opacity 0.5s;
+    }
+    body.light-theme::before { opacity: 0.4; }
 
-.live-icon{
-    font-size:1.8rem;
-    filter:drop-shadow(0 0 10px rgba(255,255,255,.5));
-    animation:liveIconRotate 4s linear infinite;
-    flex-shrink:0;
-}
-@keyframes liveIconRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255, 140, 66, 0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 140, 66, 0.06) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+    }
+    body.light-theme::after { opacity: 0.3; }
 
-.live-btn{
-    background:linear-gradient(135deg,#ffd700,#ffb300);
-    color:#8b0000;
-    border:3px solid #fff;
-    border-radius:12px;
-    padding:10px 20px;
-    font-family:inherit;
-    font-weight:900;
-    font-size:.85rem;
-    cursor:pointer;
-    letter-spacing:1px;
-    transition:.2s;
-    text-decoration:none;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex-shrink:0;
-    box-shadow:0 4px 15px rgba(255,215,0,.5);
-    animation:liveBtnPulse 1.5s infinite;
-}
-@keyframes liveBtnPulse{
-    0%,100%{transform:scale(1);box-shadow:0 4px 15px rgba(255,215,0,.5)}
-    50%{transform:scale(1.05);box-shadow:0 6px 25px rgba(255,215,0,.9)}
-}
-.live-btn:hover{transform:scale(1.1)!important;box-shadow:0 8px 30px rgba(255,215,0,1)!important}
-.live-btn:active{transform:scale(.98)!important}
+    /* 🍁 Листья */
+    .autumn-leaves {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+    }
+    .a-leaf {
+        position: absolute;
+        font-size: 28px;
+        animation: fallA linear infinite;
+        opacity: 0.7;
+    }
+    @keyframes fallA {
+        0%   { transform: translateY(-60px) rotate(0deg); opacity: 0; }
+        10%  { opacity: 0.9; }
+        100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+    }
+    .a-leaf:nth-child(1) { left: 5%;  animation-duration: 11s; animation-delay: 0s;   font-size: 26px; }
+    .a-leaf:nth-child(2) { left: 20%; animation-duration: 14s; animation-delay: 2s;   font-size: 32px; }
+    .a-leaf:nth-child(3) { left: 38%; animation-duration: 12s; animation-delay: 4s;   font-size: 24px; }
+    .a-leaf:nth-child(4) { left: 55%; animation-duration: 15s; animation-delay: 1s;   font-size: 34px; }
+    .a-leaf:nth-child(5) { left: 72%; animation-duration: 13s; animation-delay: 3s;   font-size: 28px; }
+    .a-leaf:nth-child(6) { left: 88%; animation-duration: 16s; animation-delay: 5s;   font-size: 30px; }
 
-.live-close{
-    position:absolute;
-    top:8px;
-    right:12px;
-    background:rgba(0,0,0,.5);
-    color:#fff;
-    border:2px solid #fff;
-    border-radius:50%;
-    width:26px;height:26px;
-    cursor:pointer;
-    font-size:.75rem;
-    font-weight:900;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    transition:.2s;
-}
-.live-close:hover{background:#ff0000;transform:rotate(90deg)}
+    /* ⚡ Прелоадер */
+    .preloader {
+        position: fixed;
+        inset: 0;
+        background: #0a0605;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        transition: opacity 0.8s, visibility 0.8s;
+    }
+    .preloader.hide { opacity: 0; visibility: hidden; }
+    .preloader-logo {
+        font-size: 44px;
+        font-weight: 900;
+        letter-spacing: 6px;
+        background: linear-gradient(90deg, #ff8c42, #d35400, #ffcc00, #ff8c42);
+        background-size: 400% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradientMove 2.5s linear infinite;
+        text-transform: uppercase;
+        text-align: center;
+    }
+    @keyframes gradientMove {
+        0%   { background-position: 0% 50%; }
+        100% { background-position: 400% 50%; }
+    }
+    .preloader-ring {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #ff8c42;
+        border-right-color: #ffcc00;
+        border-bottom-color: #d35400;
+        animation: ringSpin 1s linear infinite;
+        box-shadow: 0 0 30px rgba(255, 140, 66, 0.5);
+    }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
+    .preloader-text {
+        font-size: 12px;
+        color: #b89988;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-family: monospace;
+    }
 
-/* Бегущая строка под эфиром */
-.live-ticker{
-    background:#000;
-    color:#ffd700;
-    padding:8px 0;
-    overflow:hidden;
-    border-bottom:2px solid #ffd700;
-    position:relative;
-    z-index:199;
-    font-family:'Courier New',monospace;
-}
-.live-ticker-content{
-    display:inline-block;
-    white-space:nowrap;
-    font-weight:900;
-    font-size:.8rem;
-    letter-spacing:1px;
-    animation:tickerMove 30s linear infinite;
-    padding-left:100%;
-}
-@keyframes tickerMove{from{transform:translateX(0)}to{transform:translateX(-100%)}}
-.live-ticker-content span{color:#ff4444;margin-right:30px}
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(10, 6, 5, 0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 140, 66, 0.3);
+        padding: 12px 16px;
+        transition: background 0.5s;
+    }
+    body.light-theme header {
+        background: rgba(255, 244, 224, 0.95);
+        border-bottom-color: #d68a3a;
+    }
 
-/* ============ ПРЯМОЙ ЭФИР — ВНУТРИ СТРАНИЦ ============ */
-.inline-live{
-    background:linear-gradient(135deg,#8b0000,#c0392b);
-    color:#fff;
-    border-radius:16px;
-    padding:16px 20px;
-    margin-bottom:18px;
-    display:flex;
-    align-items:center;
-    gap:14px;
-    box-shadow:0 8px 25px rgba(139,0,0,.5);
-    border:3px solid #ffd700;
-    flex-wrap:wrap;
-    animation:inlineLivePulse 2s infinite;
-}
-@keyframes inlineLivePulse{
-    0%,100%{box-shadow:0 8px 25px rgba(139,0,0,.5)}
-    50%{box-shadow:0 8px 35px rgba(255,0,0,.7)}
-}
-.inline-live .in-live-icon{font-size:2rem;filter:drop-shadow(0 0 8px rgba(255,255,255,.5));flex-shrink:0;animation:liveIconRotate 4s linear infinite}
-.inline-live .in-live-content{flex:1;min-width:180px}
-.inline-live .in-live-title{font-weight:900;font-size:.95rem;letter-spacing:1px;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.inline-live .in-live-title .in-live-dot{width:8px;height:8px;border-radius:50%;background:#ff0000;box-shadow:0 0 10px #ff0000;animation:livePulse 1s infinite}
-.inline-live .in-live-text{font-size:.75rem;opacity:.95;line-height:1.4}
-.inline-live .in-live-btn{
-    background:linear-gradient(135deg,#ffd700,#ffb300);
-    color:#8b0000;
-    border:2px solid #fff;
-    border-radius:10px;
-    padding:9px 16px;
-    font-family:inherit;
-    font-weight:900;
-    font-size:.75rem;
-    cursor:pointer;
-    text-decoration:none;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    transition:.2s;
-    flex-shrink:0;
-}
-.inline-live .in-live-btn:hover{transform:scale(1.05);box-shadow:0 4px 15px rgba(255,215,0,.7)}
+    .header-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
 
-/* ШАПКА */
-header{background:linear-gradient(135deg,#4a2511 0%,#6b3a1f 50%,#8b4513 100%);color:#fff;padding:0;box-shadow:0 4px 25px rgba(0,0,0,.4);position:sticky;top:0;z-index:100;border-bottom:3px solid #b87b4d}
-.header-top{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.1);gap:15px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.2rem;letter-spacing:1px}
-.logo-icon{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ffb300);color:#4a2511;display:flex;justify-content:center;align-items:center;font-size:1.4rem;font-weight:900;box-shadow:0 4px 12px rgba(255,215,0,.5);animation:logoPulse 3s ease-in-out infinite}
-@keyframes logoPulse{0%,100%{box-shadow:0 4px 12px rgba(255,215,0,.5)}50%{box-shadow:0 4px 25px rgba(255,215,0,.9)}}
-.logo-text{display:flex;flex-direction:column;line-height:1.1}
-.logo-text .city{font-size:1.15rem;color:#ffd700}
-.logo-text .sub{font-size:.65rem;opacity:.8;letter-spacing:2px;text-transform:uppercase;color:#f5d6b8}
+    .logo-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .logo-wheel {
+        width: 36px; height: 36px;
+        animation: spin 6s linear infinite;
+        filter: drop-shadow(0 0 8px var(--autumn-1));
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+    }
+    .logo-wheel svg { width: 100%; height: 100%; }
+    .logo-text {
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        background: linear-gradient(90deg, var(--autumn-1), var(--autumn-4));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        white-space: nowrap;
+    }
 
-.header-info{display:flex;gap:10px;align-items:center;font-size:.8rem;flex-wrap:wrap}
-.header-info .item{display:flex;align-items:center;gap:6px}
-.header-info .item .icon{font-size:1.1rem}
-.header-info .item .text{display:flex;flex-direction:column;line-height:1.2}
-.header-info .item .label{font-size:.65rem;opacity:.7;text-transform:uppercase;letter-spacing:1px;color:#f5d6b8}
-.header-info .item .value{font-weight:700;color:#ffd700}
+    .search-wrap { flex: 1; position: relative; max-width: 400px; }
+    .search-input {
+        width: 100%;
+        padding: 10px 14px 10px 38px;
+        background: var(--bg-card);
+        border: 1px solid var(--autumn-1);
+        border-radius: 24px;
+        color: var(--text);
+        font-size: 14px;
+        outline: none;
+    }
+    .search-input::placeholder { color: var(--text-dim); }
+    .search-icon {
+        position: absolute;
+        left: 12px; top: 50%;
+        transform: translateY(-50%);
+        width: 18px; height: 18px;
+        stroke: var(--autumn-1);
+        stroke-width: 2.5;
+        fill: none;
+        pointer-events: none;
+    }
 
-.icon-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;border:2px solid #ffd700;cursor:pointer;font-size:1.1rem;display:flex;justify-content:center;align-items:center;transition:.3s;flex-shrink:0}
-.icon-btn:hover{transform:rotate(90deg) scale(1.1);box-shadow:0 0 20px rgba(255,215,0,.7)}
-.icon-btn.dev{background:linear-gradient(135deg,#2c3e50,#34495e);border-color:#3498db}
+    .badges-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .autumn-badge, .creator-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .autumn-badge {
+        background: linear-gradient(90deg, rgba(255, 140, 66, 0.2), rgba(255, 204, 0, 0.2));
+        border: 1px solid var(--autumn-1);
+        color: var(--autumn-4);
+    }
+    .creator-badge {
+        background: linear-gradient(90deg, rgba(0, 224, 255, 0.15), rgba(0, 255, 136, 0.15));
+        border: 1px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+    }
+    body.light-theme .autumn-badge,
+    body.light-theme .creator-badge { background: #fff; }
 
-nav{display:flex;padding:0 15px;overflow-x:auto;gap:5px;background:rgba(0,0,0,.2);scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
-nav button{padding:12px 20px;background:transparent;border:none;color:rgba(255,255,255,.75);font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.2s}
-nav button:hover{color:#fff;background:rgba(255,255,255,.08)}
-nav button.active{color:#ffd700;border-bottom-color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,.6)}
+    .container { max-width: 900px; margin: 0 auto; padding: 20px 16px; position: relative; z-index: 2; }
 
-.container{max-width:1200px;margin:0 auto;width:100%;padding:20px 15px;flex:1;position:relative;z-index:1}
-.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
-@media (max-width: 900px){.main-grid{grid-template-columns:1fr}}
+    .page { display: none; animation: fadeIn 0.4s; }
+    .page.active { display: block; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 
-.news-card{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:18px;overflow:hidden;box-shadow:0 8px 25px rgba(74,37,17,.35);border:2px solid #b87b4d;margin-bottom:15px;transition:.3s;position:relative}
-.news-card:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(74,37,17,.5)}
-.news-card.green{border-color:#2ecc71;box-shadow:0 8px 25px rgba(46,204,113,.35),inset 0 0 30px rgba(46,204,113,.1)}
-.news-badge{display:inline-block;padding:4px 12px;border-radius:12px;font-size:.65rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:15px 15px 0;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff}
-.news-badge.important{background:linear-gradient(135deg,#e74c3c,#c0392b);animation:badgePulse 1.5s infinite}
-.news-badge.success{background:linear-gradient(135deg,#27ae60,#2ecc71);animation:badgePulseGreen 2s infinite}
-@keyframes badgePulse{0%,100%{box-shadow:0 2px 8px rgba(231,76,60,.4)}50%{box-shadow:0 2px 20px rgba(231,76,60,.9)}}
-@keyframes badgePulseGreen{0%,100%{box-shadow:0 2px 8px rgba(46,204,113,.4)}50%{box-shadow:0 2px 20px rgba(46,204,113,.9)}}
-.news-content{padding:12px 20px 20px}
-.news-content h2{font-size:1.15rem;color:#6b3a1f;font-weight:800;margin-bottom:10px;line-height:1.3}
-.news-content p{color:#5a3a1e;font-size:.9rem;line-height:1.6;margin-bottom:8px}
-.news-meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(184,123,77,.4);font-size:.75rem;color:#8b5a2b;flex-wrap:wrap;gap:8px}
+    .hero {
+        background: linear-gradient(135deg, rgba(255, 140, 66, 0.2) 0%, rgba(211, 84, 0, 0.2) 100%);
+        border: 1px solid var(--autumn-1);
+        border-radius: 20px;
+        padding: 32px 20px;
+        text-align: center;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    body.light-theme .hero {
+        background: linear-gradient(135deg, #ffb347 0%, #d35400 100%);
+        border: none;
+    }
+    .hero::before {
+        content: "";
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: conic-gradient(from 0deg, transparent, rgba(255, 140, 66, 0.3), transparent);
+        animation: rotate 8s linear infinite;
+        z-index: 0;
+    }
+    body.light-theme .hero::before { display: none; }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    .hero > * { position: relative; z-index: 1; }
+    .hero-emoji { font-size: 64px; margin-bottom: 8px; filter: drop-shadow(0 0 20px var(--autumn-1)); }
+    .hero h1 {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, var(--autumn-1), var(--autumn-4), var(--neon-yellow));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 6px;
+    }
+    body.light-theme .hero h1 {
+        color: #fff;
+        background: none;
+        -webkit-text-fill-color: #fff;
+        text-shadow: 2px 2px 0 rgba(90, 30, 0, 0.3);
+    }
+    .hero-sub { font-size: 14px; color: var(--text-dim); font-weight: 600; letter-spacing: 1px; }
+    body.light-theme .hero-sub { color: #ffe8c9; }
 
-.empty-news{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:18px;padding:50px 30px;text-align:center;box-shadow:0 8px 25px rgba(74,37,17,.35);border:2px dashed #b87b4d}
-.empty-news .empty-icon{font-size:4.5rem;margin-bottom:15px;opacity:.8}
-.empty-news .empty-title{font-size:1.15rem;font-weight:800;color:#6b3a1f;margin-bottom:10px}
-.empty-news .empty-text{color:#8b5a2b;font-size:.9rem;line-height:1.6;max-width:400px;margin:0 auto}
+    /* ❄️ «ЖДЁМ ЗИМУ» */
+    .wait-winter {
+        background: linear-gradient(135deg, rgba(0, 224, 255, 0.15), rgba(255, 255, 255, 0.1));
+        border: 2px solid var(--neon-cyan);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        text-align: center;
+        box-shadow: 0 0 30px rgba(0, 224, 255, 0.3);
+        animation: winterPulse 3s infinite;
+        position: relative;
+        overflow: hidden;
+    }
+    @keyframes winterPulse {
+        0%, 100% { box-shadow: 0 0 30px rgba(0, 224, 255, 0.3); }
+        50%      { box-shadow: 0 0 50px rgba(0, 224, 255, 0.6); }
+    }
+    .wait-winter::before {
+        content: "❄️";
+        position: absolute;
+        top: 8px; left: 12px;
+        font-size: 20px;
+        opacity: 0.6;
+        animation: snowFloat 4s infinite;
+    }
+    .wait-winter::after {
+        content: "❄️";
+        position: absolute;
+        bottom: 8px; right: 12px;
+        font-size: 20px;
+        opacity: 0.6;
+        animation: snowFloat 4s infinite reverse;
+    }
+    @keyframes snowFloat {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-6px); }
+    }
+    .wait-winter h2 {
+        font-size: 26px;
+        font-weight: 900;
+        letter-spacing: 4px;
+        color: var(--neon-cyan);
+        text-transform: uppercase;
+        text-shadow: 0 0 20px rgba(0, 224, 255, 0.8);
+        margin-bottom: 8px;
+    }
+    .wait-winter p { font-size: 13px; color: var(--text-dim); letter-spacing: 1px; }
 
-.sidebar-card{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:18px;padding:18px;box-shadow:0 8px 25px rgba(74,37,17,.35);margin-bottom:15px;border:2px solid #b87b4d}
-.sidebar-card h3{font-size:.95rem;color:#6b3a1f;margin-bottom:14px;padding-bottom:10px;border-bottom:2px dashed #b87b4d;font-weight:800;display:flex;justify-content:space-between;align-items:center}
-.sidebar-card h3 .badge{font-size:.65rem;padding:3px 10px;border-radius:12px;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;font-weight:800}
+    .card {
+        background: var(--bg-card);
+        border: 1px solid var(--autumn-1);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+        transition: 0.25s;
+        cursor: pointer;
+        position: relative;
+    }
+    .card:active { transform: scale(0.98); }
+    .card:hover {
+        box-shadow: 0 0 24px rgba(255, 140, 66, 0.3);
+        transform: translateY(-2px);
+    }
+    .card-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .card-title .ico { font-size: 22px; }
+    .card-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+    .card-tag {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 3px 10px;
+        border-radius: 12px;
+        background: rgba(255, 140, 66, 0.15);
+        color: var(--autumn-1);
+        border: 1px solid var(--autumn-1);
+        margin-top: 10px;
+    }
+    .card-tag.news {
+        background: rgba(255, 204, 0, 0.15);
+        color: var(--neon-yellow);
+        border-color: var(--neon-yellow);
+    }
+    .card-tag.live {
+        background: rgba(255, 0, 51, 0.15);
+        color: var(--neon-red);
+        border-color: var(--neon-red);
+        animation: blink 1s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-.section{display:none}
-.section.active{display:block;animation:fadeIn .4s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.section-title{font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid #ffd700;display:inline-block;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+    .block {
+        background: var(--bg-card);
+        border: 1px solid var(--autumn-2);
+        border-left: 4px solid var(--autumn-1);
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 16px;
+    }
+    .block h3 {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .block ol, .block ul { margin-left: 22px; font-size: 14px; line-height: 1.7; color: var(--text); }
+    .block li { margin-bottom: 8px; }
+    .block li b { color: var(--autumn-1); }
+    .block p { font-size: 14px; line-height: 1.7; color: var(--text); }
 
-.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px}
-.category-card{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.3s;box-shadow:0 4px 15px rgba(74,37,17,.3);border:2px solid #b87b4d}
-.category-card:hover{transform:translateY(-5px) scale(1.03);border-color:#d35400}
-.category-card .cat-icon{font-size:2.2rem;margin-bottom:8px}
-.category-card .cat-name{font-size:.85rem;font-weight:700;color:#6b3a1f}
+    /* 🏆 Кубок Гагарина */
+    .gagarin-block {
+        background: linear-gradient(135deg, rgba(255, 204, 0, 0.15), rgba(255, 140, 66, 0.15));
+        border: 2px solid var(--neon-yellow);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 0 30px rgba(255, 204, 0, 0.25);
+    }
+    .gagarin-block h2 {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--neon-yellow);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        text-shadow: 0 0 12px rgba(255, 204, 0, 0.5);
+    }
+    .gagarin-block p { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 10px; }
+    .gagarin-block .highlight { color: var(--autumn-1); font-weight: 800; }
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+    body.light-theme .info-row { background: #fff; }
 
-.subscribe-box{background:linear-gradient(135deg,#fff8e1,#ffe4cc);border-radius:12px;padding:15px;border-left:4px solid #d35400}
-.subscribe-box input{width:100%;padding:10px;border:2px solid #b87b4d;border-radius:10px;font-family:inherit;font-size:.85rem;margin-bottom:8px;background:#fff;color:#333}
-.subscribe-box input:focus{outline:none;border-color:#d35400}
-.subscribe-box button{width:100%;padding:11px;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.85rem}
+    /* 📺 Луномосик */
+    .live-hero {
+        background: linear-gradient(135deg, #2a0010 0%, #4a0030 100%);
+        border: 2px solid var(--neon-red);
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0 0 40px rgba(255, 0, 51, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    .live-hero::before {
+        content: "";
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: conic-gradient(from 0deg, transparent, rgba(255, 0, 51, 0.2), transparent);
+        animation: rotate 8s linear infinite;
+    }
+    .live-hero > * { position: relative; z-index: 1; }
+    .live-badge-top {
+        display: inline-block;
+        background: var(--neon-red);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+        padding: 5px 14px;
+        border-radius: 20px;
+        letter-spacing: 2px;
+        animation: blink 1s infinite;
+        margin-bottom: 12px;
+    }
+    .live-hero h1 {
+        font-size: 30px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        text-shadow: 0 0 20px rgba(255, 0, 128, 0.8);
+    }
+    .live-hero p { font-size: 13px; color: #ff88aa; margin-bottom: 16px; letter-spacing: 1px; }
 
-footer{background:linear-gradient(135deg,#2a1508,#4a2511);color:#fff;padding:30px 20px 20px;margin-top:30px;text-align:center;border-top:3px solid #b87b4d;position:relative;z-index:1}
-footer .footer-logo{font-size:1.1rem;font-weight:800;margin-bottom:10px;display:flex;justify-content:center;align-items:center;gap:10px;color:#ffd700}
-footer .footer-text{font-size:.8rem;opacity:.8;line-height:1.6;max-width:600px;margin:0 auto 15px;color:#f5d6b8}
-footer .footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:15px;font-size:.8rem}
-footer .footer-links a{color:#ffd700;text-decoration:none;cursor:pointer}
-footer .copyright{font-size:.7rem;opacity:.5;padding-top:15px;border-top:1px solid rgba(255,215,0,.15);color:#f5d6b8}
+    .video-wrapper {
+        background: #000;
+        border: 2px solid var(--neon-red);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 14px;
+        box-shadow: 0 0 30px rgba(255, 0, 51, 0.3);
+    }
+    .video-wrapper iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 0;
+        display: block;
+    }
+    .video-fallback {
+        display: none;
+        background: #000;
+        aspect-ratio: 16 / 9;
+        color: #fff;
+        text-align: center;
+        padding: 30px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+    }
+    .video-fallback.show { display: flex; }
+    .video-fallback .fb-emoji { font-size: 48px; }
+    .video-fallback p { font-size: 13px; color: #ccc; max-width: 300px; }
 
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(59,28,10,.85);z-index:9000;display:none;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(8px);overflow-y:auto}
-.modal.active{display:flex;animation:fadeIn .3s}
-.modal-box{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:20px;padding:25px;max-width:450px;width:100%;box-shadow:0 25px 80px rgba(0,0,0,.6);border:3px solid #b87b4d;max-height:90vh;overflow-y:auto;position:relative}
-.modal-box h2{color:#6b3a1f;font-size:1.2rem;margin-bottom:18px;padding-bottom:12px;border-bottom:2px dashed #b87b4d;display:flex;align-items:center;gap:10px;font-weight:800}
-.modal-box .close-modal{position:absolute;top:15px;right:15px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.1rem;font-weight:800;display:flex;justify-content:center;align-items:center;transition:.2s}
-.modal-box .close-modal:hover{transform:rotate(90deg) scale(1.1)}
-.setting-group{background:rgba(255,255,255,.5);border-radius:12px;padding:12px 15px;margin-bottom:12px;border:1px solid rgba(184,123,77,.3)}
-.setting-title{font-size:.75rem;color:#8b5a2b;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-.setting-toggle{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(184,123,77,.3);font-size:.85rem;color:#4a2511;font-weight:600}
-.setting-toggle:last-child{border-bottom:none}
-.switch{position:relative;width:48px;height:26px;background:#d0c0b0;border-radius:13px;cursor:pointer;transition:.3s;flex-shrink:0}
-.switch::after{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 2px 5px rgba(0,0,0,.2)}
-.switch.on{background:linear-gradient(135deg,#d35400,#e67e22)}
-.switch.on::after{left:24px;background:#ffd700}
-.setting-select{width:100%;padding:8px 12px;border:2px solid #b87b4d;border-radius:8px;font-family:inherit;font-size:.85rem;background:#fff;color:#4a2511;font-weight:600;cursor:pointer}
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 20px;
+        background: linear-gradient(90deg, var(--autumn-1), var(--autumn-2));
+        border: none;
+        border-radius: 24px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: inherit;
+        text-decoration: none;
+    }
+    .btn:active { transform: scale(0.95); }
+    .btn-outline { background: transparent; border: 1px solid var(--autumn-1); color: var(--autumn-1); }
+    .btn-danger { background: linear-gradient(90deg, #ff0033, #ff0080); }
+    .btn-green { background: linear-gradient(90deg, #00ff88, #00e0ff); }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
-.dev-menu{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);color:#0f0;border-color:#0f0;max-width:650px!important;padding:20px!important}
-.dev-menu h2{color:#0f0!important;border-color:#0f0!important;font-size:1rem!important;margin-bottom:10px!important;padding-bottom:8px!important}
-.dev-status-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;margin-bottom:12px}
-.dev-status-item{background:rgba(0,255,0,.08);border:1px solid rgba(0,255,0,.3);border-radius:8px;padding:6px 8px;font-size:.65rem;font-family:'Courier New',monospace}
-.dev-status-item .lbl{color:#0a0;display:block;margin-bottom:2px}
-.dev-status-item .val{color:#0f0;font-weight:bold;font-size:.8rem}
-.dev-status-item .val.err{color:#f00}
+    .settings-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        background: var(--bg-card);
+        border: 1px solid var(--autumn-1);
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
+    .settings-label { font-size: 14px; font-weight: 700; color: var(--text); }
+    .settings-value { font-size: 13px; color: var(--autumn-1); font-weight: 800; }
 
-.dev-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;border-bottom:1px solid rgba(0,255,0,.2);padding-bottom:8px}
-.dev-tab{padding:7px 12px;background:rgba(0,255,0,.1);border:1px solid #0f0;color:#0f0;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.7rem;font-weight:700;transition:.2s}
-.dev-tab.active{background:#0f0;color:#000}
-.dev-tab:hover{background:rgba(0,255,0,.3)}
+    .bottom-nav {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: rgba(10, 6, 5, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 140, 66, 0.3);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 8px 12px;
+        z-index: 200;
+    }
+    body.light-theme .bottom-nav { background: rgba(255, 244, 224, 0.98); border-top-color: #d68a3a; }
+    .nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-dim);
+        transition: 0.2s;
+        padding: 4px;
+        border-radius: 10px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
+    .nav-icon svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 2; fill: none; }
+    .nav-item.active { color: var(--autumn-1); }
+    .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 8px var(--autumn-1)); }
 
-.dev-panel{display:none;max-height:55vh;overflow-y:auto;padding-right:5px}
-.dev-panel.active{display:block}
-.dev-panel::-webkit-scrollbar{width:6px}
-.dev-panel::-webkit-scrollbar-thumb{background:#0f0;border-radius:3px}
-.dev-panel::-webkit-scrollbar-track{background:#1a1a2e}
+    .empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 14px; }
+    .empty-emoji { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
 
-.dev-section-title{font-size:.7rem;color:#0ff;margin:10px 0 6px;text-transform:uppercase;letter-spacing:1px;font-family:'Courier New',monospace;border-left:2px solid #0ff;padding-left:6px}
+    .lock-screen {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 99999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .lock-screen.show { display: flex; }
+    .lock-box {
+        background: var(--bg-dark);
+        border: 2px solid var(--neon-green);
+        border-radius: 16px;
+        padding: 30px 24px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+    }
+    .lock-box h2 {
+        color: var(--neon-green);
+        font-size: 20px;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    .lock-input {
+        width: 100%;
+        padding: 14px;
+        background: rgba(20, 20, 40, 0.8);
+        border: 1px solid var(--neon-green);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 20px;
+        text-align: center;
+        letter-spacing: 8px;
+        outline: none;
+        margin-bottom: 12px;
+        font-family: monospace;
+    }
+    .lock-error {
+        color: var(--neon-red);
+        font-size: 13px;
+        font-weight: 700;
+        min-height: 18px;
+        margin-bottom: 10px;
+    }
 
-.dev-btn{width:100%;padding:9px 12px;margin-bottom:6px;background:rgba(0,255,0,.08);border:1px solid #0f0;color:#0f0;border-radius:8px;cursor:pointer;font-family:'Courier New',monospace;font-size:.75rem;font-weight:700;text-align:left;transition:.2s;display:flex;align-items:center;gap:8px}
-.dev-btn:hover{background:rgba(0,255,0,.25);transform:translateX(3px)}
-.dev-btn:active{transform:translateX(0) scale(.98)}
-.dev-btn.danger{border-color:#f00;color:#f00;background:rgba(255,0,0,.08)}
-.dev-btn.danger:hover{background:rgba(255,0,0,.25)}
-.dev-btn.warn{border-color:#ff0;color:#ff0;background:rgba(255,255,0,.08)}
-.dev-btn.warn:hover{background:rgba(255,255,0,.25)}
-.dev-btn.blue{border-color:#0af;color:#0af;background:rgba(0,170,255,.08)}
-.dev-btn.blue:hover{background:rgba(0,170,255,.25)}
-.dev-btn.purple{border-color:#c0f;color:#c0f;background:rgba(200,0,255,.08)}
-.dev-btn.purple:hover{background:rgba(200,0,255,.25)}
-.dev-btn .ico{font-size:1rem;flex-shrink:0}
+    .fav-input {
+        width: 100%;
+        padding: 12px 14px;
+        background: var(--bg-card);
+        border: 1px solid var(--autumn-1);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 14px;
+        outline: none;
+        margin-bottom: 10px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 60px;
+    }
+    .fav-item {
+        background: rgba(255, 140, 66, 0.1);
+        border: 1px solid var(--autumn-1);
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    body.light-theme .fav-item { background: #fff; }
+    .fav-item-text {
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.5;
+        word-wrap: break-word;
+        padding-right: 30px;
+    }
+    .fav-item-del {
+        position: absolute;
+        top: 10px; right: 10px;
+        width: 24px; height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 0, 51, 0.2);
+        border: 1px solid var(--neon-red);
+        color: var(--neon-red);
+        font-size: 14px;
+        font-weight: 900;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.dev-info{font-size:.7rem;color:#0a0;margin-bottom:8px;font-family:'Courier New',monospace;padding:6px 8px;background:rgba(0,0,0,.5);border-radius:6px;border-left:2px solid #0f0}
+    .dev-panel {
+        background: rgba(0, 20, 30, 0.95);
+        border: 2px solid var(--neon-green);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        font-family: "Courier New", monospace;
+    }
+    body.light-theme .dev-panel { background: #fff; color: #1a1a1a; }
+    .dev-panel h3 {
+        color: var(--neon-green);
+        font-size: 16px;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
 
-.terminal{background:#000;border-radius:10px;padding:12px;font-family:'Courier New',monospace;color:#0f0;border:2px solid #0f0;margin-bottom:10px;min-height:200px;max-height:300px;overflow-y:auto;font-size:.78rem;line-height:1.5}
-.terminal::-webkit-scrollbar{width:6px}
-.terminal::-webkit-scrollbar-thumb{background:#0f0;border-radius:3px}
-.terminal::-webkit-scrollbar-track{background:#000}
-.terminal .line{margin-bottom:3px;word-wrap:break-word}
-.terminal .line.err{color:#f00}
-.terminal .line.warn{color:#ff0}
-.terminal .line.info{color:#0ff}
-.terminal .line.success{color:#0f0}
-.terminal .line.cmd{color:#fff;font-weight:bold}
-.terminal-input-row{display:flex;gap:6px;margin-bottom:8px}
-.terminal-input{flex:1;background:#000;color:#0f0;border:2px solid #0f0;border-radius:8px;padding:10px;font-family:'Courier New',monospace;font-size:.8rem;outline:none}
-.terminal-input:focus{box-shadow:0 0 10px rgba(0,255,0,.5)}
-.terminal-btn{background:linear-gradient(135deg,#0f0,#0a0);color:#000;border:none;border-radius:8px;padding:10px 16px;cursor:pointer;font-family:'Courier New',monospace;font-weight:900;font-size:.8rem}
+    footer {
+        text-align: center;
+        font-size: 11px;
+        color: var(--text-dim);
+        padding: 30px 20px 20px;
+        letter-spacing: 1px;
+    }
 
-.error-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99998;display:none;font-family:'Courier New',monospace;color:#0f0;padding:20px;overflow-y:auto}
-.error-screen.active{display:block}
-.error-title{font-size:3rem;color:#f00;font-weight:900;text-align:center;margin-bottom:20px;text-shadow:0 0 30px #f00;animation:errorBlink .3s infinite}
-@keyframes errorBlink{0%,100%{opacity:1}50%{opacity:.4}}
-.error-sub{font-size:1.2rem;color:#ff0;text-align:center;margin-bottom:30px}
-.error-log{background:#0a0a0a;border:2px solid #f00;border-radius:8px;padding:15px;font-size:.8rem;max-width:900px;margin:0 auto;max-height:400px;overflow-y:auto}
-.error-log .err-line{margin-bottom:4px;word-wrap:break-word}
-.error-log .err-line.critical{color:#f00;font-weight:bold}
-.error-log .err-line.warning{color:#ff0}
-.error-log .err-line.info{color:#0ff}
-.error-close{display:block;margin:30px auto 0;padding:15px 40px;background:#f00;color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-size:1.1rem;font-weight:900;letter-spacing:3px;box-shadow:0 0 30px #f00}
-
-.password-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:9500;display:none;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(10px)}
-.password-modal.active{display:flex;animation:fadeIn .3s}
-.password-box{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);border:3px solid #0f0;border-radius:20px;padding:30px;max-width:400px;width:100%;text-align:center;box-shadow:0 0 60px rgba(0,255,0,.5);font-family:'Courier New',monospace}
-.password-box .lock-icon{font-size:4rem;margin-bottom:15px;filter:drop-shadow(0 0 20px #0f0)}
-.password-box h2{color:#0f0;font-size:1.1rem;margin-bottom:10px;letter-spacing:3px}
-.password-box p{color:#0a0;font-size:.75rem;margin-bottom:20px}
-.password-input{width:100%;padding:15px;background:#000;color:#0f0;border:2px solid #0f0;border-radius:10px;font-family:'Courier New',monospace;font-size:1.5rem;text-align:center;letter-spacing:8px;outline:none;margin-bottom:15px}
-.password-buttons{display:flex;gap:10px}
-.password-buttons button{flex:1;padding:12px;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.85rem}
-.password-ok{background:linear-gradient(135deg,#0f0,#0a0);color:#000}
-.password-cancel{background:linear-gradient(135deg,#f00,#a00);color:#fff}
-.password-error{color:#f00;font-size:.8rem;margin-bottom:10px;font-weight:bold;animation:errorBlink .3s infinite}
-
-.ad-bomb{position:fixed;background:linear-gradient(135deg,#fff,#ffe);border:3px solid #f00;border-radius:10px;padding:15px;z-index:99997;box-shadow:0 10px 40px rgba(0,0,0,.7);max-width:280px;font-family:'Segoe UI',sans-serif;animation:adPop .3s ease-out;cursor:pointer}
-@keyframes adPop{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
-.ad-bomb .ad-title{font-weight:900;color:#f00;font-size:.9rem;margin-bottom:8px;text-align:center;animation:errorBlink .5s infinite}
-.ad-bomb .ad-text{font-size:.75rem;color:#333;line-height:1.4;margin-bottom:8px}
-.ad-bomb .ad-btn{display:block;width:100%;padding:8px;background:linear-gradient(135deg,#f00,#c00);color:#fff;border:none;border-radius:6px;font-weight:800;font-size:.75rem;cursor:pointer}
-.no-connection{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#f00;color:#fff;padding:10px 25px;border-radius:10px;font-weight:900;z-index:99996;box-shadow:0 0 30px #f00;animation:errorBlink .3s infinite;letter-spacing:2px;font-size:.85rem}
-
-.diary-tabs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:5px;scrollbar-width:none}
-.diary-tabs::-webkit-scrollbar{display:none}
-.diary-tab{padding:10px 18px;background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border:2px solid #b87b4d;color:#6b3a1f;border-radius:12px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;white-space:nowrap;transition:.3s}
-.diary-tab:hover{transform:translateY(-2px)}
-.diary-tab.active{background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;border-color:#ffd700}
-.diary-section{display:none}
-.diary-section.active{display:block;animation:fadeIn .4s}
-.diary-card{background:linear-gradient(160deg,#fdf2e9,#f5d6b8);border-radius:18px;padding:20px;margin-bottom:15px;box-shadow:0 8px 25px rgba(74,37,17,.35);border:2px solid #b87b4d}
-.diary-card h3{color:#6b3a1f;font-size:1rem;margin-bottom:15px;padding-bottom:10px;border-bottom:2px dashed #b87b4d;font-weight:800;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.diary-card h3 .badge{font-size:.65rem;padding:3px 10px;border-radius:12px;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;font-weight:800}
-.schedule-day{margin-bottom:14px;border-left:4px solid #d35400;padding-left:14px}
-.schedule-day.today{border-left-color:#e67e22;background:linear-gradient(90deg,rgba(230,126,34,.15),transparent);border-radius:12px;padding:14px}
-.schedule-day h4{color:#6b3a1f;font-size:.95rem;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;font-weight:700;flex-wrap:wrap;gap:5px}
-.schedule-day .date-badge{font-size:.65rem;color:#fff;background:linear-gradient(135deg,#d35400,#e67e22);padding:3px 10px;border-radius:10px;font-weight:700;animation:badgePulse 1.5s infinite}
-.lesson{display:flex;gap:12px;padding:10px 12px;margin:5px 0;background:linear-gradient(135deg,#fff8f0,#ffe4cc);border-radius:12px;align-items:center;border:1px solid rgba(184,123,77,.3);transition:.3s}
-.lesson:hover{background:linear-gradient(135deg,#ffe4cc,#ffd9b3);transform:translateX(5px)}
-.lesson .num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;display:flex;justify-content:center;align-items:center;font-weight:800;font-size:.85rem;flex-shrink:0}
-.lesson .info{flex:1;min-width:0}
-.lesson .subject{font-weight:700;color:#4a2511;font-size:.9rem}
-.lesson .teacher{font-size:.75rem;color:#8b5a2b;margin-top:2px}
-.lesson .time{font-size:.75rem;color:#6b3a1f;font-weight:600;white-space:nowrap}
-
-.grades-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.subject-grade{background:linear-gradient(135deg,#fff8f0,#ffe4cc);border-radius:14px;padding:14px;border-left:4px solid #d35400}
-.subject-grade .subject-name{font-weight:700;color:#4a2511;font-size:.85rem;margin-bottom:10px}
-.subject-grade .marks{display:flex;gap:5px;flex-wrap:wrap}
-.subject-grade .mark{min-width:38px;height:36px;border-radius:8px;padding:2px 6px;display:flex;flex-direction:column;justify-content:center;align-items:center;font-weight:800;color:#fff;position:relative;box-shadow:0 2px 5px rgba(0,0,0,.2)}
-.subject-grade .mark .mark-value{font-size:.9rem;line-height:1}
-.subject-grade .mark .mark-student{font-size:.55rem;opacity:.95;line-height:1;margin-top:2px;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mark.m5p{background:linear-gradient(135deg,#16a085,#1abc9c)}
-.mark.m5{background:linear-gradient(135deg,#27ae60,#2ecc71)}
-.mark.m5m{background:linear-gradient(135deg,#27ae60,#229954)}
-.mark.m4p{background:linear-gradient(135deg,#2980b9,#3498db)}
-.mark.m4{background:linear-gradient(135deg,#d35400,#e67e22)}
-.mark.m4m{background:linear-gradient(135deg,#c0392b,#e74c3c)}
-.mark.m3p{background:linear-gradient(135deg,#f39c12,#f1c40f)}
-.mark.m3{background:linear-gradient(135deg,#e67e22,#d35400)}
-.mark.m3m{background:linear-gradient(135deg,#d35400,#a04000)}
-.mark.m2p{background:linear-gradient(135deg,#e74c3c,#c0392b)}
-.mark.m2{background:linear-gradient(135deg,#c0392b,#8e0000)}
-.mark.m2m{background:linear-gradient(135deg,#8e0000,#5a0000)}
-.mark .del-mark{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#e74c3c;color:#fff;font-size:.65rem;display:flex;justify-content:center;align-items:center;cursor:pointer;border:2px solid #fff;font-weight:900}
-.subject-grade .avg{font-size:.75rem;color:#8b5a2b;margin-top:8px;font-weight:600}
-.subject-grade .avg span{color:#d35400;font-weight:800}
-
-.form-box{display:none;background:linear-gradient(135deg,#f3e8ff,#e8d5ff);border-radius:14px;padding:16px;margin-bottom:15px;border:2px dashed #8e44ad}
-body.teacher .form-box{display:block}
-.form-box.grade-form{background:linear-gradient(135deg,#e8f8ee,#d5f5e0);border-color:#27ae60}
-.form-box h4{color:#4a2511;font-size:.9rem;margin-bottom:10px;font-weight:800}
-.form-box input,.form-box select,.form-box textarea{width:100%;padding:10px;border:2px solid #b87b4d;border-radius:10px;font-family:inherit;font-size:.85rem;margin-bottom:8px;background:#fff;color:#333}
-.form-box input:focus,.form-box select:focus{outline:none;border-color:#d35400}
-.form-box button{width:100%;padding:12px;color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.9rem}
-.form-box button.green{background:linear-gradient(135deg,#27ae60,#2ecc71)}
-.form-box button.purple{background:linear-gradient(135deg,#8e44ad,#9b59b6)}
-
-.grade-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
-.grade-pick-btn{padding:10px 5px;border-radius:8px;border:2px solid transparent;cursor:pointer;font-family:inherit;font-weight:800;font-size:.9rem;color:#fff;transition:.2s}
-.grade-pick-btn:hover{transform:scale(1.08)}
-.grade-pick-btn.selected{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.6) inset;transform:scale(1.05)}
-.grade-pick-btn.m5p{background:linear-gradient(135deg,#16a085,#1abc9c)}
-.grade-pick-btn.m5{background:linear-gradient(135deg,#27ae60,#2ecc71)}
-.grade-pick-btn.m5m{background:linear-gradient(135deg,#27ae60,#229954)}
-.grade-pick-btn.m4p{background:linear-gradient(135deg,#2980b9,#3498db)}
-.grade-pick-btn.m4{background:linear-gradient(135deg,#d35400,#e67e22)}
-.grade-pick-btn.m4m{background:linear-gradient(135deg,#c0392b,#e74c3c)}
-.grade-pick-btn.m3p{background:linear-gradient(135deg,#f39c12,#f1c40f)}
-.grade-pick-btn.m3{background:linear-gradient(135deg,#e67e22,#d35400)}
-.grade-pick-btn.m3m{background:linear-gradient(135deg,#d35400,#a04000)}
-.grade-pick-btn.m2p{background:linear-gradient(135deg,#e74c3c,#c0392b)}
-.grade-pick-btn.m2{background:linear-gradient(135deg,#c0392b,#8e0000)}
-.grade-pick-btn.m2m{background:linear-gradient(135deg,#8e0000,#5a0000)}
-
-.homework-item{background:linear-gradient(135deg,#fff8f0,#ffe4cc);border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid #8e44ad;position:relative;transition:.3s}
-.homework-item .subj{font-weight:800;color:#8e44ad;font-size:.9rem;margin-bottom:6px}
-.homework-item .task{color:#4a2511;font-size:.85rem;line-height:1.5;padding-right:30px}
-.homework-item .due{font-size:.75rem;color:#8b5a2b;margin-top:8px;font-weight:600}
-.homework-item .due.urgent{color:#e74c3c;font-weight:800;animation:errorBlink .8s infinite}
-.homework-item.done{opacity:.55}
-.homework-item.done .task{text-decoration:line-through}
-.homework-item .check{float:right;cursor:pointer;font-size:1.3rem;user-select:none}
-body.viewer .homework-item .check{pointer-events:none;opacity:.5}
-.homework-item .delete-hw{position:absolute;top:10px;right:10px;background:#e74c3c;border:none;color:#fff;cursor:pointer;font-size:.9rem;padding:5px 9px;border-radius:8px;display:none}
-body.teacher .homework-item .delete-hw{display:block}
-
-.note-input{width:100%;padding:14px;border:2px solid #b87b4d;border-radius:12px;font-family:inherit;font-size:.9rem;resize:vertical;min-height:80px;color:#333;background:#fff8f0}
-.note-input:focus{outline:none;border-color:#d35400;background:#fff}
-.note-add{margin-top:10px;padding:12px 25px;color:#fff;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.9rem;background:linear-gradient(135deg,#d35400,#e67e22)}
-.note-item{background:linear-gradient(135deg,#fff8f0,#ffe4cc);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid #d35400;position:relative}
-.note-item .note-text{font-size:.9rem;color:#4a2511;line-height:1.5;padding-right:30px}
-.note-item .note-date{font-size:.7rem;color:#8b5a2b;margin-top:8px;font-weight:600}
-.note-item .delete{position:absolute;top:10px;right:10px;background:#e74c3c;border:none;color:#fff;cursor:pointer;font-size:.9rem;padding:5px 9px;border-radius:8px}
-
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.stat-box{background:linear-gradient(135deg,#d35400,#e67e22);border-radius:16px;padding:18px;color:#fff;text-align:center;border:2px solid rgba(255,255,255,.3)}
-.stat-box.green{background:linear-gradient(135deg,#27ae60,#2ecc71)}
-.stat-box.orange{background:linear-gradient(135deg,#f39c12,#f1c40f)}
-.stat-box.red{background:linear-gradient(135deg,#e74c3c,#c0392b)}
-.stat-box.purple{background:linear-gradient(135deg,#8e44ad,#9b59b6)}
-.stat-box .stat-value{font-size:2rem;font-weight:900;line-height:1}
-.stat-box .stat-label{font-size:.75rem;opacity:.95;margin-top:8px;letter-spacing:1px;font-weight:700}
-
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;padding:12px 25px;border-radius:14px;font-size:.85rem;font-weight:700;z-index:99999;box-shadow:0 10px 30px rgba(211,84,0,.6);border:2px solid #ffd700;max-width:calc(100vw - 30px);text-align:center}
-
-.mode-banner{padding:10px 15px;text-align:center;font-weight:800;font-size:.8rem;letter-spacing:2px;display:none;border-radius:12px;margin-bottom:15px}
-.mode-banner.teacher{background:linear-gradient(135deg,#8e44ad,#9b59b6);color:#fff}
-.mode-banner.viewer{background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff}
-body.teacher .mode-banner.teacher{display:block}
-body.viewer .mode-banner.viewer{display:block}
-
-.diary-mode-btn{padding:8px 14px;background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;border:2px solid #ffd700;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.8rem}
-.diary-mode-btn.teacher{background:linear-gradient(135deg,#8e44ad,#9b59b6)}
-.diary-mode-btn.viewer{background:linear-gradient(135deg,#27ae60,#2ecc71)}
-
-@media (max-width: 700px){
-    .header-top{padding:10px 12px;gap:8px}
-    .logo{font-size:1rem;gap:8px}
-    .logo-icon{width:38px;height:38px;font-size:1.1rem}
-    .logo-text .city{font-size:.95rem}
-    .header-info{gap:8px;font-size:.7rem}
-    .icon-btn{width:36px;height:36px;font-size:1rem}
-    nav button{padding:10px 14px;font-size:.75rem}
-    .container{padding:15px 10px}
-    .grades-grid{grid-template-columns:1fr}
-    .grade-picker{grid-template-columns:repeat(3,1fr)}
-    .dev-menu{max-width:95vw!important;padding:15px!important}
-    .dev-status-bar{grid-template-columns:repeat(2,1fr)}
-    .ad-bomb{max-width:200px;font-size:.7rem}
-    .live-broadcast{padding:10px 12px;gap:10px}
-    .live-text{font-size:.85rem;min-width:150px}
-    .live-icon{font-size:1.4rem}
-    .live-btn{padding:8px 14px;font-size:.75rem}
-    .live-indicator{font-size:.7rem;padding:4px 10px}
-    .live-close{width:22px;height:22px;font-size:.65rem;top:5px;right:6px}
-    .inline-live{padding:12px 14px;gap:10px}
-    .inline-live .in-live-icon{font-size:1.5rem}
-    .inline-live .in-live-title{font-size:.85rem}
-    .inline-live .in-live-btn{padding:7px 12px;font-size:.7rem}
-}
+    @media (max-width: 500px) {
+        .logo-text { font-size: 15px; }
+        .hero h1 { font-size: 20px; }
+        .hero-emoji { font-size: 50px; }
+        .live-hero h1 { font-size: 22px; }
+        .wait-winter h2 { font-size: 20px; }
+    }
 </style>
 </head>
 <body>
 
+<!-- ⚡ ПРЕЛОАДЕР -->
 <div class="preloader" id="preloader">
-    <div class="preloader-leaves" id="preloaderLeaves"></div>
-    <div class="preloader-content">
-        <div class="preloader-logo">К</div>
-        <div class="preloader-title">КУМЕРТАУ</div>
-        <div class="preloader-sub">Осенний портал + Дневник</div>
-        <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderBar"></div></div>
-        <div class="preloader-percent" id="preloaderPercent">0%</div>
-        <div class="preloader-leaf-emoji">🍁</div>
-    </div>
+    <div class="preloader-logo">КУМЕРТАУ</div>
+    <div class="preloader-ring"></div>
+    <div class="preloader-text">🍂 Ждём зиму...</div>
 </div>
 
-<div class="error-screen" id="errorScreen">
-    <div class="error-title">⚠ FATAL ERROR ⚠</div>
-    <div class="error-sub" id="errorSub">СИСТЕМА ПОВРЕЖДЕНА</div>
-    <div class="error-log" id="errorLog"></div>
-    <button class="error-close" onclick="closeError()">ЗАКРЫТЬ</button>
-</div>
-
-<div class="password-modal" id="passwordModal">
-    <div class="password-box">
-        <div class="lock-icon">🔒</div>
-        <h2>ДОСТУП ЗАПРЕЩЁН</h2>
-        <p>Введите пароль разработчика</p>
-        <div class="password-error" id="passwordError" style="display:none">❌ НЕВЕРНЫЙ ПАРОЛЬ</div>
-        <input type="password" class="password-input" id="passwordInput" placeholder="••••••" maxlength="10" onkeydown="if(event.key==='Enter')checkPassword()">
-        <div class="password-buttons">
-            <button class="password-cancel" onclick="closePassword()">ОТМЕНА</button>
-            <button class="password-ok" onclick="checkPassword()">ВОЙТИ</button>
-        </div>
-    </div>
-</div>
-
-<div class="leaf-bg" id="leafBg"></div>
-
-<!-- ========= ПРЯМОЙ ЭФИР — САМЫЙ ВЕРХ, ВЕЗДЕ ========= -->
-<div class="live-broadcast" id="liveBroadcast">
-    <div class="live-indicator">
-        <span class="live-dot"></span>
-        LIVE
-    </div>
-    <span class="live-icon">📺</span>
-    <div class="live-text">🔴 СООБЩЕНИЕ ОТ ГОСУДАРСТВА — ПРЯМОЙ ЭФИР</div>
-    <a href="https://max.ru/ntv" target="_blank" rel="noopener" class="live-btn">
-        ▶ Смотреть во MAX
-    </a>
-    <button class="live-close" onclick="document.getElementById('liveBroadcast').style.display='none'" title="Скрыть">✕</button>
-</div>
-<div class="live-ticker">
-    <div class="live-ticker-content">
-        <span>🔴 ВНИМАНИЕ!</span> Прямой эфир — Сообщение от государства. Смотреть во MAX: max.ru/ntv &nbsp;&nbsp;&nbsp;
-        <span>📺 НТВ</span> Новости • Аналитика • Репортажи &nbsp;&nbsp;&nbsp;
-        <span>⚡ СРОЧНО</span> Не пропустите важное сообщение! &nbsp;&nbsp;&nbsp;
-        <span>🔴 ВНИМАНИЕ!</span> Прямой эфир — Сообщение от государства. Смотреть во MAX: max.ru/ntv &nbsp;&nbsp;&nbsp;
-    </div>
+<!-- 🍁 ЛИСТЬЯ -->
+<div class="autumn-leaves">
+    <div class="a-leaf">🍁</div>
+    <div class="a-leaf">🍂</div>
+    <div class="a-leaf">🍁</div>
+    <div class="a-leaf">🍂</div>
+    <div class="a-leaf">🍁</div>
+    <div class="a-leaf">🍂</div>
 </div>
 
 <header>
     <div class="header-top">
-        <div class="logo">
-            <div class="logo-icon">К</div>
-            <div class="logo-text">
-                <span class="city">Кумертау</span>
-                <span class="sub">Осенний портал + Дневник</span>
+        <div class="logo-wrap">
+            <div class="logo-wheel">
+                <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" stroke="#ff8c42" stroke-width="6" fill="none"/>
+                    <circle cx="50" cy="50" r="6" fill="#ffcc00"/>
+                    <line x1="50" y1="5" x2="50" y2="95" stroke="#ff8c42" stroke-width="3"/>
+                    <line x1="5" y1="50" x2="95" y2="50" stroke="#ff8c42" stroke-width="3"/>
+                    <line x1="18" y1="18" x2="82" y2="82" stroke="#ff8c42" stroke-width="3"/>
+                    <line x1="18" y1="82" x2="82" y2="18" stroke="#ff8c42" stroke-width="3"/>
+                </svg>
             </div>
+            <div class="logo-text">КУМЕРТАУ</div>
         </div>
-        <div class="header-info">
-            <div class="item"><span class="icon">🕐</span><div class="text"><span class="label">Время</span><span class="value" id="headerTime">00:00</span></div></div>
-            <div class="item"><span class="icon">📅</span><div class="text"><span class="label">Дата</span><span class="value" id="headerDate">—</span></div></div>
-            <button class="icon-btn" onclick="openSettings()" title="Настройки">⚙️</button>
-            <button class="icon-btn dev" onclick="requestDevAccess()" title="Меню разработчика">&lt;/&gt;</button>
+        <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
         </div>
     </div>
-    <nav>
-        <button class="active" onclick="switchTab('home', this)">🏠 Главная</button>
-        <button onclick="switchTab('city', this)">🏙️ Город</button>
-        <button onclick="switchTab('sport', this)">⚽ Спорт</button>
-        <button onclick="switchTab('culture', this)">🎭 Культура</button>
-        <button onclick="switchTab('ads', this)">📢 Объявления</button>
-        <button onclick="switchTab('diary', this)">📚 Дневник</button>
-    </nav>
+    <div class="badges-row">
+        <span class="autumn-badge">🍂 Осенний выпуск 2026</span>
+        <span class="creator-badge">👑 Компания РУ СИК</span>
+    </div>
 </header>
 
 <div class="container">
-    <div class="section active" id="home">
-        <div class="main-grid">
-            <div id="newsList">
-                <div class="news-card green">
-                    <div class="news-badge success">✅ Хорошая новость</div>
-                    <div class="news-content">
-                        <h2>ИНТЕРНЕТ ВКЛЮЧЁН!</h2>
-                        <p>Интернет включён потому что была перезагрузка из сети но вирусы все таки есть</p>
-                        <div class="news-meta"><span>📅 Сегодня</span><span>ℹ️ Информация</span></div>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-badge important">⚠️ Срочно</div>
-                    <div class="news-content">
-                        <h2>ВНИМАНИЕ ВСЕМ! УДАЛИТЕ ТИКТОК!</h2>
-                        <p>Внимание всем удалите тик-ток если ребёнок сидел за телефоном вирус тик-ток размножение</p>
-                        <div class="news-meta"><span>📅 Сегодня</span><span>⚠️ Важное предупреждение</span></div>
-                    </div>
-                </div>
+
+    <!-- 🏠 ГЛАВНАЯ -->
+    <div class="page active" id="page-home">
+        <!-- ❄️ ЖДЁМ ЗИМУ -->
+        <div class="wait-winter">
+            <h2>❄️ ЖДЁМ ЗИМУ ❄️</h2>
+            <p>Осень 2026 · Кумертау</p>
+        </div>
+
+        <div class="hero">
+            <div class="hero-emoji">🏙</div>
+            <h1>Кумертау</h1>
+            <div class="hero-sub">2026 · Республика Башкортостан</div>
+        </div>
+
+        <div class="card" data-page="gagarin">
+            <div class="card-title"><span class="ico">🏆</span> Кубок Гагарина</div>
+            <div class="card-desc">Олимпиада школьников 1–8 классов РБ</div>
+            <span class="card-tag news">Олимпиада</span>
+        </div>
+
+        <div class="card" data-page="luna">
+            <div class="card-title"><span class="ico">🌙</span> Луномосик — Прямой эфир</div>
+            <div class="card-desc">Смотреть на сайте</div>
+            <span class="card-tag live">● LIVE</span>
+        </div>
+
+        <div class="card" data-page="settings">
+            <div class="card-title"><span class="ico">⚙️</span> Настройки</div>
+            <div class="card-desc">Тема, шрифт, режим разработчика</div>
+            <span class="card-tag">Система</span>
+        </div>
+    </div>
+
+    <!-- 🏆 КУБОК ГАГАРИНА -->
+    <div class="page" id="page-gagarin">
+        <div class="hero">
+            <div class="hero-emoji">🏆</div>
+            <h1>Кубок Гагарина</h1>
+            <div class="hero-sub">Олимпиада школьников</div>
+        </div>
+
+        <div class="gagarin-block">
+            <h2>🏆 Кубок Гагарина 2026</h2>
+            <p>
+                <span class="highlight">Олимпиада школьников 1–8 классов</span>
+                проводится во всех школах
+                <span class="highlight">Республики Башкортостан</span>.
+            </p>
+
+            <div class="info-row">
+                <span>📅</span>
+                <div><b>Регистрация:</b> с 1 сентября по 31 октября</div>
             </div>
-            <div class="sidebar">
-                <div class="sidebar-card">
-                    <h3>📬 Подписка на новости</h3>
-                    <div class="subscribe-box">
-                        <input type="email" id="subscribeEmail" placeholder="Ваш email">
-                        <button onclick="subscribe()">Подписаться</button>
-                    </div>
-                </div>
-                <div class="sidebar-card">
-                    <h3>📊 Статистика сайта</h3>
-                    <div style="font-size:.8rem;color:#4a2511;line-height:2">
-                        <div>👁️ Посещений: <b id="statVisits">0</b></div>
-                        <div>⭐ Версия: <b>3.2.0</b></div>
-                        <div>📅 Работает: <b id="statUptime">0 сек</b></div>
-                    </div>
-                </div>
+            <div class="info-row">
+                <span>🏫</span>
+                <div><b>Место:</b> все школы Республики Башкортостан</div>
+            </div>
+            <div class="info-row">
+                <span>👨‍🎓</span>
+                <div><b>Участники:</b> ученики 1–8 классов</div>
+            </div>
+            <div class="info-row">
+                <span>📌</span>
+                <div><b>Регистрация:</b> во всех школах РБ</div>
+            </div>
+        </div>
+
+        <div class="block">
+            <h3>💡 Как участвовать</h3>
+            <ol>
+                <li>Учишься в 1–8 классе</li>
+                <li>Твоя школа — в Республике Башкортостан</li>
+                <li>Обратись к классному руководителю</li>
+                <li>Зарегистрируйся с 1 сентября по 31 октября</li>
+                <li>Участвуй в олимпиаде!</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- 🌙 ЛУНОМОСИК -->
+    <div class="page" id="page-luna">
+        <div class="live-hero">
+            <div class="live-badge-top">● ПРЯМОЙ ЭФИР</div>
+            <h1>🌙 Луномосик</h1>
+            <p>Любимый канал компании РУ СИК</p>
+        </div>
+
+        <div class="video-wrapper">
+            <iframe 
+                id="lunaFrame"
+                src="https://vk.com/video_ext.php?oid=-107101070&id=456243981&hd=2"
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                allowfullscreen
+                frameborder="0">
+            </iframe>
+        </div>
+
+        <div class="video-fallback" id="lunaFallback">
+            <div class="fb-emoji">🌙</div>
+            <p>Видео не загрузилось внутри сайта.<br>Нажми кнопку ниже — откроется в браузере.</p>
+        </div>
+
+        <div class="block">
+            <h3>🌙 О Луномосике</h3>
+            <p>
+                <b>Луномосик</b> — любимый канал компании РУ СИК.
+                Смотри прямые эфиры, новости и много интересного!
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>📺 Управление</h3>
+            <div class="btn-row">
+                <button class="btn btn-danger" id="lunaReload">🔄 Перезагрузить видео</button>
+                <a class="btn btn-outline" 
+                   href="https://vkvideo.ru/video-107101070_456243981?pl=-107101070_6&t=22m45s" 
+                   target="_blank" 
+                   rel="noopener">
+                    ▶ Открыть в ВК
+                </a>
             </div>
         </div>
     </div>
 
-    <div class="section" id="city">
-        <h1 class="section-title">🏙️ Городские новости</h1>
-        <!-- Прямой эфир внутри раздела -->
-        <div class="inline-live">
-            <span class="in-live-icon">📺</span>
-            <div class="in-live-content">
-                <div class="in-live-title"><span class="in-live-dot"></span>ПРЯМОЙ ЭФИР — НТВ</div>
-                <div class="in-live-text">Сообщение от государства. Смотреть во MAX.</div>
+    <!-- ⚙️ НАСТРОЙКИ -->
+    <div class="page" id="page-settings">
+        <div class="hero">
+            <div class="hero-emoji">⚙️</div>
+            <h1>Настройки</h1>
+            <div class="hero-sub">Персонализация</div>
+        </div>
+
+        <div class="settings-row">
+            <span class="settings-label">🎨 Тема</span>
+            <button class="btn btn-outline" id="themeToggle">🌙 Тёмная</button>
+        </div>
+
+        <div class="settings-row">
+            <span class="settings-label">🔤 Размер шрифта</span>
+            <div class="btn-row">
+                <button class="btn btn-outline" id="fontDown">А−</button>
+                <span class="settings-value" id="fontValue">100%</span>
+                <button class="btn btn-outline" id="fontUp">А+</button>
             </div>
-            <a href="https://max.ru/ntv" target="_blank" rel="noopener" class="in-live-btn">▶ Смотреть</a>
         </div>
-        <div class="categories-grid">
-            <div class="category-card"><div class="cat-icon">🏛️</div><div class="cat-name">Администрация</div></div>
-            <div class="category-card"><div class="cat-icon">🏗️</div><div class="cat-name">Строительство</div></div>
-            <div class="category-card"><div class="cat-icon">🌳</div><div class="cat-name">Благоустройство</div></div>
-            <div class="category-card"><div class="cat-icon">🚦</div><div class="cat-name">Дороги</div></div>
-            <div class="category-card"><div class="cat-icon">💧</div><div class="cat-name">ЖКХ</div></div>
-            <div class="category-card"><div class="cat-icon">🚨</div><div class="cat-name">Происшествия</div></div>
+
+        <div class="block">
+            <h3>🛠 Режим разработчика</h3>
+            <p style="margin-bottom:12px;">Введите пароль для входа.</p>
+            <button class="btn btn-outline" id="devModeBtn">🔓 Войти</button>
         </div>
-        <div class="empty-news"><div class="empty-icon">🍂</div><div class="empty-title">Новости скоро появятся</div><div class="empty-text">В этом разделе будут городские новости Кумертау.</div></div>
+
+        <div class="block">
+            <h3>ℹ️ О сайте</h3>
+            <p>Кумертау · Осенний выпуск · 2026</p>
+            <p>Компания РУ СИК</p>
+        </div>
     </div>
 
-    <div class="section" id="sport">
-        <h1 class="section-title">⚽ Спорт</h1>
-        <div class="inline-live">
-            <span class="in-live-icon">📺</span>
-            <div class="in-live-content">
-                <div class="in-live-title"><span class="in-live-dot"></span>ПРЯМОЙ ЭФИР — НТВ</div>
-                <div class="in-live-text">Сообщение от государства. Смотреть во MAX.</div>
-            </div>
-            <a href="https://max.ru/ntv" target="_blank" rel="noopener" class="in-live-btn">▶ Смотреть</a>
+    <!-- 🛠 DEV -->
+    <div class="page" id="page-dev">
+        <div class="hero">
+            <div class="hero-emoji">🛠</div>
+            <h1>Разработчик</h1>
+            <div class="hero-sub">Служебная панель</div>
         </div>
-        <div class="empty-news"><div class="empty-icon">🍁</div><div class="empty-title">Новости скоро появятся</div><div class="empty-text">Здесь будут спортивные новости города.</div></div>
+
+        <div class="dev-panel">
+            <h3>🎮 Управление сайтом</h3>
+            <div class="btn-row">
+                <button class="btn btn-green" id="devReload">🔄 Перезагрузить</button>
+                <button class="btn btn-outline" id="devTheme">🎨 Сменить тему</button>
+                <button class="btn btn-outline" id="devFont">🔤 Шрифт+</button>
+                <button class="btn btn-outline" id="devClearFav">🗑 Очистить избранное</button>
+                <button class="btn btn-outline" id="devAlert">📢 Тест-алерт</button>
+                <button class="btn btn-danger" id="devClearAll">💥 Сброс всего</button>
+            </div>
+        </div>
+
+        <div class="dev-panel" style="border-color: var(--autumn-1); box-shadow: 0 0 30px rgba(255,140,66,0.3);">
+            <h3 style="color: var(--autumn-1);">📋 Информация</h3>
+            <p style="font-size:13px;color:var(--text);">Режим: <b style="color:var(--neon-green);">РАЗРАБОТЧИК</b></p>
+            <p style="font-size:13px;color:var(--text);">Пароль: <b style="color:var(--neon-green);">520667</b></p>
+        </div>
+
+        <div class="block">
+            <h3>🚪 Выйти из режима</h3>
+            <button class="btn btn-danger" id="devExitBtn">Выйти</button>
+        </div>
     </div>
 
-    <div class="section" id="culture">
-        <h1 class="section-title">🎭 Культура</h1>
-        <div class="inline-live">
-            <span class="in-live-icon">📺</span>
-            <div class="in-live-content">
-                <div class="in-live-title"><span class="in-live-dot"></span>ПРЯМОЙ ЭФИР — НТВ</div>
-                <div class="in-live-text">Сообщение от государства. Смотреть во MAX.</div>
-            </div>
-            <a href="https://max.ru/ntv" target="_blank" rel="noopener" class="in-live-btn">▶ Смотреть</a>
+    <!-- ⭐ ИЗБРАННОЕ -->
+    <div class="page" id="page-fav">
+        <div class="hero">
+            <div class="hero-emoji">⭐</div>
+            <h1>Избранное</h1>
+            <div class="hero-sub">Твои заметки и ссылки</div>
         </div>
-        <div class="empty-news"><div class="empty-icon">🎭</div><div class="empty-title">Новости скоро появятся</div><div class="empty-text">Здесь будут культурные события и афиша Кумертау.</div></div>
+
+        <div class="block">
+            <h3>➕ Добавить запись</h3>
+            <textarea class="fav-input" id="favInput" placeholder="Вставь текст, ссылку или заметку..."></textarea>
+            <div class="btn-row">
+                <button class="btn" id="favAddBtn">➕ Добавить</button>
+                <button class="btn btn-outline" id="favClearBtn">🗑 Очистить всё</button>
+            </div>
+        </div>
+
+        <div id="favList"></div>
     </div>
 
-    <div class="section" id="ads">
-        <h1 class="section-title">📢 Объявления</h1>
-        <div class="inline-live">
-            <span class="in-live-icon">📺</span>
-            <div class="in-live-content">
-                <div class="in-live-title"><span class="in-live-dot"></span>ПРЯМОЙ ЭФИР — НТВ</div>
-                <div class="in-live-text">Сообщение от государства. Смотреть во MAX.</div>
-            </div>
-            <a href="https://max.ru/ntv" target="_blank" rel="noopener" class="in-live-btn">▶ Смотреть</a>
+    <!-- 🔍 ПОИСК -->
+    <div class="page" id="page-search">
+        <div class="hero">
+            <div class="hero-emoji">🔍</div>
+            <h1>Поиск</h1>
+            <div class="hero-sub">Введи запрос сверху</div>
         </div>
-        <div class="empty-news"><div class="empty-icon">📭</div><div class="empty-title">Объявлений пока нет</div><div class="empty-text">Здесь будут размещаться объявления жителей города.</div></div>
+        <div id="searchResults"></div>
     </div>
 
-    <div class="section" id="diary">
-        <h1 class="section-title">📚 Электронный дневник</h1>
-        <div class="inline-live">
-            <span class="in-live-icon">📺</span>
-            <div class="in-live-content">
-                <div class="in-live-title"><span class="in-live-dot"></span>ПРЯМОЙ ЭФИР — НТВ</div>
-                <div class="in-live-text">Сообщение от государства. Смотреть во MAX.</div>
-            </div>
-            <a href="https://max.ru/ntv" target="_blank" rel="noopener" class="in-live-btn">▶ Смотреть</a>
+</div>
+
+<!-- 📱 МЕНЮ 4К -->
+<nav class="bottom-nav">
+    <div class="nav-item active" data-target="home">
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
         </div>
-        <div class="mode-banner teacher">👨‍🏫 РЕЖИМ УЧИТЕЛЯ — можно ставить оценки и задавать домашки</div>
-        <div class="mode-banner viewer">👀 РЕЖИМ РОДИТЕЛЯ — только просмотр</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;flex-wrap:wrap;gap:10px">
-            <div style="color:#fff;font-size:.9rem">Ученик: <b id="diaryStudent">Матвеев Степан</b> • <span id="diaryClass">1 «А»</span></div>
-            <button class="diary-mode-btn" id="diaryModeBtn" onclick="cycleDiaryMode()">👤 Ученик</button>
+        <span>Главная</span>
+    </div>
+    <div class="nav-item" data-target="search">
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
         </div>
-        <div class="diary-tabs">
-            <button class="diary-tab active" onclick="switchDiaryTab('d-schedule', this)">📅 Расписание</button>
-            <button class="diary-tab" onclick="switchDiaryTab('d-grades', this)">📊 Оценки</button>
-            <button class="diary-tab" onclick="switchDiaryTab('d-homework', this)">📝 Домашка</button>
-            <button class="diary-tab" onclick="switchDiaryTab('d-notes', this)">📌 Заметки</button>
-            <button class="diary-tab" onclick="switchDiaryTab('d-stats', this)">📈 Статистика</button>
+        <span>Поиск</span>
+    </div>
+    <div class="nav-item" data-target="fav">
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
         </div>
-        <div class="diary-section active" id="d-schedule">
-            <div class="diary-card"><h3>📅 Расписание на неделю <span class="badge" id="todayBadge">Сегодня: —</span></h3><div id="scheduleList"></div></div>
+        <span>Избранное</span>
+    </div>
+    <div class="nav-item" data-target="settings">
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
         </div>
-        <div class="diary-section" id="d-grades">
-            <div class="diary-card">
-                <h3>📊 Оценки <span class="badge" id="gradesAvgBadge">Средний: —</span></h3>
-                <div class="form-box grade-form">
-                    <h4>✏️ Выставить оценку</h4>
-                    <label style="font-weight:700;font-size:.8rem;color:#4a2511;display:block;margin-bottom:5px">Кому:</label>
-                    <input type="text" id="gradeStudent" placeholder="Имя ученика" maxlength="40" list="studentsList">
-                    <datalist id="studentsList"></datalist>
-                    <label style="font-weight:700;font-size:.8rem;color:#4a2511;display:block;margin:8px 0 5px">Предмет:</label>
-                    <select id="gradeSubject"></select>
-                    <label style="font-weight:700;font-size:.8rem;color:#4a2511;display:block;margin:8px 0 5px">Оценка:</label>
-                    <div class="grade-picker" id="gradePicker"></div>
-                    <input type="hidden" id="selectedGrade" value="">
-                    <button class="green" onclick="addGrade()">➕ Выставить</button>
-                </div>
-                <div class="grades-grid" id="gradesList"></div>
-            </div>
-        </div>
-        <div class="diary-section" id="d-homework">
-            <div class="diary-card">
-                <h3>📝 Домашние задания <span class="badge" id="hwBadge">Активных: 0</span></h3>
-                <div class="form-box">
-                    <h4>✏️ Задать домашнее задание</h4>
-                    <select id="hwSubject"></select>
-                    <input type="text" id="hwTask" placeholder="Что задано?" maxlength="150">
-                    <select id="hwDue">
-                        <option value="сегодня">Сегодня</option>
-                        <option value="завтра">Завтра</option>
-                        <option value="на следующую неделю">На следующую неделю</option>
-                    </select>
-                    <button class="purple" onclick="addHomework()">📤 Задать</button>
-                </div>
-                <div id="homeworkList"></div>
-            </div>
-        </div>
-        <div class="diary-section" id="d-notes">
-            <div class="diary-card"><h3>📌 Мои заметки</h3><textarea class="note-input" id="noteInput" placeholder="Напишите заметку..."></textarea><button class="note-add" onclick="addNote()">➕ Добавить</button></div>
-            <div class="diary-card"><h3>Все заметки <span class="badge" id="notesBadge">0</span></h3><div id="notesList"></div></div>
-        </div>
-        <div class="diary-section" id="d-stats">
-            <div class="diary-card"><h3>📈 Моя статистика</h3><div class="stats-grid" id="statsGrid"></div></div>
-            <div class="diary-card"><h3>📚 По предметам</h3><div id="subjectStats"></div></div>
+        <span>Настройки</span>
+    </div>
+</nav>
+
+<!-- 🔐 ПАРОЛЬ -->
+<div class="lock-screen" id="lockScreen">
+    <div class="lock-box">
+        <h2>🔐 Пароль</h2>
+        <input type="password" class="lock-input" id="lockInput" maxlength="6" inputmode="numeric" placeholder="••••••">
+        <div class="lock-error" id="lockError"></div>
+        <div class="btn-row" style="justify-content:center;">
+            <button class="btn" id="lockOk">Войти</button>
+            <button class="btn btn-outline" id="lockCancel">Отмена</button>
         </div>
     </div>
 </div>
 
 <footer>
-    <div class="footer-logo"><div class="logo-icon" style="width:36px;height:36px;font-size:1.1rem">К</div><span>Кумертау • Осенний портал + Дневник</span></div>
-    <div class="footer-text">Городской информационный портал + электронный дневник.</div>
-    <div class="footer-links">
-        <a onclick="switchTab('home', document.querySelectorAll('nav button')[0])">Главная</a>
-        <a onclick="switchTab('diary', document.querySelectorAll('nav button')[5])">Дневник</a>
-        <a onclick="requestDevAccess()">Разработчикам</a>
-    </div>
-    <div class="copyright">© 2025 Кумертау. Все права защищены. 🍁</div>
+    Кумертау · Осенний выпуск 2026 · Компания РУ СИК · ❄️ Ждём зиму
 </footer>
 
-<!-- НАСТРОЙКИ -->
-<div class="modal" id="settingsModal">
-    <div class="modal-box">
-        <button class="close-modal" onclick="closeSettings()">✕</button>
-        <h2>⚙️ Настройки</h2>
-        <div class="setting-group">
-            <div class="setting-title">🎨 Внешний вид</div>
-            <div class="setting-toggle"><span>🍂 Анимация листьев</span><div class="switch on" id="swLeaves" onclick="toggleSetting('leaves')"></div></div>
-            <div class="setting-toggle"><span>✨ Анимации интерфейса</span><div class="switch on" id="swAnim" onclick="toggleSetting('anim')"></div></div>
-        </div>
-        <div class="setting-group">
-            <div class="setting-title">📏 Размер шрифта</div>
-            <select class="setting-select" id="fontSelect" onchange="changeFont(this.value)">
-                <option value="small">Маленький</option>
-                <option value="normal" selected>Обычный</option>
-                <option value="large">Большой</option>
-            </select>
-        </div>
-        <div class="setting-group">
-            <div class="setting-title">🔔 Уведомления</div>
-            <div class="setting-toggle"><span>🔊 Звуки</span><div class="switch" id="swSound" onclick="toggleSetting('sound')"></div></div>
-        </div>
-    </div>
-</div>
-
-<!-- МЕНЮ РАЗРАБОТЧИКА -->
-<div class="modal" id="devModal">
-    <div class="modal-box dev-menu">
-        <button class="close-modal" onclick="closeDevMenu()">✕</button>
-        <h2>&lt;/&gt; DEVELOPER CONSOLE v3.2</h2>
-        <div class="dev-status-bar">
-            <div class="dev-status-item"><span class="lbl">СТАТУС</span><span class="val" id="devStatusSys">OK</span></div>
-            <div class="dev-status-item"><span class="lbl">ПАМЯТЬ</span><span class="val" id="devStatusMem">—</span></div>
-            <div class="dev-status-item"><span class="lbl">UPTIME</span><span class="val" id="devStatusUptime">0с</span></div>
-            <div class="dev-status-item"><span class="lbl">FPS</span><span class="val" id="devStatusFps">60</span></div>
-            <div class="dev-status-item"><span class="lbl">ХРАНИЛИЩЕ</span><span class="val" id="devStatusStorage">0</span></div>
-            <div class="dev-status-item"><span class="lbl">ВЕРСИЯ</span><span class="val">3.2.0</span></div>
-        </div>
-
-        <div class="dev-tabs">
-            <button class="dev-tab active" onclick="switchDevTab('terminal', this)">💻 Терминал</button>
-            <button class="dev-tab" onclick="switchDevTab('tools', this)">🔧 Инструменты</button>
-            <button class="dev-tab" onclick="switchDevTab('visual', this)">🎨 Визуал</button>
-            <button class="dev-tab" onclick="switchDevTab('cheats', this)">🎮 Читы</button>
-            <button class="dev-tab" onclick="switchDevTab('storage', this)">💾 Данные</button>
-            <button class="dev-tab" onclick="switchDevTab('about', this)">ℹ️ Инфо</button>
-        </div>
-
-        <div class="dev-panel active" id="dev-terminal">
-            <div class="dev-info">Введите "help". Секретная: <b style="color:#ff0">qpi</b></div>
-            <div class="terminal" id="terminalOutput">
-                <div class="line info">Кумертау Terminal v3.2.0</div>
-                <div class="line success">Готов к работе.</div>
-            </div>
-            <div class="terminal-input-row">
-                <input type="text" class="terminal-input" id="terminalInput" placeholder="> команда..." onkeydown="if(event.key==='Enter')runCommand()" autocomplete="off">
-                <button class="terminal-btn" onclick="runCommand()">▶</button>
-            </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap">
-                <button class="dev-btn" style="width:auto;margin:0" onclick="quickCmd('help')">help</button>
-                <button class="dev-btn" style="width:auto;margin:0" onclick="quickCmd('info')">info</button>
-                <button class="dev-btn danger" style="width:auto;margin:0" onclick="quickCmd('qpi')">qpi 🚨</button>
-                <button class="dev-btn danger" style="width:auto;margin:0" onclick="quickCmd('qpoi')">qpoi</button>
-                <button class="dev-btn danger" style="width:auto;margin:0" onclick="quickCmd('crash')">crash</button>
-            </div>
-        </div>
-
-        <div class="dev-panel" id="dev-tools">
-            <div class="dev-section-title">⚠️ Отладка</div>
-            <button class="dev-btn danger" onclick="devTool('qpi')"><span class="ico">🚨</span> Команда QPI (полный сбой)</button>
-            <button class="dev-btn" onclick="devTool('qpoi')"><span class="ico">💥</span> QPOI (50 ошибок)</button>
-            <button class="dev-btn danger" onclick="devTool('crash')"><span class="ico">☠️</span> Полный краш</button>
-            <button class="dev-btn warn" onclick="devTool('fakecrash')"><span class="ico">🎭</span> Фейковый краш</button>
-            <button class="dev-btn" onclick="devTool('stress')"><span class="ico">⚡</span> Стресс-тест</button>
-            <button class="dev-btn" onclick="devTool('memory')"><span class="ico">🧠</span> Заполнить память</button>
-            <button class="dev-btn danger" onclick="devTool('membomb')"><span class="ico">💣</span> Memory Bomb</button>
-            <div class="dev-section-title">📊 Диагностика</div>
-            <button class="dev-btn blue" onclick="devTool('diagnostics')"><span class="ico">🩺</span> Диагностика</button>
-            <button class="dev-btn blue" onclick="devTool('benchmark')"><span class="ico">⏱️</span> Бенчмарк</button>
-            <button class="dev-btn blue" onclick="devTool('network')"><span class="ico">📡</span> Сеть</button>
-            <div class="dev-section-title">🗑️ Очистка</div>
-            <button class="dev-btn" onclick="devTool('clearlogs')">📝 Очистить логи</button>
-            <button class="dev-btn danger" onclick="devTool('wipe')">💣 Очистить всё</button>
-        </div>
-
-        <div class="dev-panel" id="dev-visual">
-            <div class="dev-section-title">🎨 Фильтры</div>
-            <button class="dev-btn purple" onclick="visualTool('invert')">🌗 Инверсия</button>
-            <button class="dev-btn purple" onclick="visualTool('hue')">🌈 Сдвиг оттенка</button>
-            <button class="dev-btn purple" onclick="visualTool('blur')">💧 Размытие</button>
-            <button class="dev-btn purple" onclick="visualTool('glitch')">📺 Глитч</button>
-            <button class="dev-btn purple" onclick="visualTool('reset')">🔄 Сброс</button>
-            <div class="dev-section-title">🍁 Эффекты</div>
-            <button class="dev-btn" onclick="visualTool('leaves-on')">🍁 Вкл листья</button>
-            <button class="dev-btn" onclick="visualTool('leaves-off')">❌ Выкл листья</button>
-            <button class="dev-btn" onclick="visualTool('rain')">🌧️ Листопад</button>
-            <button class="dev-btn warn" onclick="visualTool('flash')">⚡ Вспышка</button>
-            <button class="dev-btn warn" onclick="visualTool('shake')">📳 Тряска</button>
-            <div class="dev-section-title">🖥️ Шрифты</div>
-            <button class="dev-btn" onclick="changeFont('small')">Маленький</button>
-            <button class="dev-btn" onclick="changeFont('normal')">Обычный</button>
-            <button class="dev-btn" onclick="changeFont('large')">Большой</button>
-        </div>
-
-        <div class="dev-panel" id="dev-cheats">
-            <div class="dev-section-title">📊 Оценки</div>
-            <button class="dev-btn green" onclick="cheat('all5')">5️⃣ Все → 5+</button>
-            <button class="dev-btn" onclick="cheat('random-grades')">🎲 Случайные</button>
-            <button class="dev-btn" onclick="cheat('clear-grades')">🗑️ Очистить</button>
-            <button class="dev-btn blue" onclick="cheat('add-students')">👥 +5 учеников</button>
-            <div class="dev-section-title">📝 Домашка</div>
-            <button class="dev-btn green" onclick="cheat('all-hw-done')">✅ Всё сделать</button>
-            <button class="dev-btn warn" onclick="cheat('all-hw-undone')">⬜ Сбросить</button>
-            <button class="dev-btn" onclick="cheat('add-hw')">➕ +5 домашек</button>
-            <button class="dev-btn danger" onclick="cheat('clear-hw')">🗑️ Очистить</button>
-            <div class="dev-section-title">👤 Режимы</div>
-            <button class="dev-btn" onclick="cheat('mode-student')">👤 Ученик</button>
-            <button class="dev-btn" onclick="cheat('mode-teacher')">👨‍🏫 Учитель</button>
-            <button class="dev-btn" onclick="cheat('mode-viewer')">👀 Родитель</button>
-        </div>
-
-        <div class="dev-panel" id="dev-storage">
-            <div class="dev-info">Данные в localStorage:</div>
-            <div id="storageList" style="font-size:.7rem;font-family:'Courier New',monospace;color:#0f0;margin-bottom:10px;max-height:200px;overflow-y:auto;background:rgba(0,0,0,.5);padding:8px;border-radius:6px"></div>
-            <div class="dev-section-title">📦 Экспорт / Импорт</div>
-            <button class="dev-btn green" onclick="exportAllData()">📤 Экспорт JSON</button>
-            <button class="dev-btn blue" onclick="importAllData()">📥 Импорт JSON</button>
-            <button class="dev-btn" onclick="copyStorage()">📋 Копировать</button>
-            <div class="dev-section-title">🗑️ Очистка</div>
-            <button class="dev-btn warn" onclick="clearSpecific('kumertau_settings')">⚙️ Сброс настроек</button>
-            <button class="dev-btn warn" onclick="clearSpecific('diary_grades_v4')">📊 Сброс оценок</button>
-            <button class="dev-btn danger" onclick="clearAllStorage()">💣 Очистить ВСЁ</button>
-        </div>
-
-        <div class="dev-panel" id="dev-about">
-            <div class="dev-section-title">ℹ️ О системе</div>
-            <div class="dev-info">Портал: Кумертау + Дневник</div>
-            <div class="dev-info">Версия: 3.2.0 Developer Edition</div>
-            <div class="dev-info">Лицензия: MIT</div>
-            <div class="dev-section-title">🌐 О браузере</div>
-            <div class="dev-info" id="browserInfo">—</div>
-            <div class="dev-section-title">⌨️ Горячие клавиши</div>
-            <div class="dev-info">Ctrl+Shift+D — консоль</div>
-            <div class="dev-info">Ctrl+Shift+Q — QPI сбой 🚨</div>
-            <div class="dev-info">Ctrl+Shift+X — краш</div>
-            <div class="dev-info">Ctrl+Shift+L — очистить логи</div>
-            <div class="dev-section-title">🎯 Пасхалки</div>
-            <button class="dev-btn purple" onclick="easterEgg()">🥚 Пасхалка</button>
-        </div>
-    </div>
-</div>
-
 <script>
-/* ПРЕЛОАДЕР */
-function createPreloaderLeaves(){
-    const c = document.getElementById('preloaderLeaves');
-    const leaves = ['🍁','🍂','🍃','🌿','🍁'];
-    for(let i=0;i<20;i++){
-        const leaf = document.createElement('div');
-        leaf.className = 'preloader-leaf';
-        leaf.innerText = leaves[Math.floor(Math.random()*leaves.length)];
-        leaf.style.left = Math.random() * 100 + '%';
-        leaf.style.animationDuration = (3 + Math.random() * 4) + 's';
-        leaf.style.animationDelay = Math.random() * 3 + 's';
-        leaf.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
-        c.appendChild(leaf);
+    const ARTICLES = [
+        { id: 'gagarin',  ico: '🏆', title: 'Кубок Гагарина',           desc: 'Олимпиада 1–8 классов РБ' },
+        { id: 'luna',     ico: '🌙', title: 'Луномосик — Прямой эфир',  desc: 'Смотреть на сайте' },
+        { id: 'settings', ico: '⚙️', title: 'Настройки',                desc: 'Тема, шрифт, разработчик' }
+    ];
+
+    const DEV_PASSWORD = "520667";
+
+    let favorites = JSON.parse(localStorage.getItem('kumertau_favs') || '[]');
+    let devMode = false;
+    let fontScale = parseFloat(localStorage.getItem('kumertau_font') || '1');
+    let lightTheme = localStorage.getItem('kumertau_theme') === 'light';
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('preloader').classList.add('hide');
+        }, 2200);
+    });
+
+    function showPage(name) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const page = document.getElementById('page-' + name);
+        if (page) page.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-}
-createPreloaderLeaves();
-let progress = 0;
-const progressInterval = setInterval(()=>{
-    progress += Math.random() * 15 + 5;
-    if(progress >= 100){
-        progress = 100;
-        clearInterval(progressInterval);
-        setTimeout(()=>{
-            document.getElementById('preloader').classList.add('hidden');
-            setTimeout(()=>{ document.getElementById('preloader').style.display = 'none'; }, 700);
-        }, 400);
-    }
-    document.getElementById('preloaderBar').style.width = progress + '%';
-    document.getElementById('preloaderPercent').innerText = Math.floor(progress) + '%';
-}, 200);
+    window.showPage = showPage;
 
-/* ЛИСТЬЯ */
-function createLeaves(count=15){
-    const bg = document.getElementById('leafBg');
-    const leaves = ['🍁','🍂','🍃','🌿'];
-    for(let i=0;i<count;i++){
-        const leaf = document.createElement('div');
-        leaf.className = 'falling-leaf';
-        leaf.innerText = leaves[Math.floor(Math.random()*leaves.length)];
-        leaf.style.left = Math.random() * 100 + '%';
-        leaf.style.animationDuration = (8 + Math.random() * 10) + 's';
-        leaf.style.animationDelay = Math.random() * 10 + 's';
-        leaf.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
-        bg.appendChild(leaf);
-    }
-}
-createLeaves();
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            const t = item.dataset.target;
+            if (t === 'home') showPage('home');
+            else if (t === 'search') { showPage('search'); document.getElementById('searchInput').focus(); }
+            else if (t === 'fav') { showPage('fav'); renderFavorites(); }
+            else if (t === 'settings') showPage('settings');
+        });
+    });
 
-/* ПАРОЛЬ */
-const DEV_PASSWORD = '520666';
-let devUnlocked = sessionStorage.getItem('dev_unlocked') === 'true';
-function requestDevAccess(){
-    if(devUnlocked){ openDevMenu(); return; }
-    document.getElementById('passwordModal').classList.add('active');
-    document.getElementById('passwordInput').value = '';
-    document.getElementById('passwordError').style.display = 'none';
-    setTimeout(()=>document.getElementById('passwordInput').focus(), 100);
-}
-function closePassword(){ document.getElementById('passwordModal').classList.remove('active'); }
-function checkPassword(){
-    const input = document.getElementById('passwordInput').value.trim();
-    const err = document.getElementById('passwordError');
-    if(input === DEV_PASSWORD){
-        devUnlocked = true;
-        sessionStorage.setItem('dev_unlocked', 'true');
-        closePassword(); playSound('success'); openDevMenu();
-    } else {
-        err.style.display = 'block';
-        document.getElementById('passwordInput').value = '';
-        playSound('error');
-    }
-}
-document.getElementById('passwordModal').addEventListener('click', e=>{ if(e.target.id === 'passwordModal') closePassword(); });
+    document.querySelectorAll('.card[data-page]').forEach(card => {
+        card.addEventListener('click', () => showPage(card.dataset.page));
+    });
 
-/* НАСТРОЙКИ */
-const defaultSettings = { leaves:true, anim:true, sound:false, font:'normal' };
-let settings = JSON.parse(localStorage.getItem('kumertau_settings') || 'null') || {...defaultSettings};
-function saveSettings(){ localStorage.setItem('kumertau_settings', JSON.stringify(settings)); }
-function applySettings(){
-    document.getElementById('leafBg').style.display = settings.leaves ? 'block' : 'none';
-    document.getElementById('swLeaves').classList.toggle('on', settings.leaves);
-    document.body.classList.toggle('no-anim', !settings.anim);
-    document.getElementById('swAnim').classList.toggle('on', settings.anim);
-    document.getElementById('swSound').classList.toggle('on', settings.sound);
-    document.getElementById('fontSelect').value = settings.font;
-    document.body.classList.remove('font-small','font-large');
-    if(settings.font === 'small') document.body.classList.add('font-small');
-    if(settings.font === 'large') document.body.classList.add('font-large');
-}
-function toggleSetting(key){ settings[key] = !settings[key]; saveSettings(); applySettings(); playSound('click'); }
-function changeFont(v){ settings.font = v; saveSettings(); applySettings(); showToast('📏 Шрифт: ' + v); }
-function openSettings(){ document.getElementById('settingsModal').classList.add('active'); playSound('click'); }
-function closeSettings(){ document.getElementById('settingsModal').classList.remove('active'); }
-document.getElementById('settingsModal').addEventListener('click', e=>{ if(e.target.id === 'settingsModal') closeSettings(); });
-
-/* ЗВУК */
-let audioCtx = null;
-function initAudio(){ if(!audioCtx){try{audioCtx = new (window.AudioContext || window.webkitAudioContext)();}catch(e){}} if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
-function playSound(type){
-    if(!settings.sound) return; initAudio(); if(!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-    osc.type = 'sine';
-    let freq = 600;
-    if(type === 'click') freq = 800;
-    if(type === 'success') freq = 1000;
-    if(type === 'error') freq = 300;
-    osc.frequency.setValueAtTime(freq, now);
-    gain.gain.setValueAtTime(0.1, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.15);
-}
-let scarySoundInterval = null;
-function startScarySounds(){
-    initAudio(); if(!audioCtx) return;
-    stopScarySounds();
-    scarySoundInterval = setInterval(()=>{
-        if(!audioCtx) return;
-        const now = audioCtx.currentTime;
-        const r = Math.random();
-        if(r < 0.25){
-            const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(80 + Math.random()*40, now);
-            osc.frequency.exponentialRampToValueAtTime(20, now + 1);
-            g.gain.setValueAtTime(0.15, now);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 1);
-            osc.connect(g); g.connect(audioCtx.destination);
-            osc.start(now); osc.stop(now + 1);
-        } else if(r < 0.5){
-            const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(1500 + Math.random()*2000, now);
-            osc.frequency.exponentialRampToValueAtTime(200, now + 0.5);
-            g.gain.setValueAtTime(0.1, now);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-            osc.connect(g); g.connect(audioCtx.destination);
-            osc.start(now); osc.stop(now + 0.5);
-        } else if(r < 0.7){
-            const bufferSize = audioCtx.sampleRate * 0.3;
-            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for(let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1) * 0.15;
-            const noise = audioCtx.createBufferSource();
-            noise.buffer = buffer;
-            const g = audioCtx.createGain();
-            g.gain.setValueAtTime(0.15, now);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-            noise.connect(g); g.connect(audioCtx.destination);
-            noise.start(now);
-        } else {
-            const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(400, now);
-            osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
-            osc.frequency.exponentialRampToValueAtTime(200, now + 0.3);
-            g.gain.setValueAtTime(0.12, now);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-            osc.connect(g); g.connect(audioCtx.destination);
-            osc.start(now); osc.stop(now + 0.35);
-        }
-    }, 250);
-}
-function stopScarySounds(){ if(scarySoundInterval) clearInterval(scarySoundInterval); scarySoundInterval = null; }
-
-/* НАВИГАЦИЯ */
-function switchTab(tabId, btn){
-    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    if(btn) btn.classList.add('active');
-    window.scrollTo({top:0, behavior:'smooth'});
-    playSound('click');
-    localStorage.setItem('kumertau_active_tab', tabId);
-}
-
-/* ЧАСЫ */
-function updateClock(){
-    const now = new Date();
-    document.getElementById('headerTime').innerText = now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
-    const date = now.toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'});
-    document.getElementById('headerDate').innerText = date.split(' ').slice(0,2).join(' ');
-}
-setInterval(updateClock, 1000); updateClock();
-
-/* ПОДПИСКА */
-function subscribe(){
-    const email = document.getElementById('subscribeEmail').value.trim();
-    if(!email || !email.includes('@')){ showToast('❌ Некорректный email'); return; }
-    localStorage.setItem('kumertau_subscribed', 'true');
-    showToast('✅ Вы подписаны!');
-    playSound('success');
-    document.getElementById('subscribeEmail').value = '';
-}
-
-/* УВЕДОМЛЕНИЯ */
-function showToast(text){
-    const old = document.querySelector('.toast'); if(old) old.remove();
-    const t = document.createElement('div'); t.className = 'toast'; t.innerText = text;
-    document.body.appendChild(t);
-    setTimeout(()=>{ t.style.transition='all .4s'; t.style.opacity='0'; t.style.transform='translate(-50%,30px)'; setTimeout(()=>t.remove(),400); },2400);
-}
-
-/* QPI */
-const AD_TITLES = ['🎁 ВЫ ВЫИГРАЛИ 1 000 000 ₽!','💊 ЧУДО-СРЕДСТВО','💰 ЗАРАБОТОК 100 000 ₽/день','🔥 СКИДКА 99%','🚨 ТЕЛЕФОН ЗАРАЖЁН!','⚡ ИНТЕРНЕТ x100','🎰 КАЗИНО БОНУС 5000 ₽','📱 ВАШЕ ФОТО В СЕТИ!','💎 АЛМАЗЫ ЗА 1 ₽','🏆 ПРОЙДИ ТЕСТ','👑 СТАНЬ БОГАТЫМ','🚀 ЗАРАБОТОК БЕЗ ВЛОЖЕНИЙ','💳 КАРТА ЗАБЛОКИРОВАНА','🆘 СРОЧНО!','🎉 ВЫ ТЫСЯЧНЫЙ!'];
-const AD_TEXTS = ['Нажмите!','Только сегодня!','Не спам!','Миллионы пользуются!','Одобрено врачами!','Гарантия 100%!'];
-const AD_BUTTONS = ['ПОЛУЧИТЬ','ЗАБРАТЬ','СКАЧАТЬ','КУПИТЬ','УЗНАТЬ','OK'];
-function showAds(){
-    let adCount = 0;
-    const iv = setInterval(()=>{
-        if(adCount >= 25){ clearInterval(iv); return; }
-        const ad = document.createElement('div');
-        ad.className = 'ad-bomb';
-        ad.style.left = Math.random() * (window.innerWidth - 260) + 'px';
-        ad.style.top = Math.random() * (window.innerHeight - 180) + 'px';
-        ad.innerHTML = `<div class="ad-title">${AD_TITLES[Math.floor(Math.random()*AD_TITLES.length)]}</div><div class="ad-text">${AD_TEXTS[Math.floor(Math.random()*AD_TEXTS.length)]}</div><button class="ad-btn">${AD_BUTTONS[Math.floor(Math.random()*AD_BUTTONS.length)]}</button>`;
-        ad.onclick = ()=>ad.remove();
-        document.body.appendChild(ad);
-        adCount++;
-        setTimeout(()=>{ if(ad.parentNode) ad.remove(); }, 8000);
-    }, 200);
-}
-function showNoConnection(){
-    const b = document.createElement('div');
-    b.className = 'no-connection';
-    b.innerText = '📡 СОЕДИНЕНИЕ ПОТЕРЯНО';
-    document.body.appendChild(b);
-    setTimeout(()=>{ if(b.parentNode) b.remove(); }, 15000);
-}
-function memoryBomb(){
-    try {
-        window.__qpiMem = [];
-        for(let i=0;i<1000;i++) window.__qpiMem.push(new Array(10000).fill('QPI'));
-        return true;
-    } catch(e){ return false; }
-}
-function triggerQPI(){
-    setTimeout(recoverFromQPI, 30000);
-    document.body.classList.add('crashed','glitch');
-    triggerQpiErrors();
-    setTimeout(showAds, 1000);
-    setTimeout(showNoConnection, 500);
-    setTimeout(showNoConnection, 8000);
-    setTimeout(showNoConnection, 15000);
-    startScarySounds();
-    setTimeout(()=>{ memoryBomb(); }, 2000);
-    if(navigator.vibrate) navigator.vibrate([200,100,200,100,500,200,500,200,1000,300,1000,300,2000]);
-}
-function triggerQpiErrors(){
-    const screen = document.getElementById('errorScreen');
-    const log = document.getElementById('errorLog');
-    log.innerHTML = '';
-    document.getElementById('errorSub').innerText = '🚨 QPI — ПОЛНЫЙ СБОЙ СИСТЕМЫ 🚨';
-    screen.classList.add('active');
-    let i = 0;
-    const iv = setInterval(()=>{
-        if(i >= 200){
-            clearInterval(iv);
-            setTimeout(()=>{
-                const f = document.createElement('div');
-                f.className = 'err-line critical';
-                f.style.marginTop = '15px';
-                f.innerText = '=== СИСТЕМА ПОВРЕЖДЕНА НЕОБРАТИМО ===';
-                log.appendChild(f); log.scrollTop = log.scrollHeight;
-            }, 300);
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', () => {
+        const q = searchInput.value.trim().toLowerCase();
+        const results = document.getElementById('searchResults');
+        if (q.length === 0) {
+            results.innerHTML = '<div class="empty"><div class="empty-emoji">🔍</div>Введи запрос</div>';
             return;
         }
-        const l = document.createElement('div');
-        const r = Math.random();
-        l.className = 'err-line ' + (r < 0.6 ? 'critical' : r < 0.85 ? 'warning' : 'info');
-        l.innerText = '> [' + new Date().toLocaleTimeString('ru-RU') + '] ' + ERROR_MESSAGES[i % ERROR_MESSAGES.length];
-        log.appendChild(l); log.scrollTop = log.scrollHeight;
-        i++;
-    }, 30);
-}
-function recoverFromQPI(){
-    stopScarySounds();
-    document.body.classList.remove('crashed','glitch');
-    document.getElementById('errorScreen').classList.remove('active');
-    document.querySelectorAll('.ad-bomb').forEach(a=>a.remove());
-    document.querySelectorAll('.no-connection').forEach(n=>n.remove());
-    const s = document.getElementById('devStatusSys');
-    if(s){ s.innerText = 'OK'; s.classList.remove('err'); }
-    printTerminal('✅ Система восстановлена после QPI','success');
-    showToast('✅ Система восстановлена');
-}
-
-/* DEV MENU */
-const startTime = Date.now();
-function openDevMenu(){
-    document.getElementById('devModal').classList.add('active');
-    updateStorageList(); updateDevStatus();
-    printTerminal('Меню разработчика открыто','info');
-}
-function closeDevMenu(){ document.getElementById('devModal').classList.remove('active'); }
-document.getElementById('devModal').addEventListener('click', e=>{ if(e.target.id === 'devModal') closeDevMenu(); });
-function switchDevTab(tab, btn){
-    document.querySelectorAll('.dev-tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.dev-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('dev-' + tab).classList.add('active');
-    if(tab === 'storage') updateStorageList();
-    if(tab === 'about') updateBrowserInfo();
-}
-function updateDevStatus(){
-    if(performance.memory) document.getElementById('devStatusMem').innerText = Math.round(performance.memory.usedJSHeapSize/1024/1024) + 'MB';
-    document.getElementById('devStatusUptime').innerText = Math.round((Date.now()-startTime)/1000) + 'с';
-    document.getElementById('devStatusStorage').innerText = localStorage.length + ' кл.';
-}
-setInterval(updateDevStatus, 1000);
-let lastFrameTime = performance.now(), frameCount = 0;
-function calcFps(){
-    const now = performance.now();
-    frameCount++;
-    if(now - lastFrameTime >= 1000){
-        document.getElementById('devStatusFps').innerText = frameCount;
-        frameCount = 0; lastFrameTime = now;
-    }
-    requestAnimationFrame(calcFps);
-}
-calcFps();
-function updateBrowserInfo(){
-    const info = navigator.userAgent;
-    document.getElementById('browserInfo').innerText = info.length > 80 ? info.slice(0,80) + '...' : info;
-}
-
-/* TERMINAL */
-const terminalOutput = document.getElementById('terminalOutput');
-function printTerminal(text, type='info'){
-    const l = document.createElement('div');
-    l.className = 'line ' + type;
-    l.innerText = text;
-    terminalOutput.appendChild(l);
-    terminalOutput.scrollTop = terminalOutput.scrollHeight;
-}
-function quickCmd(cmd){ document.getElementById('terminalInput').value = cmd; runCommand(); }
-function runCommand(){
-    const input = document.getElementById('terminalInput');
-    const cmd = input.value.trim().toLowerCase();
-    if(!cmd) return;
-    printTerminal('> ' + cmd, 'cmd');
-    input.value = '';
-    executeCommand(cmd);
-}
-function executeCommand(cmd){
-    const command = cmd.split(' ')[0];
-    switch(command){
-        case 'help':
-            printTerminal('═══ КОМАНДЫ ═══','info');
-            printTerminal('help, info, stats, clear, save, reset','info');
-            printTerminal('errors, secret, about, matrix','info');
-            printTerminal('qpi — 🚨 полный сбой','warn');
-            printTerminal('qpoi — ⚠️ 50 ошибок','warn');
-            printTerminal('crash — 💥 краш','warn');
-            break;
-        case 'info':
-            printTerminal('Портал: Кумертау','success');
-            printTerminal('Версия: 3.2.0','success');
-            printTerminal('ОС: ' + navigator.platform,'success');
-            break;
-        case 'stats':
-            printTerminal('Посещений: ' + (localStorage.getItem('kumertau_visits') || 0),'info');
-            printTerminal('Uptime: ' + Math.round((Date.now()-startTime)/1000) + 'с','info');
-            break;
-        case 'clear':
-            terminalOutput.innerHTML = '<div class="line success">Терминал очищен</div>'; break;
-        case 'save':
-            saveSettings(); printTerminal('✅ Сохранено','success'); break;
-        case 'reset':
-            localStorage.removeItem('kumertau_settings');
-            settings = {...defaultSettings}; applySettings();
-            printTerminal('✅ Сброшено','success'); break;
-        case 'errors':
-            for(let i=1;i<=20;i++) printTerminal('ERR_' + String(i).padStart(3,'0') + ': Ошибка','warn'); break;
-        case 'secret':
-            printTerminal('🔓 Кумертау — осенний город!','success');
-            printTerminal('💡 Попробуй "qpi"...','warn'); break;
-        case 'about':
-            printTerminal('Портал Кумертау + Дневник','info'); break;
-        case 'matrix':
-            for(let i=0;i<10;i++){
-                let line = '';
-                for(let j=0;j<40;j++) line += Math.random() > 0.5 ? '1' : '0';
-                printTerminal(line,'success');
-            } break;
-        case 'qpi':
-            printTerminal('🚨 ЗАПУСК QPI...','err');
-            setTimeout(triggerQPI, 500); break;
-        case 'qpoi':
-            printTerminal('⚠️ QPOI...','warn');
-            setTimeout(triggerQpoi, 300); break;
-        case 'crash':
-            printTerminal('💥 КРАШ...','err');
-            setTimeout(()=>triggerQpoi(true), 300); break;
-        default:
-            printTerminal('❌ Команда не найдена. help','err');
-    }
-}
-const ERROR_MESSAGES = Array.from({length:200}, (_,i)=>{
-    const msgs = ['Критическая ошибка','Segmentation fault','Недостаточно памяти','Сбой ядра','Потеря связи','Повреждение данных','Ошибка 0xDEADBEEF','Ошибка system32.dll','Драйвер не загружен','Превышен лимит','Ошибка синтаксиса','Стек переполнен','Сбой qpi.exe','Нарушение прав','Отказ диска','Сервер не отвечает','Ошибка БД','Реестр повреждён','Фатальная ошибка','Неизвестный процесс','Файл не найден','Ошибка компиляции','Тайм-аут','Недостаточно прав','Сбой ФС','Вирус в памяти','Ошибка SSL','Некорректный API','Сбой загрузки','Исключение','Ошибка вирт. памяти','Лимит стека','Сбой ядра','Ошибка I/O','Отказ HDD','Сессия потеряна','Ошибка драйвера','Сетевой протокол','Сбой обновления','Мало места','Аутентификация','Конфликт версий','Ошибка порта','SIGSEGV','Лимит файлов','Ошибка шифрования','Файл повреждён','Сбой qpi','Нестабильна','Перезагрузка требуется','QPI_HACK','CRITICAL_FAILURE','MEMORY_CORRUPTION','STACK_OVERFLOW','HEAP_OVERFLOW','BUFFER_OVERFLOW','NULL_POINTER','ACCESS_VIOLATION','DIVISION_BY_ZERO','INVALID_HANDLE','RESOURCE_EXHAUSTED','OPERATION_TIMEOUT'];
-    return 'ERR_' + String(i+1).padStart(3,'0') + ': ' + msgs[i % msgs.length];
-});
-function triggerQpoi(fullCrash=false){
-    playSound('error');
-    const screen = document.getElementById('errorScreen');
-    const log = document.getElementById('errorLog');
-    log.innerHTML = '';
-    document.getElementById('errorSub').innerText = fullCrash ? 'ПОЛНЫЙ СБРОС' : 'КРИТИЧЕСКАЯ ОШИБКА — QPOI';
-    screen.classList.add('active');
-    let i = 0;
-    const iv = setInterval(()=>{
-        if(i >= 50){ clearInterval(iv); return; }
-        const l = document.createElement('div');
-        l.className = 'err-line ' + (Math.random() < 0.5 ? 'critical' : Math.random() < 0.8 ? 'warning' : 'info');
-        l.innerText = '> ' + ERROR_MESSAGES[i];
-        log.appendChild(l); log.scrollTop = log.scrollHeight;
-        i++;
-    }, 60);
-    if(navigator.vibrate) navigator.vibrate([100,50,100,50,300]);
-}
-function closeError(){
-    document.getElementById('errorScreen').classList.remove('active');
-    printTerminal('Система восстановлена','success');
-}
-function devTool(tool){
-    switch(tool){
-        case 'qpi': printTerminal('🚨 QPI...','err'); triggerQPI(); break;
-        case 'qpoi': triggerQpoi(); break;
-        case 'crash': triggerQpoi(true); break;
-        case 'fakecrash':
-            document.body.style.filter = 'invert(1)';
-            setTimeout(()=>{ document.body.style.filter=''; }, 800);
-            showToast('🎭 Фейковый краш'); break;
-        case 'stress':
-            printTerminal('Стресс-тест...','warn');
-            try {
-                let sum = 0; const t0 = performance.now();
-                for(let i=0;i<1000;i++){ sum += Math.sqrt(i*Math.random()); const arr = new Array(100).fill(Math.random()); arr.sort(); }
-                const t1 = performance.now();
-                printTerminal('✅ Готово: ' + (t1-t0).toFixed(2) + ' мс','success');
-            } catch(e){ printTerminal('❌ ' + e.message,'err'); }
-            break;
-        case 'memory':
-            try { const arr = new Array(500000).fill('🍁'); printTerminal('✅ ' + arr.length + ' элементов','success'); arr.length = 0; }
-            catch(e){ printTerminal('❌ ' + e.message,'err'); }
-            break;
-        case 'membomb':
-            printTerminal('💣 Memory Bomb...','warn');
-            const ok = memoryBomb();
-            printTerminal(ok ? '💥 Сработал!' : '⚠️ Не удалось', ok ? 'err' : 'warn');
-            break;
-        case 'diagnostics':
-            printTerminal('═══ ДИАГНОСТИКА ═══','info');
-            printTerminal('✅ CPU: OK','success');
-            printTerminal('✅ Память: ' + (performance.memory ? Math.round(performance.memory.usedJSHeapSize/1024/1024) + 'MB' : 'н/д'),'success');
-            printTerminal('✅ Сеть: ' + (navigator.onLine ? 'подключён' : 'отключён'),navigator.onLine ? 'success' : 'err');
-            break;
-        case 'benchmark':
-            const t0 = performance.now();
-            for(let i=0;i<100000;i++) Math.sqrt(i);
-            const t1 = performance.now();
-            printTerminal('✅ 100000 операций: ' + (t1-t0).toFixed(2) + ' мс','success'); break;
-        case 'network':
-            printTerminal('✅ Онлайн: ' + (navigator.onLine ? 'да' : 'нет'),navigator.onLine ? 'success' : 'err'); break;
-        case 'clearlogs':
-            terminalOutput.innerHTML = '<div class="line success">Логи очищены</div>'; break;
-        case 'wipe':
-            if(confirm('Удалить всё?')){ localStorage.clear(); updateStorageList(); showToast('🗑️ Очищено'); }
-            break;
-    }
-}
-function visualTool(tool){
-    switch(tool){
-        case 'invert': document.body.classList.toggle('inverted'); showToast('🌗'); break;
-        case 'hue': document.body.classList.toggle('hue-rotate'); showToast('🌈'); break;
-        case 'blur': document.body.classList.toggle('blur-mode'); showToast('💧'); break;
-        case 'glitch': document.body.classList.add('glitch'); setTimeout(()=>document.body.classList.remove('glitch'), 3000); showToast('📺'); break;
-        case 'reset': document.body.classList.remove('inverted','hue-rotate','blur-mode','glitch'); showToast('🔄'); break;
-        case 'leaves-on': settings.leaves = true; saveSettings(); applySettings(); break;
-        case 'leaves-off': settings.leaves = false; saveSettings(); applySettings(); break;
-        case 'rain': createLeaves(100); showToast('🌧️'); break;
-        case 'flash': document.body.style.background = '#fff'; setTimeout(()=>{ document.body.style.background=''; }, 200); showToast('⚡'); break;
-        case 'shake': document.body.classList.add('glitch'); setTimeout(()=>document.body.classList.remove('glitch'), 500); showToast('📳'); break;
-    }
-}
-function cheat(code){
-    switch(code){
-        case 'all5':
-            Object.keys(GRADES).forEach(s=>{ GRADES[s] = GRADES[s].map(g => ({value:5, mod:'p', student:g.student||'Степан'})); });
-            saveGrades(); renderDiaryGrades(); renderDiaryStats(); showToast('✅ Все → 5+'); break;
-        case 'random-grades':
-            Object.keys(GRADES).forEach(s=>{
-                GRADES[s] = Array.from({length:5}, ()=>{
-                    const g = ALL_GRADES[Math.floor(Math.random()*ALL_GRADES.length)];
-                    return {value:g.value, mod:g.mod, student:STUDENTS[Math.floor(Math.random()*STUDENTS.length)]};
-                });
-            }); saveGrades(); renderDiaryGrades(); renderDiaryStats(); showToast('🎲'); break;
-        case 'clear-grades':
-            if(confirm('Очистить?')){ Object.keys(GRADES).forEach(s=>{ GRADES[s]=[]; }); saveGrades(); renderDiaryGrades(); renderDiaryStats(); showToast('🗑️'); } break;
-        case 'add-students':
-            ['Саша','Миша','Юля','Костя','Вера'].forEach(n=>{ if(!STUDENTS.includes(n)) STUDENTS.push(n); });
-            saveStudents(); renderDiaryGrades(); showToast('👥'); break;
-        case 'all-hw-done': HOMEWORK.forEach(h=>h.done=true); saveHomework(); renderDiaryHomework(); showToast('✅'); break;
-        case 'all-hw-undone': HOMEWORK.forEach(h=>h.done=false); saveHomework(); renderDiaryHomework(); showToast('⬜'); break;
-        case 'add-hw':
-            for(let i=0;i<5;i++) HOMEWORK.push({subject: SUBJECTS[Math.floor(Math.random()*SUBJECTS.length)], task: 'Задание №' + (i+1), due: ['сегодня','завтра','на следующую неделю'][Math.floor(Math.random()*3)], done: false});
-            saveHomework(); renderDiaryHomework(); showToast('➕'); break;
-        case 'clear-hw':
-            if(confirm('Очистить?')){ HOMEWORK = []; saveHomework(); renderDiaryHomework(); showToast('🗑️'); } break;
-        case 'mode-student': diaryMode='student'; applyDiaryMode(); showToast('👤'); break;
-        case 'mode-teacher': diaryMode='teacher'; applyDiaryMode(); showToast('👨‍🏫'); break;
-        case 'mode-viewer': diaryMode='viewer'; applyDiaryMode(); showToast('👀'); break;
-    }
-}
-function updateStorageList(){
-    const list = document.getElementById('storageList');
-    list.innerHTML = '';
-    if(localStorage.length === 0){ list.innerHTML = '<div style="color:#888">Пусто</div>'; return; }
-    for(let i=0;i<localStorage.length;i++){
-        const k = localStorage.key(i), v = localStorage.getItem(k);
-        list.innerHTML += `<div>📁 <b>${k}</b>: ${v.length} байт</div>`;
-    }
-}
-function exportAllData(){
-    const data = {};
-    for(let i=0;i<localStorage.length;i++){ const k = localStorage.key(i); data[k] = localStorage.getItem(k); }
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'kumertau-backup.json';
-    a.click();
-    showToast('💾 Экспортировано');
-}
-function importAllData(){
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json';
-    input.onchange = (e)=>{
-        const file = e.target.files[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev)=>{
-            try {
-                const data = JSON.parse(ev.target.result);
-                Object.keys(data).forEach(k=>localStorage.setItem(k, data[k]));
-                showToast('📥 Импортировано! Перезагрузка...');
-                setTimeout(()=>location.reload(), 1000);
-            } catch(err){ showToast('❌ Ошибка'); }
-        };
-        reader.readAsText(file);
-    };
-    input.click();
-}
-function copyStorage(){
-    let text = '';
-    for(let i=0;i<localStorage.length;i++){ const k = localStorage.key(i); text += k + '=' + localStorage.getItem(k) + '\n'; }
-    navigator.clipboard.writeText(text).then(()=>showToast('📋 Скопировано'));
-}
-function clearSpecific(key){ localStorage.removeItem(key); updateStorageList(); showToast('🗑️ Удалено'); }
-function clearAllStorage(){ if(confirm('Очистить всё?')){ localStorage.clear(); updateStorageList(); showToast('💣'); } }
-function easterEgg(){
-    for(let i=0;i<50;i++){
-        setTimeout(()=>{
-            const leaf = document.createElement('div');
-            leaf.innerText = '🍁';
-            leaf.style.cssText = 'position:fixed;font-size:3rem;top:' + Math.random()*100 + '%;left:' + Math.random()*100 + '%;z-index:99998;pointer-events:none';
-            document.body.appendChild(leaf);
-            setTimeout(()=>leaf.remove(), 3000);
-        }, i*50);
-    }
-    showToast('🥚 Пасхалка!');
-}
-
-/* ДНЕВНИК */
-const DAYS = ['Понедельник','Вторник','Среда','Четверг','Пятница'];
-const DEFAULT_SUBJECTS = ['Русский язык','Математика','Литературное чтение','Окружающий мир','Рисование (ИЗО)','Музыка','Технология','Физкультура','Английский язык'];
-const DEFAULT_STUDENTS = ['Степан','Аня','Ваня','Катя','Дима','Маша','Петя','Лена'];
-const ALL_GRADES = [
-    {value:5, mod:'p', label:'5+', cls:'m5p'},{value:5, mod:'',  label:'5',  cls:'m5'},{value:5, mod:'m', label:'5−', cls:'m5m'},
-    {value:4, mod:'p', label:'4+', cls:'m4p'},{value:4, mod:'',  label:'4',  cls:'m4'},{value:4, mod:'m', label:'4−', cls:'m4m'},
-    {value:3, mod:'p', label:'3+', cls:'m3p'},{value:3, mod:'',  label:'3',  cls:'m3'},{value:3, mod:'m', label:'3−', cls:'m3m'},
-    {value:2, mod:'p', label:'2+', cls:'m2p'},{value:2, mod:'',  label:'2',  cls:'m2'},{value:2, mod:'m', label:'2−', cls:'m2m'},
-];
-function normalizeGrade(g){
-    if(typeof g === 'number') return {value:g, mod:'', student:'—'};
-    if(g && typeof g === 'object' && typeof g.value === 'number') return {value:g.value, mod:g.mod||'', student:g.student||'—'};
-    return null;
-}
-function gradeLabel(g){ if(!g) return '?'; const f = ALL_GRADES.find(x=>x.value===g.value && x.mod===g.mod); return f ? f.label : '?'; }
-function gradeToNumber(g){ if(!g) return 0; let base = g.value; if(g.mod === 'p') base += 0.33; if(g.mod === 'm') base -= 0.33; return base; }
-function getGradeClass(g){ if(!g) return 'm3'; const f = ALL_GRADES.find(x=>x.value===g.value && x.mod===g.mod); return f ? f.cls : 'm3'; }
-
-let profile = JSON.parse(localStorage.getItem('diary_profile') || 'null') || {name:'Матвеев Степан', className:'1 «А»', initials:'МС'};
-let SUBJECTS = JSON.parse(localStorage.getItem('diary_subjects') || 'null') || [...DEFAULT_SUBJECTS];
-let STUDENTS = JSON.parse(localStorage.getItem('diary_students') || 'null') || [...DEFAULT_STUDENTS];
-let SCHEDULE = JSON.parse(localStorage.getItem('diary_schedule') || 'null') || {
-    'Понедельник':[{num:1,subject:'Русский язык',teacher:'Елена Владимировна',time:'08:30-09:10',room:'к. 3'},{num:2,subject:'Математика',teacher:'Елена Владимировна',time:'09:20-10:00',room:'к. 3'},{num:3,subject:'Физкультура',teacher:'Сергей Петрович',time:'10:10-10:50',room:'спортзал'}],
-    'Вторник':[{num:1,subject:'Математика',teacher:'Елена Владимировна',time:'08:30-09:10',room:'к. 3'},{num:2,subject:'Русский язык',teacher:'Елена Владимировна',time:'09:20-10:00',room:'к. 3'},{num:3,subject:'Окружающий мир',teacher:'Елена Владимировна',time:'10:10-10:50',room:'к. 3'}],
-    'Среда':[{num:1,subject:'Русский язык',teacher:'Елена Владимировна',time:'08:30-09:10',room:'к. 3'},{num:2,subject:'Математика',teacher:'Елена Владимировна',time:'09:20-10:00',room:'к. 3'},{num:3,subject:'Музыка',teacher:'Анна Сергеевна',time:'10:10-10:50',room:'каб. музыки'},{num:4,subject:'Рисование (ИЗО)',teacher:'Марина Ивановна',time:'11:00-11:40',room:'каб. ИЗО'}],
-    'Четверг':[{num:1,subject:'Русский язык',teacher:'Елена Владимировна',time:'08:30-09:10',room:'к. 3'},{num:2,subject:'Математика',teacher:'Елена Владимировна',time:'09:20-10:00',room:'к. 3'},{num:3,subject:'Литературное чтение',teacher:'Елена Владимировна',time:'10:10-10:50',room:'к. 3'},{num:4,subject:'Физкультура',teacher:'Сергей Петрович',time:'11:00-11:40',room:'спортзал'}],
-    'Пятница':[{num:1,subject:'Русский язык',teacher:'Елена Владимировна',time:'08:30-09:10',room:'к. 3'},{num:2,subject:'Окружающий мир',teacher:'Елена Владимировна',time:'09:20-10:00',room:'к. 3'},{num:3,subject:'Технология',teacher:'Марина Ивановна',time:'10:10-10:50',room:'каб. труда'},{num:4,subject:'Английский язык',teacher:'Ольга Петровна',time:'11:00-11:40',room:'к. 5'}]
-};
-let rawGrades = JSON.parse(localStorage.getItem('diary_grades_v4') || 'null') || {
-    'Русский язык':[{value:5,mod:'p',student:'Степан'},{value:4,mod:'',student:'Аня'},{value:5,mod:'',student:'Ваня'}],
-    'Математика':[{value:5,mod:'p',student:'Степан'},{value:5,mod:'',student:'Аня'},{value:4,mod:'p',student:'Ваня'}],
-    'Литературное чтение':[{value:5,mod:'',student:'Степан'},{value:5,mod:'p',student:'Аня'}],
-    'Окружающий мир':[{value:5,mod:'p',student:'Степан'},{value:4,mod:'',student:'Аня'}],
-    'Рисование (ИЗО)':[{value:5,mod:'p',student:'Степан'},{value:5,mod:'',student:'Аня'}],
-    'Музыка':[{value:5,mod:'',student:'Степан'},{value:5,mod:'p',student:'Аня'}],
-    'Технология':[{value:5,mod:'p',student:'Степан'}],
-    'Физкультура':[{value:5,mod:'p',student:'Степан'},{value:5,mod:'p',student:'Аня'}],
-    'Английский язык':[{value:5,mod:'',student:'Степан'},{value:4,mod:'p',student:'Аня'}],
-};
-let GRADES = {};
-Object.keys(rawGrades).forEach(s=>{ GRADES[s] = (rawGrades[s]||[]).map(normalizeGrade).filter(g=>g); });
-let HOMEWORK = JSON.parse(localStorage.getItem('diary_homework') || 'null') || [
-    {subject:'Русский язык', task:'Списать текст с. 45', due:'завтра', done:false},
-    {subject:'Математика', task:'Рабочая тетрадь с. 12', due:'завтра', done:false},
-];
-let NOTES = JSON.parse(localStorage.getItem('diary_notes') || '[]');
-
-function saveProfile(){ localStorage.setItem('diary_profile', JSON.stringify(profile)); }
-function saveSubjects(){ localStorage.setItem('diary_subjects', JSON.stringify(SUBJECTS)); }
-function saveStudents(){ localStorage.setItem('diary_students', JSON.stringify(STUDENTS)); }
-function saveSchedule(){ localStorage.setItem('diary_schedule', JSON.stringify(SCHEDULE)); }
-function saveGrades(){ localStorage.setItem('diary_grades_v4', JSON.stringify(GRADES)); }
-function saveHomework(){ localStorage.setItem('diary_homework', JSON.stringify(HOMEWORK)); }
-function saveNotes(){ localStorage.setItem('diary_notes', JSON.stringify(NOTES)); }
-
-let diaryMode = localStorage.getItem('diary_mode') || 'student';
-function applyDiaryMode(){
-    document.body.classList.remove('teacher','viewer');
-    if(diaryMode === 'teacher') document.body.classList.add('teacher');
-    else if(diaryMode === 'viewer') document.body.classList.add('viewer');
-    const btn = document.getElementById('diaryModeBtn');
-    btn.className = 'diary-mode-btn ' + diaryMode;
-    if(diaryMode === 'student') btn.innerText = '👤 Ученик';
-    else if(diaryMode === 'teacher') btn.innerText = '👨‍🏫 Учитель';
-    else btn.innerText = '👀 Родитель';
-    localStorage.setItem('diary_mode', diaryMode);
-    renderDiaryGrades(); renderDiaryHomework(); renderDiarySchedule();
-}
-function cycleDiaryMode(){
-    if(diaryMode === 'student') diaryMode = 'teacher';
-    else if(diaryMode === 'teacher') diaryMode = 'viewer';
-    else diaryMode = 'student';
-    applyDiaryMode();
-    showToast('Режим: ' + (diaryMode === 'student' ? '👤' : diaryMode === 'teacher' ? '👨‍🏫' : '👀'));
-}
-function switchDiaryTab(id, btn){
-    document.querySelectorAll('.diary-section').forEach(s=>s.classList.remove('active'));
-    document.querySelectorAll('.diary-tab').forEach(t=>t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    btn.classList.add('active');
-}
-function renderDiarySchedule(){
-    const today = new Date().getDay();
-    const dayIndex = today === 0 ? 0 : today - 1;
-    const todayName = DAYS[dayIndex] || 'Понедельник';
-    document.getElementById('todayBadge').innerText = 'Сегодня: ' + todayName;
-    const list = document.getElementById('scheduleList');
-    list.innerHTML = '';
-    DAYS.forEach(day=>{
-        const isToday = day === todayName;
-        const div = document.createElement('div');
-        div.className = 'schedule-day' + (isToday ? ' today' : '');
-        let lessonsHTML = '';
-        SCHEDULE[day].forEach(l=>{
-            lessonsHTML += `<div class="lesson"><div class="num">${l.num}</div><div class="info"><div class="subject">${l.subject}</div><div class="teacher">${l.teacher} • ${l.room}</div></div><div class="time">${l.time}</div></div>`;
-        });
-        div.innerHTML = `<h4>${day} ${isToday ? '<span class="date-badge">СЕГОДНЯ</span>' : ''}</h4>${lessonsHTML}`;
-        list.appendChild(div);
-    });
-}
-function renderDiaryGrades(){
-    const list = document.getElementById('gradesList'); if(!list) return;
-    list.innerHTML = '';
-    let totalSum = 0, totalCount = 0;
-    Object.keys(GRADES).forEach(subject=>{
-        const marks = GRADES[subject];
-        const avg = marks.length > 0 ? marks.reduce((a,b)=>a+gradeToNumber(b),0)/marks.length : 0;
-        totalSum += marks.reduce((a,b)=>a+gradeToNumber(b),0); totalCount += marks.length;
-        const marksHTML = marks.map((m,i)=>{
-            const cls = getGradeClass(m);
-            const del = (diaryMode === 'teacher') ? `<span class="del-mark" onclick="deleteDiaryGrade('${subject}',${i})">×</span>` : '';
-            return `<div class="mark ${cls}">${del}<div class="mark-value">${gradeLabel(m)}</div><div class="mark-student">${m.student||'—'}</div></div>`;
-        }).join('');
-        const div = document.createElement('div');
-        div.className = 'subject-grade';
-        div.innerHTML = `<div class="subject-name">${subject}</div><div class="marks">${marksHTML || '<span style="color:#8b5a2b;font-size:.8rem">Нет оценок</span>'}</div><div class="avg">Средний: <span>${avg.toFixed(2)}</span></div>`;
-        list.appendChild(div);
-    });
-    const g = totalCount > 0 ? (totalSum/totalCount).toFixed(2) : '—';
-    document.getElementById('gradesAvgBadge').innerText = 'Средний: ' + g;
-    const sel = document.getElementById('gradeSubject');
-    if(sel){ sel.innerHTML = ''; SUBJECTS.forEach(s=>{ if(!GRADES[s]) GRADES[s]=[]; sel.innerHTML += `<option value="${s}">${s}</option>`; }); }
-    const dl = document.getElementById('studentsList'); if(dl){ dl.innerHTML = ''; STUDENTS.forEach(s=>dl.innerHTML += `<option value="${s}">`); }
-}
-function renderGradePicker(){
-    const p = document.getElementById('gradePicker'); if(!p) return;
-    p.innerHTML = '';
-    ALL_GRADES.forEach(g=>{
-        const b = document.createElement('button');
-        b.className = 'grade-pick-btn ' + g.cls;
-        b.innerText = g.label;
-        b.onclick = ()=>{
-            document.querySelectorAll('.grade-pick-btn').forEach(x=>x.classList.remove('selected'));
-            b.classList.add('selected');
-            document.getElementById('selectedGrade').value = JSON.stringify({value:g.value, mod:g.mod});
-        };
-        p.appendChild(b);
-    });
-}
-function addGrade(){
-    if(diaryMode !== 'teacher'){ showToast('❌ Только учитель'); return; }
-    const student = document.getElementById('gradeStudent').value.trim();
-    const subject = document.getElementById('gradeSubject').value;
-    const gstr = document.getElementById('selectedGrade').value;
-    if(!student){ showToast('❌ Введите имя'); return; }
-    if(!gstr){ showToast('❌ Выберите оценку'); return; }
-    const g = JSON.parse(gstr); g.student = student;
-    if(!GRADES[subject]) GRADES[subject] = [];
-    GRADES[subject].push(g);
-    if(!STUDENTS.includes(student)){ STUDENTS.push(student); saveStudents(); }
-    saveGrades(); renderDiaryGrades(); renderDiaryStats();
-    document.getElementById('gradeStudent').value = '';
-    document.getElementById('selectedGrade').value = '';
-    document.querySelectorAll('.grade-pick-btn').forEach(x=>x.classList.remove('selected'));
-    showToast('✅ ' + gradeLabel(g) + ' → ' + student);
-}
-function deleteDiaryGrade(subject, index){
-    if(diaryMode !== 'teacher'){ showToast('❌ Только учитель'); return; }
-    GRADES[subject].splice(index,1);
-    saveGrades(); renderDiaryGrades(); renderDiaryStats();
-    showToast('🗑️ Удалено');
-}
-function renderDiaryHomework(){
-    const list = document.getElementById('homeworkList'); if(!list) return;
-    list.innerHTML = '';
-    const active = HOMEWORK.filter(h=>!h.done).length;
-    document.getElementById('hwBadge').innerText = 'Активных: ' + active;
-    if(HOMEWORK.length === 0){
-        list.innerHTML = '<div style="text-align:center;padding:20px;color:#8b5a2b">🍂 Нет домашки</div>';
-    } else {
-        const sorted = [...HOMEWORK].sort((a,b)=>a.done-b.done);
-        sorted.forEach(hw=>{
-            const idx = HOMEWORK.indexOf(hw);
-            const urgent = (hw.due === 'завтра' || hw.due === 'сегодня') && !hw.done;
-            const div = document.createElement('div');
-            div.className = 'homework-item' + (hw.done ? ' done' : '');
-            div.innerHTML = `<span class="check" onclick="toggleDiaryHW(${idx})">${hw.done ? '✅' : '⬜'}</span><button class="delete-hw" onclick="deleteDiaryHW(${idx})">🗑️</button><div class="subj">${hw.subject}</div><div class="task">${hw.task}</div><div class="due ${urgent?'urgent':''}">📅 Срок: ${hw.due}</div>`;
-            list.appendChild(div);
-        });
-    }
-    const sel = document.getElementById('hwSubject');
-    if(sel){ sel.innerHTML = ''; SUBJECTS.forEach(s=>sel.innerHTML += `<option value="${s}">${s}</option>`); }
-}
-function toggleDiaryHW(i){
-    if(diaryMode === 'viewer'){ showToast('👀 Режим родителя'); return; }
-    HOMEWORK[i].done = !HOMEWORK[i].done;
-    saveHomework(); renderDiaryHomework();
-}
-function addHomework(){
-    if(diaryMode !== 'teacher'){ showToast('❌ Только учитель'); return; }
-    const subject = document.getElementById('hwSubject').value;
-    const task = document.getElementById('hwTask').value.trim();
-    const due = document.getElementById('hwDue').value;
-    if(!task){ showToast('❌ Введите задание'); return; }
-    HOMEWORK.push({subject, task, due, done:false});
-    saveHomework(); renderDiaryHomework();
-    document.getElementById('hwTask').value = '';
-    showToast('📤 Домашка задана');
-}
-function deleteDiaryHW(i){
-    if(diaryMode !== 'teacher'){ return; }
-    HOMEWORK.splice(i,1); saveHomework(); renderDiaryHomework();
-}
-function renderDiaryNotes(){
-    const list = document.getElementById('notesList'); if(!list) return;
-    list.innerHTML = '';
-    document.getElementById('notesBadge').innerText = NOTES.length;
-    if(NOTES.length === 0){ list.innerHTML = '<div style="text-align:center;padding:20px;color:#8b5a2b">🍁 Нет заметок</div>'; return; }
-    NOTES.forEach((n,i)=>{
-        const div = document.createElement('div');
-        div.className = 'note-item';
-        div.innerHTML = `<button class="delete" onclick="deleteDiaryNote(${i})">🗑️</button><div class="note-text">${n.text.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}</div><div class="note-date">${n.date}</div>`;
-        list.appendChild(div);
-    });
-}
-function addNote(){
-    const input = document.getElementById('noteInput');
-    const text = input.value.trim();
-    if(!text){ showToast('❌ Введите текст'); return; }
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
-    NOTES.unshift({text, date:dateStr});
-    saveNotes(); input.value = ''; renderDiaryNotes();
-    showToast('📌 Заметка добавлена');
-}
-function deleteDiaryNote(i){ NOTES.splice(i,1); saveNotes(); renderDiaryNotes(); }
-function renderDiaryStats(){
-    const grid = document.getElementById('statsGrid'); if(!grid) return;
-    grid.innerHTML = '';
-    let totalSum = 0, totalCount = 0, fives=0, fours=0, threes=0, twos=0;
-    Object.values(GRADES).forEach(marks=>{
-        marks.forEach(m=>{
-            totalSum += gradeToNumber(m); totalCount++;
-            if(m.value===5) fives++; else if(m.value===4) fours++; else if(m.value===3) threes++; else if(m.value===2) twos++;
+        const found = ARTICLES.filter(a =>
+            a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q)
+        );
+        if (found.length === 0) {
+            results.innerHTML = '<div class="empty"><div class="empty-emoji">😕</div>Ничего не найдено</div>';
+            return;
+        }
+        results.innerHTML = found.map(a => `
+            <div class="card" data-page="${a.id}">
+                <div class="card-title"><span class="ico">${a.ico}</span> ${a.title}</div>
+                <div class="card-desc">${a.desc}</div>
+                <span class="card-tag">Найдено</span>
+            </div>
+        `).join('');
+        results.querySelectorAll('.card').forEach(c => {
+            c.addEventListener('click', () => showPage(c.dataset.page));
         });
     });
-    const avg = totalCount > 0 ? (totalSum/totalCount).toFixed(2) : '—';
-    const stats = [
-        {value:avg, label:'СРЕДНИЙ БАЛЛ', cls:''},
-        {value:fives, label:'ПЯТЁРОК', cls:'green'},
-        {value:fours, label:'ЧЕТВЁРОК', cls:'orange'},
-        {value:threes, label:'ТРОЕК', cls:'purple'},
-        {value:twos, label:'ДВОЕК', cls:'red'},
-        {value:totalCount, label:'ВСЕГО', cls:''},
-    ];
-    stats.forEach(s=>{
-        const d = document.createElement('div');
-        d.className = 'stat-box ' + s.cls;
-        d.innerHTML = `<div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>`;
-        grid.appendChild(d);
-    });
-    const subjList = document.getElementById('subjectStats'); if(!subjList) return;
-    subjList.innerHTML = '';
-    Object.keys(GRADES).forEach(subject=>{
-        const marks = GRADES[subject];
-        if(marks.length === 0) return;
-        const a = (marks.reduce((x,y)=>x+gradeToNumber(y),0)/marks.length).toFixed(2);
-        const percent = Math.min(100, (a/5)*100);
-        const color = a>=4.5 ? 'linear-gradient(90deg,#27ae60,#2ecc71)' : a>=3.5 ? 'linear-gradient(90deg,#d35400,#e67e22)' : a>=2.5 ? 'linear-gradient(90deg,#f39c12,#f1c40f)' : 'linear-gradient(90deg,#e74c3c,#c0392b)';
-        const d = document.createElement('div');
-        d.style.marginBottom = '10px';
-        d.innerHTML = `<div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span style="font-weight:700;color:#4a2511">${subject}</span><span style="color:#d35400;font-weight:800">${a}</span></div><div style="background:#ffe4cc;border-radius:8px;height:10px;overflow:hidden;border:1px solid #b87b4d"><div style="width:${percent}%;height:100%;background:${color};border-radius:8px"></div></div>`;
-        subjList.appendChild(d);
-    });
-}
 
-/* ГОРЯЧИЕ КЛАВИШИ */
-document.addEventListener('keydown', e=>{
-    if(e.ctrlKey && e.shiftKey && e.key === 'D'){ e.preventDefault(); requestDevAccess(); }
-    if(e.ctrlKey && e.shiftKey && e.key === 'Q'){ e.preventDefault(); triggerQPI(); }
-    if(e.ctrlKey && e.shiftKey && e.key === 'X'){ e.preventDefault(); triggerQpoi(true); }
-    if(e.ctrlKey && e.shiftKey && e.key === 'L'){ e.preventDefault(); terminalOutput.innerHTML = '<div class="line success">Логи очищены</div>'; }
-    if(e.key === 'Escape'){ closeSettings(); closeDevMenu(); closePassword(); }
-});
-
-/* СТАРТ */
-applySettings();
-applyDiaryMode();
-renderDiarySchedule();
-renderDiaryGrades();
-renderGradePicker();
-renderDiaryHomework();
-renderDiaryNotes();
-renderDiaryStats();
-let visits = parseInt(localStorage.getItem('kumertau_visits') || '0');
-visits++;
-localStorage.setItem('kumertau_visits', visits);
-document.getElementById('statVisits').innerText = visits;
-setInterval(()=>{
-    document.getElementById('statUptime').innerText = Math.round((Date.now()-startTime)/1000) + ' сек';
-}, 1000);
-const savedTab = localStorage.getItem('kumertau_active_tab');
-if(savedTab && savedTab !== 'home'){
-    const idx = ['home','city','sport','culture','ads','diary'].indexOf(savedTab);
-    if(idx >= 0){
-        const btns = document.querySelectorAll('nav button');
-        if(btns[idx]) switchTab(savedTab, btns[idx]);
+    function renderFavorites() {
+        const list = document.getElementById('favList');
+        if (favorites.length === 0) {
+            list.innerHTML = '<div class="empty"><div class="empty-emoji">⭐</div>Пока пусто</div>';
+            return;
+        }
+        list.innerHTML = favorites.map((f, i) => `
+            <div class="fav-item">
+                <div class="fav-item-text">${escapeHtml(f)}</div>
+                <button class="fav-item-del" data-index="${i}">✕</button>
+            </div>
+        `).join('');
+        list.querySelectorAll('.fav-item-del').forEach(btn => {
+            btn.addEventListener('click', () => {
+                favorites.splice(parseInt(btn.dataset.index), 1);
+                saveFavs();
+                renderFavorites();
+            });
+        });
     }
-}
-document.addEventListener('click', ()=>initAudio(), {once:true});
+
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    function saveFavs() {
+        localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
+    }
+
+    document.getElementById('favAddBtn').addEventListener('click', () => {
+        const val = document.getElementById('favInput').value.trim();
+        if (!val) return;
+        favorites.push(val);
+        saveFavs();
+        document.getElementById('favInput').value = '';
+        renderFavorites();
+    });
+
+    document.getElementById('favClearBtn').addEventListener('click', () => {
+        if (confirm('Удалить все записи?')) {
+            favorites = [];
+            saveFavs();
+            renderFavorites();
+        }
+    });
+
+    function applyTheme() {
+        if (lightTheme) {
+            document.body.classList.add('light-theme');
+            document.getElementById('themeToggle').textContent = '☀️ Светлая';
+        } else {
+            document.body.classList.remove('light-theme');
+            document.getElementById('themeToggle').textContent = '🌙 Тёмная';
+        }
+    }
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        lightTheme = !lightTheme;
+        localStorage.setItem('kumertau_theme', lightTheme ? 'light' : 'dark');
+        applyTheme();
+    });
+
+    function applyFont() {
+        document.documentElement.style.setProperty('--font-scale', fontScale);
+        document.getElementById('fontValue').textContent = Math.round(fontScale * 100) + '%';
+        localStorage.setItem('kumertau_font', fontScale);
+    }
+
+    document.getElementById('fontUp').addEventListener('click', () => {
+        fontScale = Math.min(1.5, fontScale + 0.1);
+        applyFont();
+    });
+    document.getElementById('fontDown').addEventListener('click', () => {
+        fontScale = Math.max(0.8, fontScale - 0.1);
+        applyFont();
+    });
+
+    const lockScreen = document.getElementById('lockScreen');
+    const lockInput = document.getElementById('lockInput');
+    const lockError = document.getElementById('lockError');
+
+    document.getElementById('devModeBtn').addEventListener('click', () => {
+        lockScreen.classList.add('show');
+        lockInput.value = '';
+        lockError.textContent = '';
+        lockInput.focus();
+    });
+
+    document.getElementById('lockCancel').addEventListener('click', () => {
+        lockScreen.classList.remove('show');
+    });
+
+    document.getElementById('lockOk').addEventListener('click', checkPassword);
+    lockInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') checkPassword();
+    });
+
+    function checkPassword() {
+        if (lockInput.value === DEV_PASSWORD) {
+            devMode = true;
+            lockScreen.classList.remove('show');
+            showPage('dev');
+        } else {
+            lockError.textContent = '❌ Неверный пароль';
+            lockInput.value = '';
+        }
+    }
+
+    document.getElementById('devExitBtn').addEventListener('click', () => {
+        devMode = false;
+        showPage('settings');
+    });
+
+    document.getElementById('devReload').addEventListener('click', () => location.reload());
+
+    document.getElementById('devTheme').addEventListener('click', () => {
+        lightTheme = !lightTheme;
+        localStorage.setItem('kumertau_theme', lightTheme ? 'light' : 'dark');
+        applyTheme();
+    });
+
+    document.getElementById('devFont').addEventListener('click', () => {
+        fontScale = Math.min(1.5, fontScale + 0.1);
+        applyFont();
+    });
+
+    document.getElementById('devClearFav').addEventListener('click', () => {
+        favorites = [];
+        saveFavs();
+        renderFavorites();
+        alert('✅ Избранное очищено');
+    });
+
+    document.getElementById('devAlert').addEventListener('click', () => {
+        alert('📢 Тестовое уведомление!');
+    });
+
+    document.getElementById('devClearAll').addEventListener('click', () => {
+        if (confirm('💥 Сбросить ВСЕ данные сайта?')) {
+            localStorage.clear();
+            location.reload();
+        }
+    });
+
+    const lunaFrame = document.getElementById('lunaFrame');
+    const lunaFallback = document.getElementById('lunaFallback');
+    
+    if (lunaFrame) {
+        let loaded = false;
+        lunaFrame.addEventListener('load', () => { loaded = true; });
+        setTimeout(() => {
+            if (!loaded) {
+                lunaFallback.classList.add('show');
+            }
+        }, 3500);
+    }
+
+    document.getElementById('lunaReload').addEventListener('click', () => {
+        const frame = document.getElementById('lunaFrame');
+        frame.src = frame.src;
+        lunaFallback.classList.remove('show');
+    });
+
+    applyTheme();
+    applyFont();
+    showPage('home');
+    document.getElementById('searchResults').innerHTML =
+        '<div class="empty"><div class="empty-emoji">🔍</div>Введи запрос</div>';
+    renderFavorites();
 </script>
+
 </body>
 </html>
