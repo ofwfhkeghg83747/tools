@@ -10,6 +10,7 @@
     :root {
         --paper: #f4e8d0;
         --paper-dark: #e8d5b0;
+        --paper-light: #faf1de;
         --ink: #3d2817;
         --ink-light: #6b4a2b;
         --rust: #b8471f;
@@ -18,12 +19,16 @@
         --pumpkin: #d97a2b;
         --wine: #7a2e1f;
         --cream: #fff8e8;
+        --a4-red: #e63946;
+        --a4-black: #1a1a1a;
+        --a4-yellow: #ffd60a;
         --font-scale: 1;
     }
 
     body.night-theme {
         --paper: #1a120a;
         --paper-dark: #241810;
+        --paper-light: #2a1c12;
         --ink: #e8d5b0;
         --ink-light: #b89988;
         --rust: #ff8c42;
@@ -35,7 +40,7 @@
     }
 
     html, body {
-        background: var(--paper);
+        background: var(--paper-dark);
         color: var(--ink);
         font-family: Georgia, "Times New Roman", serif;
         min-height: 100vh;
@@ -43,13 +48,8 @@
         padding-bottom: 100px;
         font-size: calc(16px * var(--font-scale));
         transition: background 0.5s, color 0.5s;
-        background-image:
-            radial-gradient(circle at 20% 10%, rgba(217, 122, 43, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(184, 71, 31, 0.12) 0%, transparent 50%);
-        background-attachment: fixed;
     }
 
-    /* 📜 Бумажная текстура */
     body::before {
         content: "";
         position: fixed;
@@ -90,7 +90,7 @@
     .preloader {
         position: fixed;
         inset: 0;
-        background: var(--paper);
+        background: var(--paper-dark);
         z-index: 99999;
         display: flex;
         flex-direction: column;
@@ -101,12 +101,11 @@
     }
     .preloader.hide { opacity: 0; visibility: hidden; }
     .preloader-logo {
-        font-size: 42px;
+        font-size: 44px;
         font-weight: 900;
         letter-spacing: 8px;
         color: var(--rust);
         text-align: center;
-        font-family: Georgia, serif;
         text-shadow: 3px 3px 0 var(--gold), 6px 6px 0 rgba(184, 71, 31, 0.2);
     }
     .preloader-leaf {
@@ -141,6 +140,7 @@
         align-items: center;
         gap: 12px;
         margin-bottom: 10px;
+        flex-wrap: wrap;
     }
 
     .logo-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
@@ -163,7 +163,7 @@
         text-shadow: 1px 1px 0 var(--gold);
     }
 
-    .search-wrap { flex: 1; position: relative; max-width: 400px; }
+    .search-wrap { flex: 1; position: relative; max-width: 400px; min-width: 180px; }
     .search-input {
         width: 100%;
         padding: 10px 14px 10px 40px;
@@ -193,7 +193,37 @@
         pointer-events: none;
     }
 
-    /* 🖥 Кнопка режима ПК */
+    /* 🔴 Кнопка А4 */
+    .a4-toggle-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 14px;
+        background: var(--a4-red);
+        border: 2px solid var(--ink);
+        border-radius: 4px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.2s;
+        white-space: nowrap;
+        font-family: Georgia, serif;
+        box-shadow: 2px 2px 0 var(--ink);
+    }
+    .a4-toggle-btn:hover {
+        background: var(--a4-black);
+        transform: translate(-1px, -1px);
+        box-shadow: 3px 3px 0 var(--ink);
+    }
+    .a4-toggle-btn:active {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0 var(--ink);
+    }
+
+    /* 🖥 Кнопка ПК */
     .pc-toggle-btn {
         display: flex;
         align-items: center;
@@ -204,22 +234,25 @@
         border-radius: 4px;
         color: var(--cream);
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 1px;
         text-transform: uppercase;
         cursor: pointer;
         transition: 0.2s;
         white-space: nowrap;
         font-family: Georgia, serif;
+        box-shadow: 2px 2px 0 var(--ink);
     }
     .pc-toggle-btn:hover {
         background: var(--wine);
-        transform: translateY(-1px);
+        transform: translate(-1px, -1px);
+        box-shadow: 3px 3px 0 var(--ink);
     }
-    .pc-toggle-btn:active { transform: scale(0.96); }
-    .pc-toggle-btn.active {
-        background: var(--moss);
+    .pc-toggle-btn:active {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0 var(--ink);
     }
+    .pc-toggle-btn.active { background: var(--moss); }
 
     .badges-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .autumn-badge, .creator-badge {
@@ -235,14 +268,8 @@
         font-family: Georgia, serif;
         border: 1.5px solid var(--ink);
     }
-    .autumn-badge {
-        background: var(--gold);
-        color: var(--ink);
-    }
-    .creator-badge {
-        background: var(--cream);
-        color: var(--wine);
-    }
+    .autumn-badge { background: var(--gold); color: var(--ink); }
+    .creator-badge { background: var(--cream); color: var(--wine); }
 
     .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; position: relative; z-index: 2; }
 
@@ -253,7 +280,6 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* 🏛 Главный герой — газетный стиль */
     .hero {
         background: var(--cream);
         border: 3px double var(--ink);
@@ -265,7 +291,6 @@
         overflow: hidden;
         box-shadow: 6px 6px 0 var(--ink);
     }
-    body.night-theme .hero { box-shadow: 6px 6px 0 var(--rust); }
     .hero::before {
         content: "";
         position: absolute;
@@ -318,7 +343,7 @@
         opacity: 0.4;
     }
 
-    /* ❄️ Ждём зиму — винтажный блок */
+    /* 🌨 Ждём зиму */
     .wait-winter {
         background: linear-gradient(135deg, var(--cream), var(--paper-dark));
         border: 3px solid var(--ink);
@@ -364,7 +389,6 @@
         text-transform: uppercase;
     }
 
-    /* 📰 Карточки — газетные */
     .card {
         background: var(--cream);
         border: 2px solid var(--ink);
@@ -394,10 +418,7 @@
         gap: 10px;
         font-family: Georgia, serif;
     }
-    .card-title .ico {
-        font-size: 24px;
-        display: inline-block;
-    }
+    .card-title .ico { font-size: 24px; display: inline-block; }
     .card-desc {
         font-size: 13px;
         color: var(--ink-light);
@@ -417,9 +438,11 @@
         margin-top: 12px;
         font-family: Georgia, serif;
     }
-    .card-tag.news {
-        background: var(--gold);
-        color: var(--ink);
+    .card-tag.news { background: var(--gold); color: var(--ink); }
+    .card-tag.a4 {
+        background: var(--a4-red);
+        color: #fff;
+        letter-spacing: 2px;
     }
     .card-tag.live {
         background: var(--rust);
@@ -428,7 +451,6 @@
     }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-    /* 📜 Обычный блок */
     .block {
         background: var(--cream);
         border: 2px solid var(--ink);
@@ -455,7 +477,195 @@
     .block p { font-size: 14px; line-height: 1.7; color: var(--ink); }
     .block p em { color: var(--ink-light); }
 
-    /* 🏆 Кубок Гагарина */
+    /* 🎬 Блок А4 */
+    .a4-hero-block {
+        background: var(--a4-black);
+        color: #fff;
+        border: 3px solid var(--a4-red);
+        border-radius: 4px;
+        padding: 30px 24px;
+        margin-bottom: 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 6px 6px 0 var(--a4-red);
+    }
+    .a4-hero-block::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 20% 30%, rgba(230, 57, 70, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(255, 214, 10, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    .a4-hero-block > * { position: relative; z-index: 1; }
+    .a4-logo-big {
+        font-size: 72px;
+        font-weight: 900;
+        letter-spacing: 10px;
+        color: var(--a4-red);
+        text-align: center;
+        text-shadow: 4px 4px 0 var(--a4-yellow), 8px 8px 0 rgba(230, 57, 70, 0.4);
+        line-height: 1;
+        margin-bottom: 12px;
+        font-family: Georgia, serif;
+    }
+    .a4-name {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 4px;
+        color: var(--a4-yellow);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .a4-sub {
+        font-size: 13px;
+        color: #aaa;
+        letter-spacing: 2px;
+        font-style: italic;
+        text-transform: uppercase;
+    }
+
+    /* 📊 Инфо-карточки А4 */
+    .a4-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+    .a4-info-item {
+        background: var(--a4-black);
+        border: 2px solid var(--a4-red);
+        border-radius: 3px;
+        padding: 14px 12px;
+        text-align: center;
+        color: #fff;
+        box-shadow: 3px 3px 0 var(--a4-red);
+    }
+    .a4-info-item .label {
+        font-size: 10px;
+        color: var(--a4-yellow);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 800;
+        margin-bottom: 6px;
+        font-family: Georgia, serif;
+    }
+    .a4-info-item .value {
+        font-size: 16px;
+        font-weight: 900;
+        color: #fff;
+        font-family: Georgia, serif;
+    }
+
+    /* 📸 Галерея картинок А4 */
+    .a4-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    .a4-gallery-item {
+        background: var(--a4-black);
+        border: 2px solid var(--a4-red);
+        border-radius: 3px;
+        overflow: hidden;
+        box-shadow: 4px 4px 0 var(--a4-red);
+        transition: 0.2s;
+        cursor: pointer;
+    }
+    .a4-gallery-item:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 var(--a4-red);
+    }
+    .a4-gallery-item img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+    }
+    .a4-gallery-item .caption {
+        padding: 8px 10px;
+        font-size: 11px;
+        color: #fff;
+        text-align: center;
+        letter-spacing: 1px;
+        background: var(--a4-black);
+        font-family: Georgia, serif;
+    }
+
+    /* 🔗 Ссылки А4 */
+    .a4-links {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+    .a4-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: var(--a4-red);
+        border: 2px solid var(--a4-black);
+        border-radius: 3px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 3px 3px 0 var(--a4-black);
+        font-family: Georgia, serif;
+    }
+    .a4-link-btn:hover {
+        background: var(--a4-yellow);
+        color: var(--a4-black);
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0 var(--a4-black);
+    }
+    .a4-link-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--a4-black);
+    }
+
+    /* 📜 Цитата А4 */
+    .a4-quote {
+        background: var(--a4-black);
+        color: #fff;
+        border-left: 6px solid var(--a4-yellow);
+        padding: 18px 20px;
+        margin-bottom: 16px;
+        border-radius: 3px;
+        font-style: italic;
+        font-size: 15px;
+        line-height: 1.7;
+        position: relative;
+        box-shadow: 4px 4px 0 var(--a4-red);
+    }
+    .a4-quote::before {
+        content: "“";
+        position: absolute;
+        top: -10px; left: 12px;
+        font-size: 60px;
+        color: var(--a4-red);
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+    .a4-quote .author {
+        display: block;
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--a4-yellow);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-style: normal;
+        font-weight: 800;
+    }
+
     .gagarin-block {
         background: var(--cream);
         border: 3px double var(--gold);
@@ -499,7 +709,6 @@
         border-left: 4px solid var(--rust);
     }
 
-    /* 📺 Луномосик */
     .live-hero {
         background: var(--wine);
         border: 3px double var(--cream);
@@ -572,7 +781,6 @@
     .video-fallback .fb-emoji { font-size: 48px; }
     .video-fallback p { font-size: 13px; color: var(--paper-dark); max-width: 300px; font-style: italic; }
 
-    /* 🔘 Кнопки — винтажные */
     .btn {
         display: inline-flex;
         align-items: center;
@@ -602,20 +810,12 @@
         transform: translate(2px, 2px);
         box-shadow: 1px 1px 0 var(--ink);
     }
-    .btn-outline {
-        background: var(--cream);
-        color: var(--rust);
-    }
+    .btn-outline { background: var(--cream); color: var(--rust); }
     .btn-outline:hover { background: var(--gold); color: var(--ink); }
-    .btn-danger {
-        background: var(--wine);
-    }
-    .btn-green {
-        background: var(--moss);
-    }
+    .btn-danger { background: var(--wine); }
+    .btn-green { background: var(--moss); }
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
-    /* ⚙️ Настройки */
     .settings-row {
         display: flex;
         align-items: center;
@@ -627,6 +827,7 @@
         border-radius: 3px;
         margin-bottom: 10px;
         box-shadow: 2px 2px 0 var(--ink);
+        flex-wrap: wrap;
     }
     .settings-label {
         font-size: 14px;
@@ -645,7 +846,6 @@
         border-radius: 3px;
     }
 
-    /* 📱 Меню */
     .bottom-nav {
         position: fixed;
         bottom: 0; left: 0; right: 0;
@@ -682,7 +882,6 @@
     .empty { text-align: center; padding: 40px 20px; color: var(--ink-light); font-size: 14px; font-style: italic; }
     .empty-emoji { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
 
-    /* 🔐 Пароль */
     .lock-screen {
         position: fixed;
         inset: 0;
@@ -735,7 +934,6 @@
         font-family: Georgia, serif;
     }
 
-    /* ⭐ Избранное */
     .fav-input {
         width: 100%;
         padding: 12px 14px;
@@ -784,7 +982,6 @@
         justify-content: center;
     }
 
-    /* 🛠 DEV */
     .dev-panel {
         background: var(--ink);
         border: 3px double var(--gold);
@@ -896,10 +1093,7 @@
         color: var(--ink);
     }
     .pc-nav .nav-item:hover { background: var(--paper-dark); }
-    .pc-nav .nav-item.active {
-        background: var(--rust);
-        color: var(--cream);
-    }
+    .pc-nav .nav-item.active { background: var(--rust); color: var(--cream); }
     .pc-nav .nav-icon { width: 22px; height: 22px; }
 
     .winter-side {
@@ -940,6 +1134,7 @@
     body.pc-mode .block { padding: 26px; }
     body.pc-mode .wait-winter { padding: 32px; }
     body.pc-mode .wait-winter h2 { font-size: 34px; }
+    body.pc-mode .a4-logo-big { font-size: 96px; }
 
     @media (max-width: 900px) {
         body.pc-mode .container { grid-template-columns: 1fr; }
@@ -954,6 +1149,9 @@
         .wait-winter h2 { font-size: 18px; letter-spacing: 3px; }
         .pc-toggle-btn span { display: none; }
         .pc-toggle-btn { padding: 9px 12px; }
+        .a4-toggle-btn span { display: none; }
+        .a4-toggle-btn { padding: 9px 12px; }
+        .a4-logo-big { font-size: 52px; }
     }
 </style>
 </head>
@@ -996,6 +1194,7 @@
             </svg>
             <input type="text" class="search-input" id="searchInput" placeholder="Поиск по вестнику...">
         </div>
+        <button class="a4-toggle-btn" id="a4Btn">🔴 <span>A4</span></button>
         <button class="pc-toggle-btn" id="pcToggle">🖥 <span>ПК</span></button>
     </div>
     <div class="badges-row">
@@ -1006,6 +1205,7 @@
 
 <div class="container">
 
+    <!-- 🏠 ГЛАВНАЯ -->
     <div class="page active" id="page-home">
         <div class="wait-winter">
             <h2>ЖДЁМ ЗИМУ</h2>
@@ -1019,15 +1219,21 @@
             <div class="hero-sub">Республика Башкортостан · 2026</div>
         </div>
 
+        <div class="card" data-page="a4">
+            <div class="card-title"><span class="ico">🔴</span> Блогер А4 — Влад Бумага</div>
+            <div class="card-desc">Всё о самом популярном блогере: биография, факты, музыка</div>
+            <span class="card-tag a4">А4</span>
+        </div>
+
         <div class="card" data-page="gagarin">
             <div class="card-title"><span class="ico">🏆</span> Кубок Гагарина</div>
-            <div class="card-desc">Олимпиада школьников 1–8 классов Республики Башкортостан</div>
+            <div class="card-desc">Олимпиада школьников 1–8 классов РБ</div>
             <span class="card-tag news">Олимпиада</span>
         </div>
 
         <div class="card" data-page="luna">
             <div class="card-title"><span class="ico">🌙</span> Луномосик — Прямой эфир</div>
-            <div class="card-desc">Смотреть прямо на страницах вестника</div>
+            <div class="card-desc">Смотреть на сайте</div>
             <span class="card-tag live">● LIVE</span>
         </div>
 
@@ -1038,6 +1244,131 @@
         </div>
     </div>
 
+    <!-- 🔴 БЛОГЕР А4 -->
+    <div class="page" id="page-a4">
+        <div class="a4-hero-block">
+            <div class="a4-logo-big">A4</div>
+            <div class="a4-name">Влад Бумага</div>
+            <div class="a4-sub">Самый популярный блогер рунета</div>
+        </div>
+
+        <!-- 📊 Инфо -->
+        <div class="a4-info-grid">
+            <div class="a4-info-item">
+                <div class="label">Родился</div>
+                <div class="value">05.06.1996</div>
+            </div>
+            <div class="a4-info-item">
+                <div class="label">Город</div>
+                <div class="value">Минск</div>
+            </div>
+            <div class="a4-info-item">
+                <div class="label">Канал создан</div>
+                <div class="value">2014</div>
+            </div>
+            <div class="a4-info-item">
+                <div class="label">Подписчики</div>
+                <div class="value">10M+</div>
+            </div>
+        </div>
+
+        <!-- 📖 Кто такой -->
+        <div class="block" style="border-left-color: var(--a4-red);">
+            <h3 style="color: var(--a4-red);">📖 Кто такой Влад А4</h3>
+            <p>
+                <b>Влад Бумага</b> (настоящее имя — Владислав Бумага) — один из самых
+                популярных русскоязычных видеоблогеров. Родился <b>5 июня 1996 года</b>
+                в Минске, в семье инженера-строителя и учительницы начальных классов.
+            </p>
+            <p style="margin-top:10px;">
+                Псевдоним <b>«А4»</b> — это отсылка к формату бумажного листа
+                и его настоящей фамилии, которую он в детстве стеснялся.
+            </p>
+        </div>
+
+        <!-- 📈 Путь к славе -->
+        <div class="block" style="border-left-color: var(--a4-yellow);">
+            <h3 style="color: var(--a4-yellow);">📈 Путь к славе</h3>
+            <ul>
+                <li><b>2014</b> — Зарегистрировал YouTube-канал <b>«А4»</b> (29 ноября). Первые ролики — челленджи и розыгрыши.</li>
+                <li><b>2016</b> — Настоящий прорыв после видео <b>«24 часа в батутном центре»</b> — подписчики выросли с 250 тыс. до миллиона.</li>
+                <li><b>2017</b> — Выпустил пародию <b>«Тает срок»</b> на хит группы «Грибы».</li>
+                <li><b>2019</b> — Получил <b>«Бриллиантовую кнопку»</b> YouTube за 10 млн подписчиков. Видео <b>«Покупаю все, что ты можешь унести из магазина!»</b> попало в мировой топ.</li>
+            </ul>
+        </div>
+
+        <!-- 🎬 Контент -->
+        <div class="block" style="border-left-color: var(--a4-black);">
+            <h3 style="color: var(--a4-black);">🎬 Контент и музыка</h3>
+            <p>
+                Основной формат — <b>дорогие челленджи, испытания и соревнования</b> с друзьями.
+            </p>
+            <p style="margin-top:10px;">
+                Также известен как музыкант: выпускал треки <b>«Батя»</b>,
+                <b>«Офишлбывший»</b>, <b>«KIDS»</b>, <b>«Лама Мама»</b>
+                и новогоднюю песню с Егором Кридом и JONY.
+            </p>
+        </div>
+
+        <!-- 💼 Бизнес -->
+        <div class="block" style="border-left-color: var(--moss);">
+            <h3 style="color: var(--moss);">💼 Бизнес</h3>
+            <p>
+                Запустил бренд снеков и напитков <b>Lava-Lava</b>,
+                а также сеть пиццерий <b>«A4 pizza»</b>.
+                В 2026 году у некоторых его компаний возникли
+                налоговые задолженности и блокировки счетов.
+            </p>
+        </div>
+
+        <!-- 💬 Цитата -->
+        <div class="a4-quote">
+            В 2024 году Влад Бумага лично задал вопрос Владимиру Путину
+            на «Прямой линии» о работе YouTube в России и похвастался
+            рождением дочери.
+            <span class="author">— Интересный факт</span>
+        </div>
+
+        <!-- 🔗 Ссылки -->
+        <div class="a4-links">
+            <a class="a4-link-btn" href="https://www.youtube.com/@A4" target="_blank" rel="noopener">
+                ▶ YouTube А4
+            </a>
+            <a class="a4-link-btn" href="https://vk.com/a4" target="_blank" rel="noopener">
+                🔵 ВКонтакте
+            </a>
+            <a class="a4-link-btn" href="https://t.me/a4" target="_blank" rel="noopener">
+                ✈ Telegram
+            </a>
+        </div>
+
+        <!-- 📸 Галерея -->
+        <div class="block">
+            <h3>📸 Галерея А4</h3>
+            <p style="margin-bottom:12px;"><em>Фотографии и стиль блогера</em></p>
+            <div class="a4-gallery">
+                <div class="a4-gallery-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Vlad_Bumaga_2021.jpg/320px-Vlad_Bumaga_2021.jpg" alt="Влад А4" onerror="this.style.background='linear-gradient(135deg,#e63946,#1a1a1a)';this.style.height='160px';">
+                    <div class="caption">Влад А4</div>
+                </div>
+                <div class="a4-gallery-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/YouTube_logo_%282017%29.svg/320px-YouTube_logo_%282017%29.svg.png" alt="YouTube" style="background:#fff;object-fit:contain;padding:20px;">
+                    <div class="caption">YouTube-канал</div>
+                </div>
+                <div class="a4-gallery-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/A4_paper_%28blue%29.jpg/320px-A4_paper_%28blue%29.jpg" alt="А4" onerror="this.style.background='linear-gradient(135deg,#ffd60a,#e63946)';this.style.height='160px';">
+                    <div class="caption">Символ А4</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:16px;">
+            <button class="btn" onclick="showPage('home')">← Назад</button>
+            <button class="btn btn-outline" onclick="location.reload()">🔄 Обновить</button>
+        </div>
+    </div>
+
+    <!-- 🏆 КУБОК ГАГАРИНА -->
     <div class="page" id="page-gagarin">
         <div class="hero">
             <div class="hero-emoji">🏆</div>
@@ -1084,6 +1415,7 @@
         </div>
     </div>
 
+    <!-- 🌙 ЛУНОМОСИК -->
     <div class="page" id="page-luna">
         <div class="live-hero">
             <div class="live-badge-top">● ПРЯМОЙ ЭФИР</div>
@@ -1125,6 +1457,7 @@
         </div>
     </div>
 
+    <!-- ⚙️ НАСТРОЙКИ -->
     <div class="page" id="page-settings">
         <div class="hero">
             <div class="hero-emoji">⚙️</div>
@@ -1152,6 +1485,11 @@
             <button class="btn btn-outline" id="pcToggleSettings">🖥 Включить</button>
         </div>
 
+        <div class="settings-row">
+            <span class="settings-label">🔴 Блогер А4</span>
+            <button class="btn btn-outline" onclick="showPage('a4')">🔴 Открыть раздел</button>
+        </div>
+
         <div class="block">
             <h3>🛠 Режим разработчика</h3>
             <p style="margin-bottom:12px;"><em>Введите пароль для входа.</em></p>
@@ -1165,6 +1503,7 @@
         </div>
     </div>
 
+    <!-- 🛠 DEV -->
     <div class="page" id="page-dev">
         <div class="hero">
             <div class="hero-emoji">🛠</div>
@@ -1179,7 +1518,7 @@
                 <button class="btn btn-green" id="devReload">🔄 Перезагрузить</button>
                 <button class="btn btn-outline" id="devTheme" style="background:#f4e8d0;">🎨 Тема</button>
                 <button class="btn btn-outline" id="devFont" style="background:#f4e8d0;">🔤 Шрифт+</button>
-                <button class="btn btn-outline" id="devPC" style="background:#f4e8d0;">🖥 Режим ПК</button>
+                <button class="btn btn-outline" id="devPC" style="background:#f4e8d0;">🖥 ПК</button>
                 <button class="btn btn-outline" id="devClearFav" style="background:#f4e8d0;">🗑 Избранное</button>
                 <button class="btn btn-outline" id="devAlert" style="background:#f4e8d0;">📢 Алерт</button>
                 <button class="btn btn-danger" id="devClearAll">💥 Сброс</button>
@@ -1199,6 +1538,7 @@
         </div>
     </div>
 
+    <!-- ⭐ ИЗБРАННОЕ -->
     <div class="page" id="page-fav">
         <div class="hero">
             <div class="hero-emoji">⭐</div>
@@ -1219,6 +1559,7 @@
         <div id="favList"></div>
     </div>
 
+    <!-- 🔍 ПОИСК -->
     <div class="page" id="page-search">
         <div class="hero">
             <div class="hero-emoji">🔍</div>
@@ -1229,6 +1570,7 @@
         <div id="searchResults"></div>
     </div>
 
+    <!-- 🖥 САЙДБАР -->
     <aside class="pc-sidebar">
         <div class="winter-side">
             <h3>Ждём зиму</h3>
@@ -1268,6 +1610,7 @@
 
         <div class="sidebar-card">
             <h4>🍁 Разделы</h4>
+            <a class="item" data-page="a4">🔴 Блогер А4</a>
             <a class="item" data-page="gagarin">🏆 Кубок Гагарина</a>
             <a class="item" data-page="luna">🌙 Луномосик</a>
             <a class="item" data-page="settings">⚙️ Настройки</a>
@@ -1324,6 +1667,7 @@
 
 <script>
     const ARTICLES = [
+        { id: 'a4',       ico: '🔴', title: 'Блогер А4 — Влад Бумага',  desc: 'Биография, факты, музыка' },
         { id: 'gagarin',  ico: '🏆', title: 'Кубок Гагарина',           desc: 'Олимпиада 1–8 классов РБ' },
         { id: 'luna',     ico: '🌙', title: 'Луномосик — Прямой эфир',  desc: 'Смотреть на сайте' },
         { id: 'settings', ico: '⚙️', title: 'Настройки',                desc: 'Тема, шрифт, разработчик' }
@@ -1349,6 +1693,7 @@
         if (page) page.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    window.showPage = showPage;
 
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
@@ -1371,6 +1716,11 @@
             showPage(item.dataset.page);
             if (item.dataset.page === 'fav') renderFavorites();
         });
+    });
+
+    // 🔴 Кнопка А4 — переход на раздел
+    document.getElementById('a4Btn').addEventListener('click', () => {
+        showPage('a4');
     });
 
     const searchInput = document.getElementById('searchInput');
