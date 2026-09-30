@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Кумертау · Будущее 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Кумертау · Анонимный чат 2026</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -11,13 +11,12 @@
         --bg: #05060f;
         --bg-2: #0a0d1f;
         --glass: rgba(20, 25, 50, 0.55);
-        --glass-2: rgba(15, 20, 45, 0.75);
+        --glass-2: rgba(15, 20, 45, 0.85);
         --border: rgba(120, 200, 255, 0.25);
         --border-strong: rgba(120, 220, 255, 0.6);
         --text: #e8f0ff;
         --text-dim: #8892b8;
         --neon-cyan: #00e5ff;
-        --neon-blue: #4d7cff;
         --neon-purple: #a855f7;
         --neon-pink: #ff2d95;
         --neon-green: #00ff9d;
@@ -30,23 +29,16 @@
         --bg: #0a0800;
         --bg-2: #14100a;
         --glass: rgba(40, 30, 0, 0.6);
-        --glass-2: rgba(30, 22, 0, 0.85);
+        --glass-2: rgba(30, 22, 0, 0.9);
         --border: rgba(255, 214, 10, 0.3);
         --border-strong: rgba(255, 214, 10, 0.8);
         --text: #fff9e0;
         --text-dim: #c9a84a;
         --neon-cyan: #ffd60a;
-        --neon-blue: #ffb700;
         --neon-purple: #ffd60a;
-        --neon-pink: #ff2d95;
         --neon-green: #ffd60a;
         --neon-yellow: #ffd60a;
         --neon-red: #e63946;
-    }
-
-    body.night-theme {
-        --bg: #000;
-        --bg-2: #05060f;
     }
 
     html, body {
@@ -55,9 +47,10 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         min-height: 100vh;
         overflow-x: hidden;
-        padding-bottom: 100px;
+        padding-bottom: 80px;
         font-size: calc(16px * var(--font-scale));
         transition: background 0.5s, color 0.5s;
+        -webkit-text-size-adjust: 100%;
     }
 
     body::before {
@@ -65,191 +58,135 @@
         position: fixed;
         inset: 0;
         background:
-            radial-gradient(circle at 15% 15%, rgba(0, 229, 255, 0.18) 0%, transparent 40%),
-            radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.18) 0%, transparent 40%),
-            radial-gradient(circle at 50% 90%, rgba(0, 255, 157, 0.15) 0%, transparent 50%);
+            radial-gradient(circle at 15% 15%, rgba(0, 229, 255, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
         pointer-events: none;
         z-index: 0;
-        transition: opacity 0.5s;
     }
     body.a4-mode::before {
         background:
-            radial-gradient(circle at 15% 15%, rgba(255, 214, 10, 0.25) 0%, transparent 40%),
-            radial-gradient(circle at 85% 30%, rgba(255, 183, 0, 0.22) 0%, transparent 40%),
-            radial-gradient(circle at 50% 90%, rgba(230, 57, 70, 0.18) 0%, transparent 50%);
+            radial-gradient(circle at 15% 15%, rgba(255, 214, 10, 0.2) 0%, transparent 40%),
+            radial-gradient(circle at 85% 30%, rgba(230, 57, 70, 0.15) 0%, transparent 40%);
     }
 
-    body::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image:
-            linear-gradient(rgba(120, 200, 255, 0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(120, 200, 255, 0.06) 1px, transparent 1px);
-        background-size: 50px 50px;
-        pointer-events: none;
-        z-index: 0;
-    }
-    body.a4-mode::after {
-        background-image:
-            linear-gradient(rgba(255, 214, 10, 0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 214, 10, 0.08) 1px, transparent 1px);
-    }
-
-    /* 🚀 ОБЫЧНЫЙ ПРЕЛОАДЕР */
+    /* ⚡ Прелоадер */
     .preloader {
-        position: fixed;
-        inset: 0;
+        position: fixed; inset: 0;
         background: var(--bg);
         z-index: 99999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 24px;
-        transition: opacity 0.8s, visibility 0.8s;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 18px;
+        transition: opacity 0.6s, visibility 0.6s;
+        padding: 20px;
     }
     .preloader.hide { opacity: 0; visibility: hidden; }
     .preloader-logo {
-        font-size: 52px;
+        font-size: 36px;
         font-weight: 900;
-        letter-spacing: 12px;
-        background: linear-gradient(90deg, #00e5ff, #4d7cff, #a855f7, #00ff9d, #00e5ff);
+        letter-spacing: 8px;
+        background: linear-gradient(90deg, #00e5ff, #a855f7, #00ff9d, #00e5ff);
         background-size: 400% 100%;
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
         animation: gradientMove 2.5s linear infinite;
-        text-transform: uppercase;
     }
     @keyframes gradientMove {
-        0%   { background-position: 0% 50%; }
+        0% { background-position: 0% 50%; }
         100% { background-position: 400% 50%; }
     }
     .preloader-ring {
-        width: 80px; height: 80px;
+        width: 60px; height: 60px;
         border-radius: 50%;
         border: 3px solid transparent;
         border-top-color: #00e5ff;
         border-right-color: #a855f7;
-        border-bottom-color: #00ff9d;
         animation: ringSpin 1s linear infinite;
-        box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
     }
     @keyframes ringSpin { to { transform: rotate(360deg); } }
-    .preloader-text {
-        font-size: 12px;
-        color: var(--text-dim);
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        font-family: monospace;
-    }
 
-    /* 🔴 ПРЕЛОАДЕР А4 — с картинкой Hatber */
+    /* 🔴 Прелоадер А4 */
     .preloader-a4 {
-        position: fixed;
-        inset: 0;
+        position: fixed; inset: 0;
         background: #0a0800;
         z-index: 99999;
         display: none;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
+        align-items: center; justify-content: center;
+        gap: 18px;
         padding: 20px;
-        transition: opacity 0.8s, visibility 0.8s;
+        transition: opacity 0.6s, visibility 0.6s;
     }
     .preloader-a4.show { display: flex; }
     .preloader-a4.hide { opacity: 0; visibility: hidden; }
-
-    /* 📸 Картинка Hatber в прелоадере */
     .preloader-a4-img {
-        max-width: 70vw;
-        max-height: 55vh;
-        width: 340px;
-        height: auto;
+        max-width: 60vw;
+        max-height: 45vh;
+        width: 260px;
         border-radius: 12px;
         border: 4px solid #ffd60a;
-        box-shadow:
-            0 0 60px rgba(255, 214, 10, 0.6),
-            0 0 100px rgba(230, 57, 70, 0.4);
+        box-shadow: 0 0 40px rgba(255, 214, 10, 0.6);
         animation: a4Pulse 1.5s ease-in-out infinite;
         object-fit: contain;
         background: #fff;
-        padding: 6px;
+        padding: 4px;
     }
     @keyframes a4Pulse {
         0%, 100% { transform: scale(1); }
-        50%      { transform: scale(1.05); }
+        50% { transform: scale(1.04); }
     }
     .preloader-a4-name {
-        font-size: 22px;
+        font-size: 18px;
         font-weight: 900;
-        letter-spacing: 10px;
+        letter-spacing: 8px;
         color: #ffd60a;
         text-transform: uppercase;
-        text-shadow: 0 0 20px rgba(255, 214, 10, 0.8);
-    }
-    .preloader-a4-bar {
-        width: 300px; max-width: 80vw;
-        height: 4px;
-        background: rgba(255, 214, 10, 0.15);
-        border-radius: 2px;
-        overflow: hidden;
-        margin-top: 10px;
-    }
-    .preloader-a4-fill {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #ffd60a, #e63946, #ffd60a);
-        background-size: 200% 100%;
-        animation: loadFillA4 2s ease-in-out infinite;
-    }
-    @keyframes loadFillA4 {
-        0%   { width: 0%; background-position: 0% 50%; }
-        50%  { width: 80%; background-position: 100% 50%; }
-        100% { width: 100%; background-position: 0% 50%; }
     }
 
+    /* 🧊 HEADER */
     header {
-        position: sticky;
-        top: 0;
+        position: sticky; top: 0;
         z-index: 100;
         background: var(--glass-2);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--border);
-        padding: 12px 16px;
-        transition: background 0.5s, border-color 0.5s;
+        padding: 10px 12px 8px;
     }
     body.a4-mode header {
-        border-bottom: 1px solid var(--border-strong);
-        box-shadow: 0 4px 30px rgba(255, 214, 10, 0.15);
+        border-bottom-color: var(--border-strong);
+        box-shadow: 0 4px 20px rgba(255, 214, 10, 0.15);
     }
 
-    .header-top {
+    .header-row {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 8px;
-        flex-wrap: wrap;
+        gap: 8px;
+        flex-wrap: nowrap;
     }
 
-    .logo-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+    }
     .logo-wheel {
-        width: 40px; height: 40px;
+        width: 32px; height: 32px;
         animation: spin 10s linear infinite;
-        filter: drop-shadow(0 0 8px var(--neon-cyan));
+        filter: drop-shadow(0 0 6px var(--neon-cyan));
+        flex-shrink: 0;
     }
     @keyframes spin {
         from { transform: rotate(0deg); }
-        to   { transform: rotate(360deg); }
+        to { transform: rotate(360deg); }
     }
     .logo-wheel svg { width: 100%; height: 100%; }
     .logo-text {
-        font-size: 18px;
+        font-size: 15px;
         font-weight: 900;
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
         background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
         -webkit-background-clip: text;
         background-clip: text;
@@ -257,59 +194,77 @@
         white-space: nowrap;
     }
 
-    /* 🔴 Логотип А4 в шапке — с картинкой */
-    .a4-header-logo {
-        display: none;
-        align-items: center;
-        gap: 8px;
-    }
+    .a4-header-logo { display: none; align-items: center; gap: 6px; }
     body.a4-mode .a4-header-logo { display: flex; }
     body.a4-mode .logo-wrap { display: none; }
-
-    /* 📸 Маленькая картинка Hatber в шапке */
     .a4-header-img {
-        width: 40px;
-        height: 40px;
+        width: 32px; height: 32px;
         object-fit: cover;
         border-radius: 6px;
         border: 2px solid #ffd60a;
-        box-shadow: 0 0 12px rgba(255, 214, 10, 0.6);
         background: #fff;
         padding: 2px;
+        flex-shrink: 0;
     }
     .a4-name-small {
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 900;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
         color: #ffd60a;
         text-transform: uppercase;
+        white-space: nowrap;
     }
 
-    .search-wrap { flex: 1; position: relative; max-width: 400px; min-width: 150px; }
-    .search-input {
-        width: 100%;
-        padding: 10px 14px 10px 40px;
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .icon-btn {
+        width: 36px; height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: var(--glass);
         border: 1px solid var(--border);
-        border-radius: 24px;
-        color: var(--text);
-        font-size: 14px;
-        outline: none;
+        border-radius: 10px;
+        cursor: pointer;
         transition: 0.2s;
+        color: var(--text);
+        font-size: 16px;
+        padding: 0;
+        font-family: inherit;
     }
-    .search-input:focus {
-        border-color: var(--border-strong);
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+    .icon-btn:active { transform: scale(0.92); }
+    .icon-btn.a4 { background: linear-gradient(135deg, #ffd60a, #ffb700); color: #0a0800; border-color: #ffd60a; }
+    .icon-btn.pc.active { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #fff; }
+
+    /* 🔍 ПОИСК */
+    .search-row {
+        margin-top: 8px;
+        position: relative;
     }
-    body.a4-mode .search-input:focus {
-        box-shadow: 0 0 20px rgba(255, 214, 10, 0.4);
+    .search-input {
+        width: 100%;
+        padding: 9px 12px 9px 36px;
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        color: var(--text);
+        font-size: 13px;
+        outline: none;
+        font-family: inherit;
     }
+    .search-input:focus { border-color: var(--border-strong); }
     .search-input::placeholder { color: var(--text-dim); }
     .search-icon {
         position: absolute;
-        left: 14px; top: 50%;
+        left: 12px; top: 50%;
         transform: translateY(-50%);
-        width: 18px; height: 18px;
+        width: 16px; height: 16px;
         stroke: var(--neon-cyan);
         stroke-width: 2.5;
         fill: none;
@@ -317,134 +272,51 @@
     }
     body.a4-mode .search-icon { stroke: var(--neon-yellow); }
 
-    .a4-toggle-btn, .pc-toggle-btn {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 9px 14px;
-        border: 1px solid var(--border-strong);
-        border-radius: 24px;
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: 0.2s;
-        white-space: nowrap;
-        background: var(--glass);
-        color: var(--text);
-        backdrop-filter: blur(10px);
-    }
-    .a4-toggle-btn {
-        background: linear-gradient(90deg, #ffd60a, #ffb700);
-        color: #0a0800;
-        border-color: #ffd60a;
-        box-shadow: 0 0 15px rgba(255, 214, 10, 0.4);
-    }
-    .a4-toggle-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 25px rgba(255, 214, 10, 0.7);
-    }
-    .pc-toggle-btn:hover {
-        border-color: var(--neon-cyan);
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
-        color: var(--neon-cyan);
-    }
-    .pc-toggle-btn.active {
-        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-        color: #fff;
-    }
-    body.a4-mode .pc-toggle-btn:hover {
-        border-color: #ffd60a;
-        box-shadow: 0 0 20px rgba(255, 214, 10, 0.5);
-        color: #ffd60a;
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 16px 12px;
+        position: relative;
+        z-index: 2;
     }
 
-    .badges-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-    .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        border: 1px solid var(--border);
-        background: var(--glass);
-        color: var(--neon-cyan);
-    }
-    .badge.purple { color: var(--neon-purple); border-color: rgba(168, 85, 247, 0.4); }
-    body.a4-mode .badge {
-        color: #ffd60a;
-        border-color: rgba(255, 214, 10, 0.5);
-        background: rgba(255, 214, 10, 0.08);
-    }
-    body.a4-mode .badge.purple { color: #e63946; border-color: rgba(230, 57, 70, 0.5); }
-
-    .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; position: relative; z-index: 2; }
-
-    .page { display: none; animation: fadeIn 0.5s; }
+    .page { display: none; animation: fadeIn 0.4s; }
     .page.active { display: block; }
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(12px); }
-        to   { opacity: 1; transform: translateY(0); }
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
+    /* HERO */
     .hero {
         background: var(--glass);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 36px 24px;
+        border-radius: 16px;
+        padding: 24px 16px;
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 14px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
-    body.a4-mode .hero {
-        border-color: var(--border-strong);
-        box-shadow: 0 8px 40px rgba(255, 214, 10, 0.25);
-    }
-    .hero::before {
-        content: "";
-        position: absolute;
-        top: -50%; left: -50%;
-        width: 200%; height: 200%;
-        background: conic-gradient(from 0deg, transparent, rgba(0, 229, 255, 0.15), transparent);
-        animation: rotate 10s linear infinite;
-    }
-    body.a4-mode .hero::before {
-        background: conic-gradient(from 0deg, transparent, rgba(255, 214, 10, 0.2), transparent);
-    }
-    @keyframes rotate { to { transform: rotate(360deg); } }
-    .hero > * { position: relative; z-index: 1; }
+    body.a4-mode .hero { border-color: var(--border-strong); }
     .hero-emoji {
-        font-size: 64px;
-        margin-bottom: 12px;
+        font-size: 44px;
+        margin-bottom: 8px;
         display: inline-block;
-        filter: drop-shadow(0 0 20px var(--neon-cyan));
-        animation: leafSpin 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 15px var(--neon-cyan));
     }
-    body.a4-mode .hero-emoji { filter: drop-shadow(0 0 25px #ffd60a); }
-    @keyframes leafSpin {
-        0%, 100% { transform: rotate(-10deg) scale(1); }
-        50%      { transform: rotate(10deg) scale(1.1); }
-    }
+    body.a4-mode .hero-emoji { filter: drop-shadow(0 0 15px #ffd60a); }
     .hero h1 {
-        font-size: 32px;
+        font-size: 22px;
         font-weight: 900;
-        letter-spacing: 4px;
-        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         text-transform: uppercase;
-        line-height: 1.1;
     }
     body.a4-mode .hero h1 {
         background: linear-gradient(90deg, #ffd60a, #e63946);
@@ -452,430 +324,375 @@
         background-clip: text;
     }
     .hero-sub {
-        font-size: 13px;
+        font-size: 11px;
         color: var(--text-dim);
-        font-weight: 600;
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
+        font-weight: 600;
     }
     body.a4-mode .hero-sub { color: #ffd60a; }
 
-    /* 📸 Картинка Hatber на странице А4 */
-    .a4-page-img {
-        display: block;
-        margin: 0 auto 16px;
-        max-width: 85%;
-        width: 300px;
-        height: auto;
-        border-radius: 14px;
-        border: 3px solid #ffd60a;
-        box-shadow:
-            0 0 40px rgba(255, 214, 10, 0.5),
-            0 0 80px rgba(230, 57, 70, 0.3);
-        background: #fff;
-        padding: 6px;
-        position: relative;
-        z-index: 1;
-    }
-
+    /* Ждём зиму */
     .wait-winter {
         background: var(--glass);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 22px;
-        margin-bottom: 20px;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 14px;
         text-align: center;
-        position: relative;
-    }
-    .wait-winter::before {
-        content: "❄";
-        position: absolute;
-        top: -14px; left: 24px;
-        background: var(--bg);
-        padding: 0 10px;
-        font-size: 20px;
-        color: var(--neon-cyan);
-    }
-    body.a4-mode .wait-winter::before {
-        background: var(--bg);
-        color: #ffd60a;
-    }
-    .wait-winter::after {
-        content: "❄";
-        position: absolute;
-        bottom: -14px; right: 24px;
-        background: var(--bg);
-        padding: 0 10px;
-        font-size: 20px;
-        color: var(--neon-cyan);
-    }
-    body.a4-mode .wait-winter::after {
-        background: var(--bg);
-        color: #ffd60a;
     }
     .wait-winter h2 {
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 900;
-        letter-spacing: 6px;
+        letter-spacing: 4px;
         color: var(--neon-cyan);
         text-transform: uppercase;
-        margin-bottom: 8px;
-        text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+        margin-bottom: 4px;
     }
-    body.a4-mode .wait-winter h2 {
-        color: #ffd60a;
-        text-shadow: 0 0 20px rgba(255, 214, 10, 0.8);
-    }
+    body.a4-mode .wait-winter h2 { color: #ffd60a; }
     .wait-winter p {
-        font-size: 12px;
+        font-size: 10px;
         color: var(--text-dim);
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
     }
-    body.a4-mode .wait-winter p { color: #c9a84a; }
 
+    /* CARD */
     .card {
         background: var(--glass);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 14px;
-        transition: 0.3s;
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 10px;
+        transition: 0.2s;
         cursor: pointer;
         position: relative;
-        overflow: hidden;
     }
-    .card:hover {
-        transform: translateY(-4px);
-        border-color: var(--border-strong);
-        box-shadow: 0 12px 40px rgba(0, 229, 255, 0.25);
-    }
-    body.a4-mode .card:hover {
-        box-shadow: 0 12px 40px rgba(255, 214, 10, 0.35);
-        border-color: #ffd60a;
-    }
-    .card:active { transform: translateY(-1px) scale(0.99); }
-    .card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: -100%;
-        width: 100%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.1), transparent);
-        transition: 0.6s;
-    }
-    body.a4-mode .card::before {
-        background: linear-gradient(90deg, transparent, rgba(255, 214, 10, 0.15), transparent);
-    }
-    .card:hover::before { left: 100%; }
+    .card:active { transform: scale(0.98); }
     .card-title {
-        font-size: 17px;
+        font-size: 15px;
         font-weight: 800;
         color: var(--text);
-        margin-bottom: 6px;
+        margin-bottom: 4px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        position: relative;
-        z-index: 1;
+        gap: 8px;
     }
-    .card-title .ico { font-size: 24px; }
+    .card-title .ico { font-size: 20px; }
     .card-desc {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--text-dim);
-        line-height: 1.5;
-        position: relative;
-        z-index: 1;
+        line-height: 1.4;
     }
     .card-tag {
         display: inline-block;
-        font-size: 10px;
+        font-size: 9px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
-        padding: 4px 12px;
-        border-radius: 12px;
-        background: linear-gradient(90deg, rgba(0, 229, 255, 0.2), rgba(168, 85, 247, 0.2));
+        letter-spacing: 1px;
+        padding: 3px 8px;
+        border-radius: 10px;
+        background: rgba(0, 229, 255, 0.15);
         color: var(--neon-cyan);
         border: 1px solid rgba(0, 229, 255, 0.4);
-        margin-top: 12px;
-        position: relative;
-        z-index: 1;
+        margin-top: 8px;
     }
     .card-tag.a4 {
-        background: linear-gradient(90deg, rgba(255, 214, 10, 0.25), rgba(230, 57, 70, 0.2));
+        background: rgba(255, 214, 10, 0.15);
         color: #ffd60a;
-        border-color: rgba(255, 214, 10, 0.6);
+        border-color: rgba(255, 214, 10, 0.5);
+    }
+    .card-tag.chat {
+        background: rgba(0, 255, 157, 0.15);
+        color: var(--neon-green);
+        border-color: rgba(0, 255, 157, 0.5);
     }
     .card-tag.live {
-        background: rgba(255, 45, 149, 0.2);
+        background: rgba(255, 45, 149, 0.15);
         color: var(--neon-pink);
         border-color: rgba(255, 45, 149, 0.5);
         animation: blink 1.2s infinite;
     }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
+    /* BLOCK */
     .block {
         background: var(--glass);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--border);
         border-left: 3px solid var(--neon-cyan);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 16px;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
     }
-    body.a4-mode .block {
-        border-color: var(--border);
-        border-left-color: #ffd60a;
-    }
+    body.a4-mode .block { border-left-color: #ffd60a; }
     .block h3 {
-        font-size: 17px;
+        font-size: 14px;
         font-weight: 800;
         color: var(--neon-cyan);
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+    }
+    body.a4-mode .block h3 { color: #ffd60a; }
+    .block ol, .block ul { margin-left: 18px; font-size: 13px; line-height: 1.7; color: var(--text); }
+    .block li { margin-bottom: 6px; }
+    .block p { font-size: 13px; line-height: 1.6; color: var(--text); }
+
+    /* 💬 ЧАТ */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 200px);
+        min-height: 400px;
+        max-height: 600px;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
         margin-bottom: 12px;
+    }
+    body.a4-mode .chat-container { border-color: var(--border-strong); }
+
+    .chat-header {
+        padding: 12px 14px;
+        background: rgba(0, 229, 255, 0.08);
+        border-bottom: 1px solid var(--border);
         display: flex;
         align-items: center;
         gap: 8px;
-        letter-spacing: 1px;
     }
-    body.a4-mode .block h3 { color: #ffd60a; }
-    .block ol, .block ul { margin-left: 22px; font-size: 14px; line-height: 1.8; color: var(--text); }
-    .block li { margin-bottom: 8px; }
-    .block li b { color: var(--neon-cyan); }
-    body.a4-mode .block li b { color: #ffd60a; }
-    .block p { font-size: 14px; line-height: 1.7; color: var(--text); }
-    .block p em { color: var(--text-dim); }
-
-    .gagarin-block {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 214, 10, 0.4);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 16px;
-        box-shadow: 0 8px 32px rgba(255, 214, 10, 0.15);
-        position: relative;
+    body.a4-mode .chat-header {
+        background: rgba(255, 214, 10, 0.08);
     }
-    .gagarin-block::before {
-        content: "★";
-        position: absolute;
-        top: -14px; left: 50%;
-        transform: translateX(-50%);
-        background: var(--bg);
-        padding: 0 12px;
-        font-size: 20px;
-        color: var(--neon-yellow);
+    .chat-header .online-dot {
+        width: 8px; height: 8px;
+        background: var(--neon-green);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--neon-green);
+        animation: blink 1.5s infinite;
     }
-    .gagarin-block h2 {
-        font-size: 22px;
-        font-weight: 900;
-        color: var(--neon-yellow);
-        text-transform: uppercase;
-        margin-bottom: 14px;
-        letter-spacing: 2px;
-        text-align: center;
-        text-shadow: 0 0 15px rgba(255, 214, 10, 0.6);
-    }
-    .gagarin-block p { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 12px; text-align: center; }
-    .gagarin-block .highlight { color: var(--neon-cyan); font-weight: 800; }
-    .info-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 14px;
-        background: rgba(0, 229, 255, 0.05);
-        border-radius: 10px;
-        margin-bottom: 8px;
-        font-size: 14px;
-        border-left: 3px solid var(--neon-cyan);
+    .chat-header .chat-title {
+        font-size: 13px;
+        font-weight: 800;
         color: var(--text);
+        flex: 1;
     }
-    body.a4-mode .info-row {
-        background: rgba(255, 214, 10, 0.05);
-        border-left-color: #ffd60a;
-    }
-
-    .live-hero {
-        background: linear-gradient(135deg, rgba(255, 45, 149, 0.15), rgba(168, 85, 247, 0.15));
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 45, 149, 0.4);
-        border-radius: 20px;
-        padding: 26px;
-        margin-bottom: 20px;
-        text-align: center;
-        position: relative;
-        box-shadow: 0 8px 32px rgba(255, 45, 149, 0.2);
-    }
-    .live-badge-top {
-        display: inline-block;
-        background: var(--neon-pink);
-        color: #fff;
+    .chat-header .online-count {
         font-size: 11px;
-        font-weight: 900;
-        padding: 5px 14px;
-        border-radius: 20px;
-        letter-spacing: 2px;
-        animation: blink 1s infinite;
-        margin-bottom: 14px;
-    }
-    .live-hero h1 {
-        font-size: 30px;
-        font-weight: 900;
-        color: var(--text);
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-        text-shadow: 0 0 20px rgba(255, 45, 149, 0.6);
-    }
-    .live-hero p {
-        font-size: 12px;
         color: var(--text-dim);
-        letter-spacing: 2px;
-        text-transform: uppercase;
+        font-weight: 600;
     }
 
-    .video-wrapper {
-        background: #000;
-        border: 1px solid var(--border-strong);
-        border-radius: 16px;
-        overflow: hidden;
-        margin-bottom: 14px;
-        box-shadow: 0 8px 32px rgba(0, 229, 255, 0.2);
-    }
-    body.a4-mode .video-wrapper {
-        box-shadow: 0 8px 32px rgba(255, 214, 10, 0.3);
-    }
-    .video-wrapper iframe {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        border: 0;
-        display: block;
-    }
-    .video-fallback {
-        display: none;
-        background: #000;
-        aspect-ratio: 16 / 9;
-        color: #fff;
-        text-align: center;
-        padding: 30px;
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px;
+        display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
+        gap: 8px;
+        scroll-behavior: smooth;
     }
-    .video-fallback.show { display: flex; }
-    .video-fallback .fb-emoji { font-size: 48px; }
-    .video-fallback p { font-size: 13px; color: #ccc; max-width: 300px; }
 
+    .chat-msg {
+        max-width: 85%;
+        padding: 8px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        animation: msgIn 0.3s;
+    }
+    @keyframes msgIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-msg .msg-name {
+        font-size: 10px;
+        font-weight: 900;
+        margin-bottom: 3px;
+        letter-spacing: 0.5px;
+    }
+    .chat-msg .msg-time {
+        font-size: 9px;
+        opacity: 0.6;
+        margin-top: 3px;
+        text-align: right;
+    }
+    .chat-msg.other {
+        align-self: flex-start;
+        background: rgba(0, 229, 255, 0.12);
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        color: var(--text);
+    }
+    .chat-msg.other .msg-name { color: var(--neon-cyan); }
+    body.a4-mode .chat-msg.other {
+        background: rgba(255, 214, 10, 0.12);
+        border-color: rgba(255, 214, 10, 0.35);
+    }
+    body.a4-mode .chat-msg.other .msg-name { color: #ffd60a; }
+    .chat-msg.me {
+        align-self: flex-end;
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 229, 255, 0.25));
+        border: 1px solid rgba(168, 85, 247, 0.5);
+        color: var(--text);
+    }
+    .chat-msg.me .msg-name { color: var(--neon-purple); }
+    body.a4-mode .chat-msg.me {
+        background: linear-gradient(135deg, rgba(230, 57, 70, 0.3), rgba(255, 214, 10, 0.3));
+        border-color: rgba(230, 57, 70, 0.6);
+    }
+    body.a4-mode .chat-msg.me .msg-name { color: #e63946; }
+
+    .chat-msg.system {
+        align-self: center;
+        background: rgba(255, 214, 10, 0.1);
+        border: 1px solid rgba(255, 214, 10, 0.3);
+        color: var(--text-dim);
+        font-size: 11px;
+        font-style: italic;
+        text-align: center;
+        max-width: 90%;
+    }
+
+    .chat-input-row {
+        display: flex;
+        gap: 6px;
+        padding: 10px;
+        border-top: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.2);
+    }
+    body.a4-mode .chat-input-row {
+        background: rgba(0, 0, 0, 0.4);
+    }
+    .chat-input {
+        flex: 1;
+        padding: 10px 14px;
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        color: var(--text);
+        font-size: 13px;
+        outline: none;
+        font-family: inherit;
+        min-width: 0;
+    }
+    .chat-input:focus { border-color: var(--border-strong); }
+    .chat-send {
+        padding: 10px 16px;
+        background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+        border: none;
+        border-radius: 20px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+        flex-shrink: 0;
+    }
+    .chat-send:active { transform: scale(0.95); }
+    body.a4-mode .chat-send {
+        background: linear-gradient(135deg, #ffd60a, #ffb700);
+        color: #0a0800;
+    }
+
+    /* Имя в чате */
+    .nick-row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+    .nick-input {
+        flex: 1;
+        padding: 10px 14px;
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        color: var(--text);
+        font-size: 13px;
+        outline: none;
+        font-family: inherit;
+        min-width: 0;
+    }
+    .nick-input:focus { border-color: var(--border-strong); }
+
+    /* Кнопки */
     .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        padding: 11px 22px;
+        padding: 10px 18px;
         background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
         border: none;
-        border-radius: 24px;
+        border-radius: 20px;
         color: #fff;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 800;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
         text-transform: uppercase;
         cursor: pointer;
         transition: 0.2s;
         font-family: inherit;
         text-decoration: none;
-        box-shadow: 0 4px 20px rgba(0, 229, 255, 0.3);
     }
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0, 229, 255, 0.5);
-    }
-    .btn:active { transform: translateY(0) scale(0.97); }
+    .btn:active { transform: scale(0.96); }
     .btn-outline {
         background: var(--glass);
         border: 1px solid var(--border-strong);
         color: var(--neon-cyan);
-        box-shadow: none;
     }
-    .btn-outline:hover {
-        background: rgba(0, 229, 255, 0.1);
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-    }
-    .btn-danger {
-        background: linear-gradient(90deg, #ff2d55, #ff2d95);
-        box-shadow: 0 4px 20px rgba(255, 45, 85, 0.4);
-    }
-    .btn-green {
-        background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
-        box-shadow: 0 4px 20px rgba(0, 255, 157, 0.4);
-    }
-
     body.a4-mode .btn {
         background: linear-gradient(90deg, #ffd60a, #ffb700);
         color: #0a0800;
-        box-shadow: 0 4px 20px rgba(255, 214, 10, 0.5);
-    }
-    body.a4-mode .btn:hover {
-        box-shadow: 0 8px 30px rgba(255, 214, 10, 0.8);
     }
     body.a4-mode .btn-outline {
         background: transparent;
         border-color: #ffd60a;
         color: #ffd60a;
-        box-shadow: none;
     }
-    body.a4-mode .btn-outline:hover {
-        background: rgba(255, 214, 10, 0.1);
-        box-shadow: 0 0 20px rgba(255, 214, 10, 0.4);
-    }
-    body.a4-mode .btn-danger {
-        background: linear-gradient(90deg, #e63946, #ff2d55);
+    .btn-danger {
+        background: linear-gradient(90deg, #ff2d55, #ff2d95);
         color: #fff;
     }
-    body.a4-mode .btn-green {
-        background: linear-gradient(90deg, #ffd60a, #ffb700);
+    .btn-green {
+        background: linear-gradient(90deg, #00ff9d, #00e5ff);
         color: #0a0800;
     }
-    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .settings-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding: 14px 16px;
+        gap: 10px;
+        padding: 12px;
         background: var(--glass);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        margin-bottom: 10px;
+        border-radius: 12px;
+        margin-bottom: 8px;
         flex-wrap: wrap;
     }
-    body.a4-mode .settings-row {
-        border-color: var(--border-strong);
-    }
+    body.a4-mode .settings-row { border-color: var(--border-strong); }
     .settings-label {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         color: var(--text);
-        letter-spacing: 0.5px;
     }
-    body.a4-mode .settings-label { color: #fff9e0; }
     .settings-value {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--neon-cyan);
         font-weight: 800;
         font-family: monospace;
         background: rgba(0, 229, 255, 0.1);
-        padding: 4px 10px;
-        border-radius: 8px;
+        padding: 3px 8px;
+        border-radius: 6px;
     }
     body.a4-mode .settings-value { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
 
+    /* МЕНЮ СНИЗУ — компактное */
     .bottom-nav {
         position: fixed;
         bottom: 0; left: 0; right: 0;
@@ -885,136 +702,138 @@
         border-top: 1px solid var(--border);
         display: flex;
         justify-content: space-around;
-        padding: 10px 8px 14px;
+        padding: 6px 4px 8px;
         z-index: 200;
     }
     body.a4-mode .bottom-nav {
-        border-top: 1px solid var(--border-strong);
-        box-shadow: 0 -4px 30px rgba(255, 214, 10, 0.15);
+        border-top-color: var(--border-strong);
     }
     .nav-item {
         flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 2px;
         cursor: pointer;
-        font-size: 10px;
+        font-size: 9px;
         font-weight: 700;
         color: var(--text-dim);
         transition: 0.2s;
-        padding: 6px 4px;
-        border-radius: 12px;
-        letter-spacing: 0.5px;
+        padding: 4px 2px;
+        border-radius: 10px;
+        letter-spacing: 0.3px;
         text-transform: uppercase;
+        text-align: center;
     }
-    .nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
-    .nav-icon svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 2; fill: none; }
+    .nav-icon {
+        width: 22px; height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .nav-icon svg {
+        width: 100%; height: 100%;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+    }
     .nav-item.active { color: var(--neon-cyan); }
-    .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 8px var(--neon-cyan)); }
+    .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 6px var(--neon-cyan)); }
     body.a4-mode .nav-item.active { color: #ffd60a; }
-    body.a4-mode .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 8px #ffd60a); }
+    body.a4-mode .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 6px #ffd60a); }
 
-    .empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 14px; }
-    .empty-emoji { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+    .empty { text-align: center; padding: 30px 16px; color: var(--text-dim); font-size: 13px; }
+    .empty-emoji { font-size: 36px; margin-bottom: 8px; opacity: 0.5; }
 
+    /* 🔐 Lock */
     .lock-screen {
-        position: fixed;
-        inset: 0;
+        position: fixed; inset: 0;
         background: rgba(0, 0, 0, 0.95);
         z-index: 99999;
         display: none;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 16px;
     }
     .lock-screen.show { display: flex; }
     .lock-box {
         background: var(--bg-2);
         border: 2px solid var(--neon-green);
         border-radius: 16px;
-        padding: 30px 24px;
-        max-width: 400px;
+        padding: 24px 20px;
+        max-width: 360px;
         width: 100%;
         text-align: center;
-        box-shadow: 0 0 60px rgba(0, 255, 157, 0.3);
     }
     .lock-box h2 {
         color: var(--neon-green);
-        font-size: 20px;
-        margin-bottom: 16px;
+        font-size: 16px;
+        margin-bottom: 14px;
         text-transform: uppercase;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
     }
     .lock-input {
         width: 100%;
-        padding: 14px;
+        padding: 12px;
         background: var(--glass);
         border: 1px solid var(--neon-green);
-        border-radius: 12px;
+        border-radius: 10px;
         color: var(--text);
-        font-size: 20px;
+        font-size: 18px;
         text-align: center;
-        letter-spacing: 10px;
+        letter-spacing: 8px;
         outline: none;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         font-family: monospace;
     }
     .lock-error {
         color: var(--neon-red);
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 800;
-        min-height: 18px;
-        margin-bottom: 10px;
+        min-height: 16px;
+        margin-bottom: 8px;
     }
 
     .fav-input {
         width: 100%;
-        padding: 12px 14px;
+        padding: 10px 12px;
         background: var(--glass);
         border: 1px solid var(--border);
-        border-radius: 14px;
+        border-radius: 12px;
         color: var(--text);
-        font-size: 14px;
+        font-size: 13px;
         outline: none;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         font-family: inherit;
         resize: vertical;
-        min-height: 60px;
-    }
-    .fav-input:focus {
-        border-color: var(--border-strong);
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-    }
-    body.a4-mode .fav-input:focus {
-        box-shadow: 0 0 20px rgba(255, 214, 10, 0.4);
+        min-height: 50px;
     }
     .fav-item {
         background: var(--glass);
         border: 1px solid var(--border);
         border-left: 3px solid var(--neon-cyan);
-        border-radius: 12px;
-        padding: 14px;
-        margin-bottom: 10px;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 8px;
         position: relative;
     }
     body.a4-mode .fav-item { border-left-color: #ffd60a; }
     .fav-item-text {
-        font-size: 14px;
+        font-size: 13px;
         color: var(--text);
-        line-height: 1.5;
+        line-height: 1.4;
         word-wrap: break-word;
-        padding-right: 30px;
+        padding-right: 26px;
     }
     .fav-item-del {
         position: absolute;
-        top: 10px; right: 10px;
-        width: 26px; height: 26px;
+        top: 8px; right: 8px;
+        width: 24px; height: 24px;
         border-radius: 50%;
         background: rgba(255, 45, 85, 0.2);
         border: 1px solid var(--neon-red);
         color: var(--neon-red);
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 900;
         cursor: pointer;
         display: flex;
@@ -1025,182 +844,135 @@
     .dev-panel {
         background: rgba(0, 20, 30, 0.9);
         border: 1px solid var(--neon-green);
-        border-radius: 14px;
-        padding: 18px;
-        margin-bottom: 16px;
-        box-shadow: 0 0 40px rgba(0, 255, 157, 0.2);
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
         font-family: "Courier New", monospace;
     }
     body.a4-mode .dev-panel {
         background: rgba(30, 22, 0, 0.9);
         border-color: #ffd60a;
-        box-shadow: 0 0 40px rgba(255, 214, 10, 0.25);
     }
     .dev-panel h3 {
         color: var(--neon-green);
-        font-size: 15px;
-        margin-bottom: 12px;
+        font-size: 13px;
+        margin-bottom: 10px;
         text-transform: uppercase;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
     }
     body.a4-mode .dev-panel h3 { color: #ffd60a; }
-    .dev-panel p { color: var(--text); }
+    .dev-panel p { color: var(--text); font-size: 12px; }
 
     footer {
         text-align: center;
-        font-size: 12px;
+        font-size: 10px;
         color: var(--text-dim);
-        padding: 30px 20px 20px;
-        letter-spacing: 2px;
+        padding: 20px 12px 12px;
+        letter-spacing: 1.5px;
         font-style: italic;
         max-width: 900px;
-        margin: 40px auto 0;
+        margin: 20px auto 0;
     }
-    body.a4-mode footer { color: #c9a84a; }
 
-    body.pc-mode { padding-bottom: 20px; }
-    body.pc-mode header { padding: 12px 24px; }
-    body.pc-mode .header-top { max-width: 1400px; margin: 0 auto 8px; }
-    body.pc-mode .badges-row { max-width: 1400px; margin: 0 auto; }
+    /* 🖥 ПК */
+    body.pc-mode { padding-bottom: 16px; }
     body.pc-mode .container {
-        max-width: 1400px;
-        padding: 30px 24px;
+        max-width: 1200px;
+        padding: 20px 20px;
         display: grid;
-        grid-template-columns: 1fr 320px;
-        gap: 24px;
+        grid-template-columns: 1fr 280px;
+        gap: 20px;
         align-items: start;
     }
     body.pc-mode .page { grid-column: 1; min-width: 0; }
     body.pc-mode .page.active { display: block; }
+    body.pc-mode .bottom-nav { display: none; }
+    body.pc-mode .hero h1 { font-size: 28px; }
+    body.pc-mode .hero-emoji { font-size: 56px; }
+    body.pc-mode .chat-container { height: calc(100vh - 200px); }
 
-    .pc-sidebar { display: none; grid-column: 2; position: sticky; top: 120px; }
+    .pc-sidebar { display: none; grid-column: 2; position: sticky; top: 100px; }
     body.pc-mode .pc-sidebar { display: block; }
 
     .sidebar-card {
         background: var(--glass);
-        backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 16px;
-        margin-bottom: 14px;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 10px;
     }
-    body.a4-mode .sidebar-card { border-color: var(--border-strong); }
     .sidebar-card h4 {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 900;
         color: var(--neon-cyan);
         text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 8px;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
     }
-    body.a4-mode .sidebar-card h4 { color: #ffd60a; border-bottom-color: var(--border-strong); }
+    body.a4-mode .sidebar-card h4 { color: #ffd60a; }
     .sidebar-card .item {
         display: block;
-        padding: 8px 10px;
-        border-radius: 8px;
-        font-size: 13px;
+        padding: 6px 8px;
+        border-radius: 6px;
+        font-size: 12px;
         color: var(--text);
         cursor: pointer;
         transition: 0.2s;
         text-decoration: none;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
     }
     .sidebar-card .item:hover {
         background: rgba(0, 229, 255, 0.1);
         color: var(--neon-cyan);
-        transform: translateX(4px);
     }
-    body.a4-mode .sidebar-card .item:hover {
-        background: rgba(255, 214, 10, 0.1);
-        color: #ffd60a;
-    }
-    body.pc-mode .bottom-nav { display: none; }
 
     .pc-nav { display: none; }
     body.pc-mode .pc-nav { display: block; }
     .pc-nav .nav-item {
         flex-direction: row;
         justify-content: flex-start;
-        gap: 12px;
-        padding: 10px 12px;
-        font-size: 13px;
-        border-radius: 8px;
+        gap: 10px;
+        padding: 8px 10px;
+        font-size: 12px;
         text-transform: none;
-        letter-spacing: 0.5px;
-    }
-    .pc-nav .nav-item:hover { background: rgba(0, 229, 255, 0.1); }
-    body.a4-mode .pc-nav .nav-item:hover { background: rgba(255, 214, 10, 0.1); }
-    .pc-nav .nav-item.active { background: rgba(0, 229, 255, 0.15); color: var(--neon-cyan); }
-    body.a4-mode .pc-nav .nav-item.active { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
-    .pc-nav .nav-icon { width: 20px; height: 20px; }
-
-    .winter-side {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 16px;
-        text-align: center;
-    }
-    body.a4-mode .winter-side { border-color: var(--border-strong); }
-    .winter-side h3 {
-        font-size: 15px;
-        font-weight: 900;
-        color: var(--neon-cyan);
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-    }
-    body.a4-mode .winter-side h3 { color: #ffd60a; }
-    .winter-side p { font-size: 11px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
-
-    body.pc-mode .hero { padding: 52px 40px; }
-    body.pc-mode .hero h1 { font-size: 44px; letter-spacing: 8px; }
-    body.pc-mode .hero-emoji { font-size: 84px; }
-
-    @media (max-width: 900px) {
-        body.pc-mode .container { grid-template-columns: 1fr; }
-        body.pc-mode .pc-sidebar { position: static; }
     }
 
+    /* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ */
     @media (max-width: 500px) {
-        .logo-text { font-size: 15px; letter-spacing: 1px; }
-        .hero h1 { font-size: 22px; letter-spacing: 2px; }
-        .hero-emoji { font-size: 48px; }
-        .live-hero h1 { font-size: 22px; }
-        .wait-winter h2 { font-size: 18px; letter-spacing: 3px; }
-        .pc-toggle-btn span, .a4-toggle-btn span { display: none; }
-        .pc-toggle-btn, .a4-toggle-btn { padding: 9px 12px; }
-        .preloader-a4-img { width: 250px; }
-        .a4-header-img { width: 32px; height: 32px; }
+        .logo-text { font-size: 13px; letter-spacing: 1px; }
+        .logo-wheel { width: 28px; height: 28px; }
+        .hero h1 { font-size: 18px; }
+        .hero-emoji { font-size: 36px; }
+        .wait-winter h2 { font-size: 15px; letter-spacing: 2px; }
+        .chat-container { height: calc(100vh - 190px); min-height: 340px; }
+        .chat-msg { font-size: 12px; padding: 7px 10px; }
+    }
+
+    @media (max-width: 360px) {
+        .logo-text { font-size: 11px; }
+        .icon-btn { width: 32px; height: 32px; font-size: 14px; }
     }
 </style>
 </head>
 <body>
 
-<!-- ⚡ ОБЫЧНЫЙ ПРЕЛОАДЕР -->
+<!-- ПРЕЛОАДЕР -->
 <div class="preloader" id="preloader">
     <div class="preloader-logo">КУМЕРТАУ</div>
     <div class="preloader-ring"></div>
-    <div class="preloader-text">Будущее · 2026</div>
 </div>
 
-<!-- 🔴 ПРЕЛОАДЕР А4 — с картинкой Hatber -->
+<!-- ПРЕЛОАДЕР А4 -->
 <div class="preloader-a4" id="preloaderA4">
-    <img class="preloader-a4-img" 
-         src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg" 
-         alt="A4 Hatber">
+    <img class="preloader-a4-img"
+         src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
+         alt="A4"
+         onerror="this.style.display='none'">
     <div class="preloader-a4-name">Влад Бумага</div>
-    <div class="preloader-a4-bar"><div class="preloader-a4-fill"></div></div>
 </div>
 
 <header>
-    <div class="header-top">
+    <div class="header-row">
         <div class="logo-wrap">
             <div class="logo-wheel">
                 <svg viewBox="0 0 100 100">
@@ -1215,32 +987,31 @@
             <div class="logo-text">КУМЕРТАУ</div>
         </div>
 
-        <!-- 🔴 Логотип А4 в шапке — с картинкой Hatber -->
         <div class="a4-header-logo">
-            <img class="a4-header-img" 
-                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg" 
-                 alt="A4">
+            <img class="a4-header-img"
+                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
+                 alt="A4"
+                 onerror="this.style.display='none'">
             <div class="a4-name-small">Влад Бумага</div>
         </div>
 
-        <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7"/>
-                <line x1="16.5" y1="16.5" x2="21" y2="21"/>
-            </svg>
-            <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
+        <div class="header-actions">
+            <button class="icon-btn a4" id="a4Btn" title="Режим А4">🔴</button>
+            <button class="icon-btn pc" id="pcToggle" title="Режим ПК">🖥</button>
         </div>
-        <button class="a4-toggle-btn" id="a4Btn">🔴 <span id="a4BtnText">A4</span></button>
-        <button class="pc-toggle-btn" id="pcToggle">🖥 <span>ПК</span></button>
     </div>
-    <div class="badges-row">
-        <span class="badge">🚀 Будущее 2026</span>
-        <span class="badge purple">👑 Компания РУ СИК</span>
+    <div class="search-row">
+        <svg class="search-icon" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+        </svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
     </div>
 </header>
 
 <div class="container">
 
+    <!-- 🏠 ГЛАВНАЯ -->
     <div class="page active" id="page-home">
         <div class="wait-winter">
             <h2>❄ ЖДЁМ ЗИМУ ❄</h2>
@@ -1251,6 +1022,12 @@
             <div class="hero-emoji">🏙</div>
             <h1>Кумертау</h1>
             <div class="hero-sub">Республика Башкортостан · 2026</div>
+        </div>
+
+        <div class="card" data-page="chat">
+            <div class="card-title"><span class="ico">💬</span> Анонимный чат</div>
+            <div class="card-desc">Общайся с людьми со всего мира без регистрации</div>
+            <span class="card-tag chat">● ОНЛАЙН</span>
         </div>
 
         <div class="card" data-page="a4">
@@ -1273,26 +1050,77 @@
 
         <div class="card" data-page="settings">
             <div class="card-title"><span class="ico">⚙️</span> Настройки</div>
-            <div class="card-desc">Тема, шрифт, режим А4, разработчик</div>
+            <div class="card-desc">Тема, шрифт, режимы, разработчик</div>
             <span class="card-tag">Система</span>
+        </div>
+    </div>
+
+    <!-- 💬 АНОНИМНЫЙ ЧАТ -->
+    <div class="page" id="page-chat">
+        <div class="hero" style="padding: 18px 12px;">
+            <div class="hero-emoji">💬</div>
+            <h1>Анонимный чат</h1>
+            <div class="hero-sub">Люди со всего мира · Без регистрации</div>
+        </div>
+
+        <!-- Имя -->
+        <div class="nick-row">
+            <input type="text" class="nick-input" id="nickInput" placeholder="Твой ник (например: Гость1234)" maxlength="20">
+            <button class="btn btn-outline" id="nickSave">✓</button>
+        </div>
+
+        <!-- Чат -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="online-dot"></div>
+                <div class="chat-title">🌍 Мировой чат</div>
+                <div class="online-count" id="onlineCount">Онлайн: 1</div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg system">
+                    🌍 Добро пожаловать в анонимный чат! Общайся с людьми со всего мира.
+                </div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Напиши сообщение..." maxlength="500">
+                <button class="chat-send" id="chatSend">➤</button>
+            </div>
+        </div>
+
+        <div class="block">
+            <h3>💡 О чате</h3>
+            <p>
+                Это <b>анонимный чат</b> — общайся с людьми со всего мира без регистрации.
+                Просто введи ник и пиши.
+            </p>
+            <p style="margin-top:8px;font-size:12px;color:var(--text-dim);">
+                ⚠️ Не сообщай личные данные. Администрация не несёт ответственности.
+            </p>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-danger" id="chatClear">🗑 Очистить чат</button>
+            <button class="btn btn-outline" onclick="showPage('home')">← Назад</button>
         </div>
     </div>
 
     <!-- 🔴 СТРАНИЦА А4 -->
     <div class="page" id="page-a4">
         <div class="hero">
-            <img class="a4-page-img" 
-                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg" 
-                 alt="A4 Hatber">
+            <img class="a4-page-img"
+                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
+                 alt="A4"
+                 onerror="this.style.display='none'"
+                 style="display:block;margin:0 auto 12px;max-width:70%;width:220px;border-radius:12px;border:3px solid #ffd60a;box-shadow:0 0 30px rgba(255,214,10,0.5);background:#fff;padding:4px;">
             <h1>Влад Бумага</h1>
             <div class="hero-sub">Самый популярный блогер рунета</div>
         </div>
 
-        <div class="block" style="border-left-color: #ffd60a;">
-            <h3 style="color: #ffd60a;">📊 Кратко</h3>
+        <div class="block">
+            <h3>📊 Кратко</h3>
             <ul>
                 <li><b>Родился:</b> 5 июня 1996, Минск</li>
-                <li><b>Канал создан:</b> 2014</li>
+                <li><b>Канал:</b> 2014</li>
                 <li><b>Подписчики:</b> 10M+</li>
             </ul>
         </div>
@@ -1300,48 +1128,35 @@
         <div class="block">
             <h3>📖 Кто такой Влад А4</h3>
             <p>
-                <b>Влад Бумага</b> (настоящее имя — Владислав Бумага) — один из самых
-                популярных русскоязычных видеоблогеров. Псевдоним <b>«А4»</b> —
-                отсылка к формату бумажного листа и его настоящей фамилии.
+                <b>Влад Бумага</b> — один из самых популярных русскоязычных видеоблогеров.
+                Псевдоним <b>«А4»</b> — отсылка к формату бумажного листа.
             </p>
         </div>
 
         <div class="block">
             <h3>📈 Путь к славе</h3>
             <ul>
-                <li><b>2014</b> — Зарегистрировал YouTube-канал «А4»</li>
-                <li><b>2016</b> — Прорыв после «24 часа в батутном центре»</li>
-                <li><b>2017</b> — Пародия «Тает срок» на «Грибы»</li>
-                <li><b>2019</b> — «Бриллиантовая кнопка» YouTube за 10 млн</li>
+                <li><b>2014</b> — YouTube-канал «А4»</li>
+                <li><b>2016</b> — «24 часа в батутном центре»</li>
+                <li><b>2019</b> — «Бриллиантовая кнопка» за 10 млн</li>
             </ul>
         </div>
 
         <div class="block">
             <h3>🎬 Музыка и бизнес</h3>
             <p>
-                Треки: <b>«Батя»</b>, <b>«Офишлбывший»</b>, <b>«KIDS»</b>,
-                <b>«Лама Мама»</b>. Бренд <b>Lava-Lava</b> и сеть
-                пиццерий <b>«A4 pizza»</b>.
+                Треки: «Батя», «Офишлбывший», «KIDS». Бренд
+                <b>Lava-Lava</b>, сеть пиццерий <b>«A4 pizza»</b>.
             </p>
         </div>
 
-        <div class="block">
-            <h3>💬 Факт</h3>
-            <p><em>В 2024 году Влад Бумага лично задал вопрос Владимиру Путину
-            на «Прямой линии» о работе YouTube в России.</em></p>
-        </div>
-
         <div class="btn-row">
-            <a class="btn" href="https://www.youtube.com/@A4" target="_blank" rel="noopener">▶ YouTube А4</a>
-            <a class="btn btn-outline" href="https://vk.com/a4" target="_blank" rel="noopener">🔵 ВКонтакте</a>
-            <a class="btn btn-outline" href="https://t.me/a4" target="_blank" rel="noopener">✈ Telegram</a>
-        </div>
-
-        <div class="btn-row" style="margin-top:16px;">
-            <button class="btn btn-outline" onclick="showPage('home')">← Назад</button>
+            <a class="btn" href="https://www.youtube.com/@A4" target="_blank" rel="noopener">▶ YouTube</a>
+            <a class="btn btn-outline" href="https://vk.com/a4" target="_blank" rel="noopener">🔵 ВК</a>
         </div>
     </div>
 
+    <!-- 🏆 КУБОК ГАГАРИНА -->
     <div class="page" id="page-gagarin">
         <div class="hero">
             <div class="hero-emoji">🏆</div>
@@ -1349,77 +1164,58 @@
             <div class="hero-sub">Олимпиада школьников</div>
         </div>
 
-        <div class="gagarin-block">
-            <h2>Кубок Гагарина 2026</h2>
+        <div class="block" style="border-left-color: var(--neon-yellow);">
+            <h3>🏆 Кубок Гагарина 2026</h3>
             <p>
-                <span class="highlight">Олимпиада школьников 1–8 классов</span>
-                проводится во всех школах <span class="highlight">Республики Башкортостан</span>.
+                <b>Олимпиада школьников 1–8 классов</b> проводится во всех школах
+                <b>Республики Башкортостан</b>.
             </p>
-            <div class="info-row"><span>📅</span><div><b>Регистрация:</b> с 1 сентября по 31 октября</div></div>
-            <div class="info-row"><span>🏫</span><div><b>Место:</b> все школы РБ</div></div>
-            <div class="info-row"><span>👨‍🎓</span><div><b>Участники:</b> ученики 1–8 классов</div></div>
-            <div class="info-row"><span>📌</span><div><b>Регистрация:</b> во всех школах РБ</div></div>
         </div>
 
         <div class="block">
-            <h3>💡 Как участвовать</h3>
-            <ol>
-                <li>Учишься в 1–8 классе</li>
-                <li>Твоя школа — в Республике Башкортостан</li>
-                <li>Обратись к классному руководителю</li>
-                <li>Зарегистрируйся с 1 сентября по 31 октября</li>
-            </ol>
+            <h3>📋 Информация</h3>
+            <ul>
+                <li>📅 <b>Регистрация:</b> с 1 сентября по 31 октября</li>
+                <li>🏫 <b>Место:</b> все школы РБ</li>
+                <li>👨‍🎓 <b>Участники:</b> ученики 1–8 классов</li>
+            </ul>
         </div>
     </div>
 
+    <!-- 🌙 ЛУНОМОСИК -->
     <div class="page" id="page-luna">
-        <div class="live-hero">
-            <div class="live-badge-top">● ПРЯМОЙ ЭФИР</div>
-            <h1>🌙 Луномосик</h1>
-            <p>Любимый канал компании РУ СИК</p>
+        <div class="hero">
+            <div class="hero-emoji">🌙</div>
+            <h1>Луномосик</h1>
+            <div class="hero-sub">Прямой эфир</div>
         </div>
 
-        <div class="video-wrapper">
-            <iframe 
+        <div class="video-wrapper" style="background:#000;border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;margin-bottom:12px;">
+            <iframe
                 id="lunaFrame"
                 src="https://vk.com/video_ext.php?oid=-107101070&id=456243981&hd=2"
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                allow="autoplay; encrypted-media; fullscreen"
                 allowfullscreen
-                frameborder="0">
+                frameborder="0"
+                style="width:100%;aspect-ratio:16/9;border:0;display:block;">
             </iframe>
         </div>
 
-        <div class="video-fallback" id="lunaFallback">
-            <div class="fb-emoji">🌙</div>
-            <p>Видео не загрузилось. Нажми кнопку — откроется в браузере.</p>
-        </div>
-
-        <div class="block">
-            <h3>🌙 О Луномосике</h3>
-            <p><b>Луномосик</b> — любимый канал компании РУ СИК.</p>
-        </div>
-
         <div class="btn-row">
-            <button class="btn btn-danger" id="lunaReload">🔄 Перезагрузить</button>
-            <a class="btn btn-outline" 
-               href="https://vkvideo.ru/video-107101070_456243981?pl=-107101070_6&t=22m45s" 
-               target="_blank" 
-               rel="noopener">
+            <a class="btn btn-outline"
+               href="https://vkvideo.ru/video-107101070_456243981?pl=-107101070_6&t=22m45s"
+               target="_blank" rel="noopener">
                 ▶ Открыть в ВК
             </a>
         </div>
     </div>
 
+    <!-- ⚙️ НАСТРОЙКИ -->
     <div class="page" id="page-settings">
         <div class="hero">
             <div class="hero-emoji">⚙️</div>
             <h1>Настройки</h1>
             <div class="hero-sub">Персонализация</div>
-        </div>
-
-        <div class="settings-row">
-            <span class="settings-label">🎨 Ночная тема</span>
-            <button class="btn btn-outline" id="themeToggle">🌙 Включить</button>
         </div>
 
         <div class="settings-row">
@@ -1433,17 +1229,17 @@
 
         <div class="settings-row">
             <span class="settings-label">🖥 Режим ПК</span>
-            <button class="btn btn-outline" id="pcToggleSettings">🖥 Включить</button>
+            <button class="btn btn-outline" id="pcToggleSettings">Включить</button>
         </div>
 
         <div class="settings-row">
             <span class="settings-label">🔴 Режим А4</span>
-            <button class="btn btn-outline" id="a4ToggleSettings">🔴 Включить А4</button>
+            <button class="btn btn-outline" id="a4ToggleSettings">Включить</button>
         </div>
 
         <div class="settings-row">
-            <span class="settings-label">🔄 Вернуть всё в начало</span>
-            <button class="btn btn-danger" id="restartBrowser">🔄 Сбросить</button>
+            <span class="settings-label">🔄 Сброс настроек</span>
+            <button class="btn btn-danger" id="restartBrowser">Сбросить</button>
         </div>
 
         <div class="block">
@@ -1457,6 +1253,7 @@
         </div>
     </div>
 
+    <!-- 🛠 DEV -->
     <div class="page" id="page-dev">
         <div class="hero">
             <div class="hero-emoji">🛠</div>
@@ -1467,13 +1264,11 @@
         <div class="dev-panel">
             <h3>🎮 Управление</h3>
             <div class="btn-row">
-                <button class="btn btn-green" id="devReload">🔄 Перезагрузить</button>
-                <button class="btn btn-outline" id="devTheme">🎨 Тема</button>
-                <button class="btn btn-outline" id="devFont">🔤 Шрифт+</button>
+                <button class="btn btn-green" id="devReload">🔄</button>
                 <button class="btn btn-outline" id="devPC">🖥 ПК</button>
                 <button class="btn btn-outline" id="devA4">🔴 А4</button>
                 <button class="btn btn-outline" id="devClearFav">🗑 Избранное</button>
-                <button class="btn btn-outline" id="devAlert">📢 Алерт</button>
+                <button class="btn btn-outline" id="devAlert">📢</button>
                 <button class="btn btn-danger" id="devClearAll">💥 Сброс</button>
             </div>
         </div>
@@ -1482,16 +1277,14 @@
             <h3>📋 Информация</h3>
             <p>Режим: <b style="color:var(--neon-green);">РАЗРАБОТЧИК</b></p>
             <p>Пароль: <b style="color:var(--neon-green);">520667</b></p>
-            <p>View: <b id="devViewMode" style="color:var(--neon-green);">📱 мобильный</b></p>
+            <p>View: <b id="devViewMode" style="color:var(--neon-green);">📱</b></p>
             <p>A4: <b id="devA4Mode" style="color:var(--neon-green);">выкл</b></p>
         </div>
 
-        <div class="block">
-            <h3>🚪 Выход</h3>
-            <button class="btn btn-danger" id="devExitBtn">Выйти</button>
-        </div>
+        <button class="btn btn-danger" id="devExitBtn">Выйти</button>
     </div>
 
+    <!-- ⭐ ИЗБРАННОЕ -->
     <div class="page" id="page-fav">
         <div class="hero">
             <div class="hero-emoji">⭐</div>
@@ -1501,7 +1294,7 @@
 
         <div class="block">
             <h3>➕ Добавить</h3>
-            <textarea class="fav-input" id="favInput" placeholder="Вставь текст, ссылку или заметку..."></textarea>
+            <textarea class="fav-input" id="favInput" placeholder="Вставь текст или заметку..."></textarea>
             <div class="btn-row">
                 <button class="btn" id="favAddBtn">➕ Добавить</button>
                 <button class="btn btn-outline" id="favClearBtn">🗑 Очистить</button>
@@ -1511,6 +1304,7 @@
         <div id="favList"></div>
     </div>
 
+    <!-- 🔍 ПОИСК -->
     <div class="page" id="page-search">
         <div class="hero">
             <div class="hero-emoji">🔍</div>
@@ -1520,84 +1314,62 @@
         <div id="searchResults"></div>
     </div>
 
+    <!-- САЙДБАР ПК -->
     <aside class="pc-sidebar">
-        <div class="winter-side">
-            <h3>❄ Ждём зиму</h3>
-            <p>Осень 2026 · Кумертау</p>
-        </div>
-
-        <div class="sidebar-card pc-nav">
-            <h4>📖 Навигация</h4>
-            <div class="nav-item active" data-target="home">
-                <div class="nav-icon">
-                    <svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
-                </div>
-                <span>Главная</span>
-            </div>
-            <div class="nav-item" data-target="search">
-                <div class="nav-icon">
-                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-                </div>
-                <span>Поиск</span>
-            </div>
-            <div class="nav-item" data-target="fav">
-                <div class="nav-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
-                </div>
-                <span>Избранное</span>
-            </div>
-            <div class="nav-item" data-target="settings">
-                <div class="nav-icon">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                    </svg>
-                </div>
-                <span>Настройки</span>
-            </div>
-        </div>
-
         <div class="sidebar-card">
-            <h4>🍁 Разделы</h4>
-            <a class="item" data-page="a4">🔴 Блогер А4</a>
-            <a class="item" data-page="gagarin">🏆 Кубок Гагарина</a>
-            <a class="item" data-page="luna">🌙 Луномосик</a>
-            <a class="item" data-page="settings">⚙️ Настройки</a>
+            <h4>📖 Навигация</h4>
+            <div class="pc-nav">
+                <div class="nav-item active" data-target="home">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
+                    <span>Главная</span>
+                </div>
+                <div class="nav-item" data-target="chat">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                    <span>Чат</span>
+                </div>
+                <div class="nav-item" data-target="search">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></div>
+                    <span>Поиск</span>
+                </div>
+                <div class="nav-item" data-target="fav">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
+                    <span>Избранное</span>
+                </div>
+                <div class="nav-item" data-target="settings">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>
+                    <span>Настройки</span>
+                </div>
+            </div>
         </div>
     </aside>
 
 </div>
 
+<!-- МЕНЮ СНИЗУ -->
 <nav class="bottom-nav">
     <div class="nav-item active" data-target="home">
-        <div class="nav-icon">
-            <svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
-        </div>
+        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
         <span>Главная</span>
     </div>
+    <div class="nav-item" data-target="chat">
+        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <span>Чат</span>
+    </div>
     <div class="nav-item" data-target="search">
-        <div class="nav-icon">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-        </div>
+        <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></div>
         <span>Поиск</span>
     </div>
     <div class="nav-item" data-target="fav">
-        <div class="nav-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
-        </div>
+        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
         <span>Избранное</span>
     </div>
     <div class="nav-item" data-target="settings">
-        <div class="nav-icon">
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-        </div>
+        <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>
         <span>Настройки</span>
     </div>
 </nav>
 
+<!-- 🔐 ПАРОЛЬ -->
 <div class="lock-screen" id="lockScreen">
     <div class="lock-box">
         <h2>🔐 Пароль</h2>
@@ -1615,11 +1387,13 @@
 </footer>
 
 <script>
+    // ==================== ДАННЫЕ ====================
     const ARTICLES = [
-        { id: 'a4',       ico: '🔴', title: 'Блогер А4 — Влад Бумага',  desc: 'Биография, факты, музыка' },
-        { id: 'gagarin',  ico: '🏆', title: 'Кубок Гагарина',           desc: 'Олимпиада 1–8 классов РБ' },
-        { id: 'luna',     ico: '🌙', title: 'Луномосик — Прямой эфир',  desc: 'Смотреть на сайте' },
-        { id: 'settings', ico: '⚙️', title: 'Настройки',                desc: 'Тема, шрифт, разработчик' }
+        { id: 'chat',     ico: '💬', title: 'Анонимный чат',           desc: 'Общайся с людьми мира' },
+        { id: 'a4',       ico: '🔴', title: 'Блогер А4 — Влад Бумага', desc: 'Биография, факты' },
+        { id: 'gagarin',  ico: '🏆', title: 'Кубок Гагарина',          desc: 'Олимпиада 1–8 классов' },
+        { id: 'luna',     ico: '🌙', title: 'Луномосик',               desc: 'Прямой эфир' },
+        { id: 'settings', ico: '⚙️', title: 'Настройки',               desc: 'Тема, шрифт' }
     ];
 
     const DEV_PASSWORD = "520667";
@@ -1627,62 +1401,85 @@
     let favorites = JSON.parse(localStorage.getItem('kumertau_favs') || '[]');
     let devMode = false;
     let fontScale = parseFloat(localStorage.getItem('kumertau_font') || '1');
-    let nightTheme = localStorage.getItem('kumertau_theme') === 'night';
     let pcMode = localStorage.getItem('kumertau_pc') === 'true';
     let a4Mode = localStorage.getItem('kumertau_a4') === 'true';
 
+    // ==================== ЧАТ ====================
+    let chatMessages = JSON.parse(localStorage.getItem('kumertau_chat') || '[]');
+    let userNick = localStorage.getItem('kumertau_nick') || '';
+    let onlineCount = 1;
+
+    // 🎭 Демо-сообщения для "мирового чата"
+    const FAKE_MESSAGES = [
+        { name: 'Alex (USA)', text: 'Hello from New York! 🌆', time: '...' },
+        { name: 'Yuki (Japan)', text: 'こんにちは! Konnichiwa! 🌸', time: '...' },
+        { name: 'Marco (Italy)', text: 'Ciao a tutti! 🍕', time: '...' },
+        { name: 'Hans (Germany)', text: 'Guten Tag! 🇩🇪', time: '...' },
+        { name: 'Ahmed (Egypt)', text: 'مرحبا من مصر! 🐪', time: '...' },
+        { name: 'Ivan (Russia)', text: 'Привет из Москвы! 🇷🇺', time: '...' },
+        { name: 'Sofia (Brazil)', text: 'Olá do Brasil! 🌴', time: '...' },
+        { name: 'Chen (China)', text: '你好！来自中国 🌸', time: '...' }
+    ];
+
+    // ==================== ПРЕЛОАДЕР ====================
     window.addEventListener('load', () => {
         if (a4Mode) {
             document.getElementById('preloader').classList.add('hide');
             document.getElementById('preloaderA4').classList.add('show');
             setTimeout(() => {
                 document.getElementById('preloaderA4').classList.add('hide');
-            }, 2500);
+            }, 2000);
         } else {
             document.getElementById('preloaderA4').classList.add('hide');
             setTimeout(() => {
                 document.getElementById('preloader').classList.add('hide');
-            }, 2200);
+            }, 1500);
         }
     });
 
+    // ==================== НАВИГАЦИЯ ====================
     function showPage(name) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const page = document.getElementById('page-' + name);
         if (page) page.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Обновляем активную вкладку
+        document.querySelectorAll('.nav-item').forEach(i => {
+            if (i.dataset.target === name) i.classList.add('active');
+            else i.classList.remove('active');
+        });
+
+        if (name === 'chat') {
+            setTimeout(scrollChat, 100);
+        }
     }
     window.showPage = showPage;
 
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
             const t = item.dataset.target;
-            if (t === 'home') showPage('home');
-            else if (t === 'search') { showPage('search'); document.getElementById('searchInput').focus(); }
-            else if (t === 'fav') { showPage('fav'); renderFavorites(); }
-            else if (t === 'settings') showPage('settings');
+            if (t === 'search') {
+                showPage('search');
+                document.getElementById('searchInput').focus();
+            } else if (t === 'fav') {
+                showPage('fav');
+                renderFavorites();
+            } else {
+                showPage(t);
+            }
         });
     });
 
     document.querySelectorAll('.card[data-page]').forEach(card => {
-        card.addEventListener('click', () => showPage(card.dataset.page));
-    });
-
-    document.querySelectorAll('.sidebar-card .item[data-page]').forEach(item => {
-        item.addEventListener('click', () => {
-            showPage(item.dataset.page);
-            if (item.dataset.page === 'fav') renderFavorites();
+        card.addEventListener('click', () => {
+            showPage(card.dataset.page);
+            if (card.dataset.page === 'fav') renderFavorites();
+            if (card.dataset.page === 'chat') setTimeout(scrollChat, 100);
         });
     });
 
-    document.getElementById('a4Btn').addEventListener('click', () => {
-        a4Mode = !a4Mode;
-        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
-        location.reload();
-    });
-
+    // ==================== ПОИСК ====================
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', () => {
         const q = searchInput.value.trim().toLowerCase();
@@ -1702,7 +1499,6 @@
             <div class="card" data-page="${a.id}">
                 <div class="card-title"><span class="ico">${a.ico}</span> ${a.title}</div>
                 <div class="card-desc">${a.desc}</div>
-                <span class="card-tag">Найдено</span>
             </div>
         `).join('');
         results.querySelectorAll('.card').forEach(c => {
@@ -1710,6 +1506,125 @@
         });
     });
 
+    // ==================== ЧАТ ====================
+    function renderChat() {
+        const box = document.getElementById('chatMessages');
+        box.innerHTML = '';
+
+        if (chatMessages.length === 0) {
+            box.innerHTML = '<div class="chat-msg system">🌍 Добро пожаловать! Начни первым.</div>';
+        } else {
+            chatMessages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'chat-msg ' + (msg.me ? 'me' : 'other');
+                div.innerHTML = `
+                    <div class="msg-name">${escapeHtml(msg.name)}</div>
+                    <div>${escapeHtml(msg.text)}</div>
+                    <div class="msg-time">${msg.time || ''}</div>
+                `;
+                box.appendChild(div);
+            });
+        }
+
+        scrollChat();
+    }
+
+    function scrollChat() {
+        const box = document.getElementById('chatMessages');
+        if (box) box.scrollTop = box.scrollHeight;
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    function getTime() {
+        const d = new Date();
+        return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+    }
+
+    function saveChat() {
+        localStorage.setItem('kumertau_chat', JSON.stringify(chatMessages.slice(-100)));
+    }
+
+    // Сохранить ник
+    document.getElementById('nickSave').addEventListener('click', () => {
+        const val = document.getElementById('nickInput').value.trim();
+        if (!val) {
+            alert('Введи ник');
+            return;
+        }
+        userNick = val;
+        localStorage.setItem('kumertau_nick', userNick);
+        addSystemMessage(`✓ Ник сохранён: ${userNick}`);
+    });
+
+    // Отправить сообщение
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        if (!userNick) {
+            alert('Сначала введи ник');
+            return;
+        }
+
+        chatMessages.push({
+            name: userNick,
+            text: text,
+            time: getTime(),
+            me: true
+        });
+        saveChat();
+        renderChat();
+
+        input.value = '';
+
+        // Демо-ответ (случайный "иностранец" отвечает через 2-5 сек)
+        setTimeout(() => {
+            const fake = FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)];
+            chatMessages.push({
+                name: fake.name,
+                text: fake.text,
+                time: getTime(),
+                me: false
+            });
+            saveChat();
+            renderChat();
+            onlineCount = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('onlineCount').textContent = 'Онлайн: ' + onlineCount;
+        }, 2000 + Math.random() * 3000);
+    }
+
+    document.getElementById('chatSend').addEventListener('click', sendMessage);
+    document.getElementById('chatInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    document.getElementById('chatClear').addEventListener('click', () => {
+        if (confirm('Очистить всю переписку?')) {
+            chatMessages = [];
+            saveChat();
+            renderChat();
+        }
+    });
+
+    function addSystemMessage(text) {
+        chatMessages.push({
+            name: 'Система',
+            text: text,
+            time: getTime(),
+            me: false,
+            system: true
+        });
+        saveChat();
+        renderChat();
+    }
+
+    // ==================== ИЗБРАННОЕ ====================
     function renderFavorites() {
         const list = document.getElementById('favList');
         if (favorites.length === 0) {
@@ -1725,27 +1640,17 @@
         list.querySelectorAll('.fav-item-del').forEach(btn => {
             btn.addEventListener('click', () => {
                 favorites.splice(parseInt(btn.dataset.index), 1);
-                saveFavs();
+                localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
                 renderFavorites();
             });
         });
-    }
-
-    function escapeHtml(s) {
-        return String(s).replace(/[&<>"']/g, c => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        }[c]));
-    }
-
-    function saveFavs() {
-        localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
     }
 
     document.getElementById('favAddBtn').addEventListener('click', () => {
         const val = document.getElementById('favInput').value.trim();
         if (!val) return;
         favorites.push(val);
-        saveFavs();
+        localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
         document.getElementById('favInput').value = '';
         renderFavorites();
     });
@@ -1753,27 +1658,12 @@
     document.getElementById('favClearBtn').addEventListener('click', () => {
         if (confirm('Удалить все записи?')) {
             favorites = [];
-            saveFavs();
+            localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
             renderFavorites();
         }
     });
 
-    function applyTheme() {
-        if (nightTheme) {
-            document.body.classList.add('night-theme');
-            document.getElementById('themeToggle').textContent = '☀️ Выключить';
-        } else {
-            document.body.classList.remove('night-theme');
-            document.getElementById('themeToggle').textContent = '🌙 Включить';
-        }
-    }
-
-    document.getElementById('themeToggle').addEventListener('click', () => {
-        nightTheme = !nightTheme;
-        localStorage.setItem('kumertau_theme', nightTheme ? 'night' : 'day');
-        applyTheme();
-    });
-
+    // ==================== ШРИФТ ====================
     function applyFont() {
         document.documentElement.style.setProperty('--font-scale', fontScale);
         document.getElementById('fontValue').textContent = Math.round(fontScale * 100) + '%';
@@ -1789,21 +1679,20 @@
         applyFont();
     });
 
+    // ==================== ПК ====================
     function applyPC() {
         if (pcMode) {
             document.body.classList.add('pc-mode');
             document.getElementById('pcToggle').classList.add('active');
-            document.getElementById('pcToggle').innerHTML = '📱 <span>Моб.</span>';
             const btn2 = document.getElementById('pcToggleSettings');
-            if (btn2) btn2.textContent = '📱 Выключить';
+            if (btn2) btn2.textContent = 'Выключить';
             const dev = document.getElementById('devViewMode');
             if (dev) dev.textContent = '🖥 ПК';
         } else {
             document.body.classList.remove('pc-mode');
             document.getElementById('pcToggle').classList.remove('active');
-            document.getElementById('pcToggle').innerHTML = '🖥 <span>ПК</span>';
             const btn2 = document.getElementById('pcToggleSettings');
-            if (btn2) btn2.textContent = '🖥 Включить';
+            if (btn2) btn2.textContent = 'Включить';
             const dev = document.getElementById('devViewMode');
             if (dev) dev.textContent = '📱 мобильный';
         }
@@ -1823,26 +1712,29 @@
         });
     }
 
+    // ==================== А4 ====================
     function applyA4() {
         if (a4Mode) {
             document.body.classList.add('a4-mode');
-            const btnText = document.getElementById('a4BtnText');
-            if (btnText) btnText.textContent = 'ВЫКЛ';
             const btn2 = document.getElementById('a4ToggleSettings');
-            if (btn2) btn2.textContent = '🔴 Выключить А4';
+            if (btn2) btn2.textContent = 'Выключить';
             const dev = document.getElementById('devA4Mode');
             if (dev) dev.textContent = 'ВКЛ';
         } else {
             document.body.classList.remove('a4-mode');
-            const btnText = document.getElementById('a4BtnText');
-            if (btnText) btnText.textContent = 'A4';
             const btn2 = document.getElementById('a4ToggleSettings');
-            if (btn2) btn2.textContent = '🔴 Включить А4';
+            if (btn2) btn2.textContent = 'Включить';
             const dev = document.getElementById('devA4Mode');
             if (dev) dev.textContent = 'выкл';
         }
         localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
     }
+
+    document.getElementById('a4Btn').addEventListener('click', () => {
+        a4Mode = !a4Mode;
+        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
+        location.reload();
+    });
 
     const a4ToggleSettings = document.getElementById('a4ToggleSettings');
     if (a4ToggleSettings) {
@@ -1854,29 +1746,23 @@
     }
 
     document.getElementById('restartBrowser').addEventListener('click', () => {
-        if (confirm('🔄 Вернуть всё в начало? Все настройки сбросятся.')) {
+        if (confirm('Сбросить всё? Настройки очистятся.')) {
             localStorage.clear();
             location.reload();
         }
     });
 
     const devPC = document.getElementById('devPC');
-    if (devPC) {
-        devPC.addEventListener('click', () => {
-            pcMode = !pcMode;
-            applyPC();
-        });
-    }
+    if (devPC) devPC.addEventListener('click', () => { pcMode = !pcMode; applyPC(); });
 
     const devA4 = document.getElementById('devA4');
-    if (devA4) {
-        devA4.addEventListener('click', () => {
-            a4Mode = !a4Mode;
-            localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
-            location.reload();
-        });
-    }
+    if (devA4) devA4.addEventListener('click', () => {
+        a4Mode = !a4Mode;
+        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
+        location.reload();
+    });
 
+    // ==================== DEV ====================
     const lockScreen = document.getElementById('lockScreen');
     const lockInput = document.getElementById('lockInput');
     const lockError = document.getElementById('lockError');
@@ -1915,20 +1801,9 @@
 
     document.getElementById('devReload').addEventListener('click', () => location.reload());
 
-    document.getElementById('devTheme').addEventListener('click', () => {
-        nightTheme = !nightTheme;
-        localStorage.setItem('kumertau_theme', nightTheme ? 'night' : 'day');
-        applyTheme();
-    });
-
-    document.getElementById('devFont').addEventListener('click', () => {
-        fontScale = Math.min(1.5, fontScale + 0.1);
-        applyFont();
-    });
-
     document.getElementById('devClearFav').addEventListener('click', () => {
         favorites = [];
-        saveFavs();
+        localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
         renderFavorites();
         alert('✅ Избранное очищено');
     });
@@ -1938,34 +1813,33 @@
     });
 
     document.getElementById('devClearAll').addEventListener('click', () => {
-        if (confirm('💥 Сбросить ВСЕ данные сайта?')) {
+        if (confirm('💥 Сбросить ВСЕ данные?')) {
             localStorage.clear();
             location.reload();
         }
     });
 
-    const lunaFrame = document.getElementById('lunaFrame');
-    const lunaFallback = document.getElementById('lunaFallback');
-    
-    if (lunaFrame) {
-        let loaded = false;
-        lunaFrame.addEventListener('load', () => { loaded = true; });
-        setTimeout(() => {
-            if (!loaded) lunaFallback.classList.add('show');
-        }, 3500);
-    }
-
-    document.getElementById('lunaReload').addEventListener('click', () => {
-        const frame = document.getElementById('lunaFrame');
-        frame.src = frame.src;
-        lunaFallback.classList.remove('show');
-    });
-
-    applyTheme();
+    // ==================== СТАРТ ====================
     applyFont();
     applyPC();
     applyA4();
     showPage('home');
+
+    // Загружаем ник
+    if (userNick) {
+        document.getElementById('nickInput').value = userNick;
+    }
+
+    // Рендер чата
+    renderChat();
+
+    // Обновление онлайн-счётчика
+    setInterval(() => {
+        onlineCount = Math.floor(Math.random() * 50) + 5;
+        const el = document.getElementById('onlineCount');
+        if (el) el.textContent = 'Онлайн: ' + onlineCount;
+    }, 5000);
+
     document.getElementById('searchResults').innerHTML =
         '<div class="empty"><div class="empty-emoji">🔍</div>Введи запрос</div>';
     renderFavorites();
