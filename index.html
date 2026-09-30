@@ -8,7 +8,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     :root {
-        /* 🚀 БУДУЩЕЕ — основа */
         --bg: #05060f;
         --bg-2: #0a0d1f;
         --glass: rgba(20, 25, 50, 0.55);
@@ -27,7 +26,6 @@
         --font-scale: 1;
     }
 
-    /* 🔴 РЕЖИМ А4 — ВСЁ ЖЁЛТОЕ */
     body.a4-mode {
         --bg: #0a0800;
         --bg-2: #14100a;
@@ -47,7 +45,6 @@
     }
 
     body.night-theme {
-        /* Ночная тема = обычная, но ещё темнее */
         --bg: #000;
         --bg-2: #05060f;
     }
@@ -63,7 +60,6 @@
         transition: background 0.5s, color 0.5s;
     }
 
-    /* 🌌 Фоновые свечения */
     body::before {
         content: "";
         position: fixed;
@@ -100,7 +96,7 @@
             linear-gradient(90deg, rgba(255, 214, 10, 0.08) 1px, transparent 1px);
     }
 
-    /* 🚀 ПРЕЛОАДЕР — БУДУЩЕЕ */
+    /* 🚀 ОБЫЧНЫЙ ПРЕЛОАДЕР */
     .preloader {
         position: fixed;
         inset: 0;
@@ -149,7 +145,7 @@
         font-family: monospace;
     }
 
-    /* 🔴 ПРЕЛОАДЕР А4 — жёлтый */
+    /* 🔴 ПРЕЛОАДЕР А4 — с картинкой Hatber */
     .preloader-a4 {
         position: fixed;
         inset: 0;
@@ -160,30 +156,39 @@
         align-items: center;
         justify-content: center;
         gap: 20px;
+        padding: 20px;
         transition: opacity 0.8s, visibility 0.8s;
     }
     .preloader-a4.show { display: flex; }
     .preloader-a4.hide { opacity: 0; visibility: hidden; }
-    .preloader-a4-logo {
-        font-size: 140px;
-        font-weight: 900;
-        letter-spacing: 20px;
-        color: #ffd60a;
-        text-shadow: 6px 6px 0 #e63946, 12px 12px 0 rgba(255, 214, 10, 0.3);
-        line-height: 1;
+
+    /* 📸 Картинка Hatber в прелоадере */
+    .preloader-a4-img {
+        max-width: 70vw;
+        max-height: 55vh;
+        width: 340px;
+        height: auto;
+        border-radius: 12px;
+        border: 4px solid #ffd60a;
+        box-shadow:
+            0 0 60px rgba(255, 214, 10, 0.6),
+            0 0 100px rgba(230, 57, 70, 0.4);
         animation: a4Pulse 1.5s ease-in-out infinite;
-        font-family: Georgia, serif;
+        object-fit: contain;
+        background: #fff;
+        padding: 6px;
     }
     @keyframes a4Pulse {
         0%, 100% { transform: scale(1); }
-        50%      { transform: scale(1.08); }
+        50%      { transform: scale(1.05); }
     }
     .preloader-a4-name {
         font-size: 22px;
         font-weight: 900;
         letter-spacing: 10px;
-        color: #fff9e0;
+        color: #ffd60a;
         text-transform: uppercase;
+        text-shadow: 0 0 20px rgba(255, 214, 10, 0.8);
     }
     .preloader-a4-bar {
         width: 300px; max-width: 80vw;
@@ -191,7 +196,7 @@
         background: rgba(255, 214, 10, 0.15);
         border-radius: 2px;
         overflow: hidden;
-        margin-top: 20px;
+        margin-top: 10px;
     }
     .preloader-a4-fill {
         height: 100%;
@@ -206,7 +211,6 @@
         100% { width: 100%; background-position: 0% 50%; }
     }
 
-    /* 🧊 HEADER — стекло будущего */
     header {
         position: sticky;
         top: 0;
@@ -252,13 +256,8 @@
         color: transparent;
         white-space: nowrap;
     }
-    body.a4-mode .logo-text {
-        background: linear-gradient(90deg, #ffd60a, #e63946);
-        -webkit-background-clip: text;
-        background-clip: text;
-    }
 
-    /* 🔴 Логотип А4 в шапке */
+    /* 🔴 Логотип А4 в шапке — с картинкой */
     .a4-header-logo {
         display: none;
         align-items: center;
@@ -266,20 +265,23 @@
     }
     body.a4-mode .a4-header-logo { display: flex; }
     body.a4-mode .logo-wrap { display: none; }
-    .a4-header-logo .a4-badge {
-        font-size: 32px;
-        font-weight: 900;
-        letter-spacing: 6px;
-        color: #ffd60a;
-        text-shadow: 3px 3px 0 #e63946;
-        font-family: Georgia, serif;
-        line-height: 1;
+
+    /* 📸 Маленькая картинка Hatber в шапке */
+    .a4-header-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 2px solid #ffd60a;
+        box-shadow: 0 0 12px rgba(255, 214, 10, 0.6);
+        background: #fff;
+        padding: 2px;
     }
-    .a4-header-logo .a4-name-small {
+    .a4-name-small {
         font-size: 11px;
         font-weight: 900;
         letter-spacing: 3px;
-        color: #fff9e0;
+        color: #ffd60a;
         text-transform: uppercase;
     }
 
@@ -315,7 +317,6 @@
     }
     body.a4-mode .search-icon { stroke: var(--neon-yellow); }
 
-    /* 🔘 КНОПКИ БУДУЩЕГО */
     .a4-toggle-btn, .pc-toggle-btn {
         display: flex;
         align-items: center;
@@ -375,7 +376,6 @@
         color: var(--neon-cyan);
     }
     .badge.purple { color: var(--neon-purple); border-color: rgba(168, 85, 247, 0.4); }
-    .badge.green { color: var(--neon-green); border-color: rgba(0, 255, 157, 0.4); }
     body.a4-mode .badge {
         color: #ffd60a;
         border-color: rgba(255, 214, 10, 0.5);
@@ -392,7 +392,6 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* 💎 HERO — стекло */
     .hero {
         background: var(--glass);
         backdrop-filter: blur(20px);
@@ -451,7 +450,6 @@
         background: linear-gradient(90deg, #ffd60a, #e63946);
         -webkit-background-clip: text;
         background-clip: text;
-        filter: drop-shadow(0 0 15px rgba(255, 214, 10, 0.6));
     }
     .hero-sub {
         font-size: 13px;
@@ -462,7 +460,24 @@
     }
     body.a4-mode .hero-sub { color: #ffd60a; }
 
-    /* 🌨 ЖДЁМ ЗИМУ — стекло */
+    /* 📸 Картинка Hatber на странице А4 */
+    .a4-page-img {
+        display: block;
+        margin: 0 auto 16px;
+        max-width: 85%;
+        width: 300px;
+        height: auto;
+        border-radius: 14px;
+        border: 3px solid #ffd60a;
+        box-shadow:
+            0 0 40px rgba(255, 214, 10, 0.5),
+            0 0 80px rgba(230, 57, 70, 0.3);
+        background: #fff;
+        padding: 6px;
+        position: relative;
+        z-index: 1;
+    }
+
     .wait-winter {
         background: var(--glass);
         backdrop-filter: blur(20px);
@@ -473,7 +488,6 @@
         margin-bottom: 20px;
         text-align: center;
         position: relative;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
     .wait-winter::before {
         content: "❄";
@@ -522,7 +536,6 @@
     }
     body.a4-mode .wait-winter p { color: #c9a84a; }
 
-    /* 🎴 КАРТОЧКИ — стекло будущего */
     .card {
         background: var(--glass);
         backdrop-filter: blur(20px);
@@ -863,7 +876,6 @@
     }
     body.a4-mode .settings-value { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
 
-    /* 📱 МЕНЮ БУДУЩЕГО — СНИЗУ */
     .bottom-nav {
         position: fixed;
         bottom: 0; left: 0; right: 0;
@@ -1046,7 +1058,6 @@
     }
     body.a4-mode footer { color: #c9a84a; }
 
-    /* 🖥 РЕЖИМ ПК */
     body.pc-mode { padding-bottom: 20px; }
     body.pc-mode header { padding: 12px 24px; }
     body.pc-mode .header-top { max-width: 1400px; margin: 0 auto 8px; }
@@ -1135,7 +1146,6 @@
         border-radius: 14px;
         padding: 16px;
         text-align: center;
-        position: relative;
     }
     body.a4-mode .winter-side { border-color: var(--border-strong); }
     .winter-side h3 {
@@ -1166,7 +1176,8 @@
         .wait-winter h2 { font-size: 18px; letter-spacing: 3px; }
         .pc-toggle-btn span, .a4-toggle-btn span { display: none; }
         .pc-toggle-btn, .a4-toggle-btn { padding: 9px 12px; }
-        .preloader-a4-logo { font-size: 90px; letter-spacing: 12px; }
+        .preloader-a4-img { width: 250px; }
+        .a4-header-img { width: 32px; height: 32px; }
     }
 </style>
 </head>
@@ -1179,9 +1190,11 @@
     <div class="preloader-text">Будущее · 2026</div>
 </div>
 
-<!-- 🔴 ПРЕЛОАДЕР А4 -->
+<!-- 🔴 ПРЕЛОАДЕР А4 — с картинкой Hatber -->
 <div class="preloader-a4" id="preloaderA4">
-    <div class="preloader-a4-logo">A4</div>
+    <img class="preloader-a4-img" 
+         src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg" 
+         alt="A4 Hatber">
     <div class="preloader-a4-name">Влад Бумага</div>
     <div class="preloader-a4-bar"><div class="preloader-a4-fill"></div></div>
 </div>
@@ -1202,8 +1215,11 @@
             <div class="logo-text">КУМЕРТАУ</div>
         </div>
 
+        <!-- 🔴 Логотип А4 в шапке — с картинкой Hatber -->
         <div class="a4-header-logo">
-            <div class="a4-badge">A4</div>
+            <img class="a4-header-img" 
+                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg" 
+                 alt="A4">
             <div class="a4-name-small">Влад Бумага</div>
         </div>
 
@@ -1218,7 +1234,7 @@
         <button class="pc-toggle-btn" id="pcToggle">🖥 <span>ПК</span></button>
     </div>
     <div class="badges-row">
-        <span class="badge">🍂 Осенний вестник 2026</span>
+        <span class="badge">🚀 Будущее 2026</span>
         <span class="badge purple">👑 Компания РУ СИК</span>
     </div>
 </header>
@@ -1262,9 +1278,12 @@
         </div>
     </div>
 
+    <!-- 🔴 СТРАНИЦА А4 -->
     <div class="page" id="page-a4">
         <div class="hero">
-            <div class="hero-emoji" style="font-family: Georgia, serif; font-weight: 900; font-size: 80px;">A4</div>
+            <img class="a4-page-img" 
+                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg" 
+                 alt="A4 Hatber">
             <h1>Влад Бумага</h1>
             <div class="hero-sub">Самый популярный блогер рунета</div>
         </div>
@@ -1658,7 +1677,6 @@
         });
     });
 
-    // 🔴 Кнопка А4 — перезагрузка страницы
     document.getElementById('a4Btn').addEventListener('click', () => {
         a4Mode = !a4Mode;
         localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
