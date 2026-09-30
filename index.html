@@ -19,9 +19,6 @@
         --pumpkin: #d97a2b;
         --wine: #7a2e1f;
         --cream: #fff8e8;
-        --a4-red: #e63946;
-        --a4-black: #1a1a1a;
-        --a4-yellow: #ffd60a;
         --font-scale: 1;
     }
 
@@ -37,6 +34,21 @@
         --pumpkin: #ff9e42;
         --wine: #d95a3f;
         --cream: #2a1c12;
+    }
+
+    /* 🔴 РЕЖИМ А4 — красно-чёрно-жёлтый стиль */
+    body.a4-mode {
+        --paper: #0a0a0a;
+        --paper-dark: #1a1a1a;
+        --paper-light: #2a2a2a;
+        --ink: #ffffff;
+        --ink-light: #cccccc;
+        --rust: #e63946;
+        --gold: #ffd60a;
+        --moss: #ffd60a;
+        --pumpkin: #e63946;
+        --wine: #e63946;
+        --cream: #1a1a1a;
     }
 
     html, body {
@@ -59,6 +71,10 @@
         pointer-events: none;
         z-index: 0;
     }
+    body.a4-mode::before {
+        background-image:
+            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(230, 57, 70, 0.05) 2px, rgba(230, 57, 70, 0.05) 4px);
+    }
 
     /* 🍁 Листья */
     .autumn-leaves {
@@ -67,7 +83,9 @@
         pointer-events: none;
         z-index: 1;
         overflow: hidden;
+        transition: opacity 0.5s;
     }
+    body.a4-mode .autumn-leaves { opacity: 0.2; }
     .a-leaf {
         position: absolute;
         animation: fallA linear infinite;
@@ -86,7 +104,7 @@
     .a-leaf:nth-child(5) { left: 78%; animation-duration: 15s; animation-delay: 3s;   font-size: 24px; }
     .a-leaf:nth-child(6) { left: 92%; animation-duration: 18s; animation-delay: 5s;   font-size: 26px; }
 
-    /* ⚡ Прелоадер */
+    /* ⚡ Прелоадер ОБЫЧНЫЙ */
     .preloader {
         position: fixed;
         inset: 0;
@@ -124,6 +142,73 @@
         font-style: italic;
     }
 
+    /* 🔴 Прелоадер А4 */
+    .preloader-a4 {
+        position: fixed;
+        inset: 0;
+        background: #0a0a0a;
+        z-index: 99999;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        transition: opacity 0.8s, visibility 0.8s;
+    }
+    .preloader-a4.show { display: flex; }
+    .preloader-a4.hide { opacity: 0; visibility: hidden; }
+    .preloader-a4-logo {
+        font-size: 120px;
+        font-weight: 900;
+        letter-spacing: 16px;
+        color: #e63946;
+        text-align: center;
+        text-shadow: 6px 6px 0 #ffd60a, 12px 12px 0 rgba(230, 57, 70, 0.4);
+        line-height: 1;
+        animation: a4Pulse 1.5s ease-in-out infinite;
+        font-family: Georgia, serif;
+    }
+    @keyframes a4Pulse {
+        0%, 100% { transform: scale(1); }
+        50%      { transform: scale(1.08); }
+    }
+    .preloader-a4-name {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 8px;
+        color: #ffd60a;
+        text-transform: uppercase;
+        margin-top: 10px;
+    }
+    .preloader-a4-sub {
+        font-size: 12px;
+        color: #888;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-style: italic;
+    }
+    .preloader-a4-bar {
+        width: 300px;
+        max-width: 80vw;
+        height: 4px;
+        background: rgba(255, 214, 10, 0.15);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+    .preloader-a4-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #e63946, #ffd60a, #e63946);
+        background-size: 200% 100%;
+        animation: loadFillA4 2s ease-in-out infinite;
+    }
+    @keyframes loadFillA4 {
+        0%   { width: 0%; background-position: 0% 50%; }
+        50%  { width: 80%; background-position: 100% 50%; }
+        100% { width: 100%; background-position: 0% 50%; }
+    }
+
     header {
         position: sticky;
         top: 0;
@@ -133,6 +218,13 @@
         padding: 14px 16px 12px;
         transition: background 0.5s;
         box-shadow: 0 4px 16px rgba(61, 40, 23, 0.15);
+    }
+
+    /* 🔴 В режиме А4 — шапка красно-чёрная */
+    body.a4-mode header {
+        background: #0a0a0a;
+        border-bottom: 4px solid #e63946;
+        box-shadow: 0 4px 20px rgba(230, 57, 70, 0.4);
     }
 
     .header-top {
@@ -161,6 +253,32 @@
         white-space: nowrap;
         font-family: Georgia, serif;
         text-shadow: 1px 1px 0 var(--gold);
+    }
+
+    /* 🔴 Логотип А4 в шапке при режиме А4 */
+    .a4-header-logo {
+        display: none;
+        align-items: center;
+        gap: 8px;
+    }
+    body.a4-mode .a4-header-logo { display: flex; }
+    body.a4-mode .logo-wrap { display: none; }
+    .a4-header-logo .a4-badge {
+        font-size: 32px;
+        font-weight: 900;
+        letter-spacing: 6px;
+        color: #e63946;
+        text-shadow: 3px 3px 0 #ffd60a;
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+    .a4-header-logo .a4-name-small {
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        color: #ffd60a;
+        text-transform: uppercase;
+        font-family: Georgia, serif;
     }
 
     .search-wrap { flex: 1; position: relative; max-width: 400px; min-width: 180px; }
@@ -199,8 +317,8 @@
         align-items: center;
         gap: 6px;
         padding: 9px 14px;
-        background: var(--a4-red);
-        border: 2px solid var(--ink);
+        background: #e63946;
+        border: 2px solid #1a1a1a;
         border-radius: 4px;
         color: #fff;
         font-size: 12px;
@@ -211,16 +329,17 @@
         transition: 0.2s;
         white-space: nowrap;
         font-family: Georgia, serif;
-        box-shadow: 2px 2px 0 var(--ink);
+        box-shadow: 2px 2px 0 #1a1a1a;
     }
     .a4-toggle-btn:hover {
-        background: var(--a4-black);
+        background: #1a1a1a;
+        color: #ffd60a;
         transform: translate(-1px, -1px);
-        box-shadow: 3px 3px 0 var(--ink);
+        box-shadow: 3px 3px 0 #1a1a1a;
     }
     .a4-toggle-btn:active {
         transform: translate(1px, 1px);
-        box-shadow: 1px 1px 0 var(--ink);
+        box-shadow: 1px 1px 0 #1a1a1a;
     }
 
     /* 🖥 Кнопка ПК */
@@ -271,6 +390,19 @@
     .autumn-badge { background: var(--gold); color: var(--ink); }
     .creator-badge { background: var(--cream); color: var(--wine); }
 
+    /* 🔴 В режиме А4 — другие бейджи */
+    body.a4-mode .autumn-badge {
+        background: #e63946;
+        color: #fff;
+        border-color: #1a1a1a;
+    }
+    body.a4-mode .creator-badge {
+        background: #ffd60a;
+        color: #0a0a0a;
+        border-color: #1a1a1a;
+    }
+    body.a4-mode .a4-hide-badge { display: none; }
+
     .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; position: relative; z-index: 2; }
 
     .page { display: none; animation: fadeIn 0.5s; }
@@ -278,6 +410,23 @@
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(12px); }
         to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 🔴 В режиме А4 — все карточки с красной рамкой */
+    body.a4-mode .card {
+        background: #1a1a1a;
+        border: 2px solid #e63946;
+        box-shadow: 4px 4px 0 #e63946;
+    }
+    body.a4-mode .card:hover {
+        box-shadow: 6px 6px 0 #ffd60a;
+        border-color: #ffd60a;
+    }
+    body.a4-mode .card-title { color: #fff; }
+    body.a4-mode .card-desc { color: #aaa; }
+    body.a4-mode .card-tag {
+        background: #e63946;
+        color: #fff;
     }
 
     .hero {
@@ -316,6 +465,13 @@
         text-transform: uppercase;
         line-height: 1.1;
     }
+    body.a4-mode .hero {
+        background: #1a1a1a;
+        border: 3px solid #e63946;
+        box-shadow: 6px 6px 0 #e63946;
+    }
+    body.a4-mode .hero h1 { color: #e63946; text-shadow: 2px 2px 0 #ffd60a; }
+    body.a4-mode .hero-sub { color: #ffd60a; }
     .hero-sub {
         font-size: 14px;
         color: var(--ink-light);
@@ -342,6 +498,7 @@
         background: var(--ink);
         opacity: 0.4;
     }
+    body.a4-mode .hero-divider { color: #ffd60a; }
 
     /* 🌨 Ждём зиму */
     .wait-winter {
@@ -388,6 +545,18 @@
         font-style: italic;
         text-transform: uppercase;
     }
+    body.a4-mode .wait-winter {
+        background: #1a1a1a;
+        border-color: #e63946;
+        box-shadow: 4px 4px 0 #e63946;
+    }
+    body.a4-mode .wait-winter::before,
+    body.a4-mode .wait-winter::after {
+        background: #0a0a0a;
+        color: #ffd60a;
+    }
+    body.a4-mode .wait-winter h2 { color: #e63946; text-shadow: 2px 2px 0 #ffd60a; }
+    body.a4-mode .wait-winter p { color: #ffd60a; }
 
     .card {
         background: var(--cream);
@@ -439,11 +608,7 @@
         font-family: Georgia, serif;
     }
     .card-tag.news { background: var(--gold); color: var(--ink); }
-    .card-tag.a4 {
-        background: var(--a4-red);
-        color: #fff;
-        letter-spacing: 2px;
-    }
+    .card-tag.a4 { background: #e63946; color: #fff; letter-spacing: 2px; }
     .card-tag.live {
         background: var(--rust);
         color: var(--cream);
@@ -460,6 +625,16 @@
         margin-bottom: 16px;
         box-shadow: 3px 3px 0 var(--ink);
     }
+    body.a4-mode .block {
+        background: #1a1a1a;
+        border: 2px solid #e63946;
+        border-left: 8px solid #e63946;
+        box-shadow: 4px 4px 0 #e63946;
+    }
+    body.a4-mode .block h3 { color: #ffd60a !important; }
+    body.a4-mode .block p,
+    body.a4-mode .block li { color: #fff; }
+    body.a4-mode .block li b { color: #e63946 !important; }
     .block h3 {
         font-size: 18px;
         font-weight: 900;
@@ -476,195 +651,6 @@
     .block li b { color: var(--wine); }
     .block p { font-size: 14px; line-height: 1.7; color: var(--ink); }
     .block p em { color: var(--ink-light); }
-
-    /* 🎬 Блок А4 */
-    .a4-hero-block {
-        background: var(--a4-black);
-        color: #fff;
-        border: 3px solid var(--a4-red);
-        border-radius: 4px;
-        padding: 30px 24px;
-        margin-bottom: 20px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 6px 6px 0 var(--a4-red);
-    }
-    .a4-hero-block::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(circle at 20% 30%, rgba(230, 57, 70, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 70%, rgba(255, 214, 10, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-    }
-    .a4-hero-block > * { position: relative; z-index: 1; }
-    .a4-logo-big {
-        font-size: 72px;
-        font-weight: 900;
-        letter-spacing: 10px;
-        color: var(--a4-red);
-        text-align: center;
-        text-shadow: 4px 4px 0 var(--a4-yellow), 8px 8px 0 rgba(230, 57, 70, 0.4);
-        line-height: 1;
-        margin-bottom: 12px;
-        font-family: Georgia, serif;
-    }
-    .a4-name {
-        font-size: 20px;
-        font-weight: 900;
-        letter-spacing: 4px;
-        color: var(--a4-yellow);
-        text-transform: uppercase;
-        margin-bottom: 6px;
-    }
-    .a4-sub {
-        font-size: 13px;
-        color: #aaa;
-        letter-spacing: 2px;
-        font-style: italic;
-        text-transform: uppercase;
-    }
-
-    /* 📊 Инфо-карточки А4 */
-    .a4-info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 10px;
-        margin-bottom: 16px;
-    }
-    .a4-info-item {
-        background: var(--a4-black);
-        border: 2px solid var(--a4-red);
-        border-radius: 3px;
-        padding: 14px 12px;
-        text-align: center;
-        color: #fff;
-        box-shadow: 3px 3px 0 var(--a4-red);
-    }
-    .a4-info-item .label {
-        font-size: 10px;
-        color: var(--a4-yellow);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        font-weight: 800;
-        margin-bottom: 6px;
-        font-family: Georgia, serif;
-    }
-    .a4-info-item .value {
-        font-size: 16px;
-        font-weight: 900;
-        color: #fff;
-        font-family: Georgia, serif;
-    }
-
-    /* 📸 Галерея картинок А4 */
-    .a4-gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
-        margin-bottom: 16px;
-    }
-    .a4-gallery-item {
-        background: var(--a4-black);
-        border: 2px solid var(--a4-red);
-        border-radius: 3px;
-        overflow: hidden;
-        box-shadow: 4px 4px 0 var(--a4-red);
-        transition: 0.2s;
-        cursor: pointer;
-    }
-    .a4-gallery-item:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 6px 6px 0 var(--a4-red);
-    }
-    .a4-gallery-item img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        display: block;
-    }
-    .a4-gallery-item .caption {
-        padding: 8px 10px;
-        font-size: 11px;
-        color: #fff;
-        text-align: center;
-        letter-spacing: 1px;
-        background: var(--a4-black);
-        font-family: Georgia, serif;
-    }
-
-    /* 🔗 Ссылки А4 */
-    .a4-links {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 16px;
-    }
-    .a4-link-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 20px;
-        background: var(--a4-red);
-        border: 2px solid var(--a4-black);
-        border-radius: 3px;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 900;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        text-decoration: none;
-        cursor: pointer;
-        transition: 0.2s;
-        box-shadow: 3px 3px 0 var(--a4-black);
-        font-family: Georgia, serif;
-    }
-    .a4-link-btn:hover {
-        background: var(--a4-yellow);
-        color: var(--a4-black);
-        transform: translate(-1px, -1px);
-        box-shadow: 4px 4px 0 var(--a4-black);
-    }
-    .a4-link-btn:active {
-        transform: translate(2px, 2px);
-        box-shadow: 1px 1px 0 var(--a4-black);
-    }
-
-    /* 📜 Цитата А4 */
-    .a4-quote {
-        background: var(--a4-black);
-        color: #fff;
-        border-left: 6px solid var(--a4-yellow);
-        padding: 18px 20px;
-        margin-bottom: 16px;
-        border-radius: 3px;
-        font-style: italic;
-        font-size: 15px;
-        line-height: 1.7;
-        position: relative;
-        box-shadow: 4px 4px 0 var(--a4-red);
-    }
-    .a4-quote::before {
-        content: "“";
-        position: absolute;
-        top: -10px; left: 12px;
-        font-size: 60px;
-        color: var(--a4-red);
-        font-family: Georgia, serif;
-        line-height: 1;
-    }
-    .a4-quote .author {
-        display: block;
-        margin-top: 10px;
-        font-size: 12px;
-        color: var(--a4-yellow);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        font-style: normal;
-        font-weight: 800;
-    }
 
     .gagarin-block {
         background: var(--cream);
@@ -816,6 +802,27 @@
     .btn-green { background: var(--moss); }
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
+    body.a4-mode .btn {
+        background: #e63946;
+        border-color: #ffd60a;
+        color: #fff;
+        box-shadow: 3px 3px 0 #ffd60a;
+    }
+    body.a4-mode .btn:hover {
+        background: #ffd60a;
+        color: #0a0a0a;
+        box-shadow: 4px 4px 0 #e63946;
+    }
+    body.a4-mode .btn-outline {
+        background: transparent;
+        border-color: #ffd60a;
+        color: #ffd60a;
+    }
+    body.a4-mode .btn-outline:hover {
+        background: #ffd60a;
+        color: #0a0a0a;
+    }
+
     .settings-row {
         display: flex;
         align-items: center;
@@ -829,6 +836,13 @@
         box-shadow: 2px 2px 0 var(--ink);
         flex-wrap: wrap;
     }
+    body.a4-mode .settings-row {
+        background: #1a1a1a;
+        border-color: #e63946;
+        box-shadow: 3px 3px 0 #e63946;
+    }
+    body.a4-mode .settings-label { color: #fff; }
+    body.a4-mode .settings-value { background: #0a0a0a; color: #ffd60a; }
     .settings-label {
         font-size: 14px;
         font-weight: 800;
@@ -856,6 +870,12 @@
         padding: 10px 8px 12px;
         z-index: 200;
         box-shadow: 0 -4px 16px rgba(61, 40, 23, 0.15);
+        transition: background 0.5s;
+    }
+    body.a4-mode .bottom-nav {
+        background: #0a0a0a;
+        border-top: 4px solid #e63946;
+        box-shadow: 0 -4px 20px rgba(230, 57, 70, 0.4);
     }
     .nav-item {
         flex: 1;
@@ -874,9 +894,11 @@
         text-transform: uppercase;
         font-family: Georgia, serif;
     }
+    body.a4-mode .nav-item { color: #888; }
     .nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
     .nav-icon svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 2; fill: none; }
     .nav-item.active { color: var(--rust); }
+    body.a4-mode .nav-item.active { color: #e63946; }
     .nav-item.active .nav-icon svg { stroke-width: 2.5; }
 
     .empty { text-align: center; padding: 40px 20px; color: var(--ink-light); font-size: 14px; font-style: italic; }
@@ -948,6 +970,11 @@
         resize: vertical;
         min-height: 60px;
     }
+    body.a4-mode .fav-input {
+        background: #1a1a1a;
+        border-color: #e63946;
+        color: #fff;
+    }
     .fav-item {
         background: var(--cream);
         border: 2px solid var(--ink);
@@ -958,6 +985,12 @@
         position: relative;
         box-shadow: 2px 2px 0 var(--ink);
     }
+    body.a4-mode .fav-item {
+        background: #1a1a1a;
+        border-color: #e63946;
+        box-shadow: 2px 2px 0 #e63946;
+    }
+    body.a4-mode .fav-item-text { color: #fff; }
     .fav-item-text {
         font-size: 14px;
         color: var(--ink);
@@ -1016,10 +1049,12 @@
         margin-left: auto;
         margin-right: auto;
     }
+    body.a4-mode footer {
+        color: #888;
+        border-top-color: #e63946;
+    }
 
-    /* =============================================
-       🖥 РЕЖИМ ПК
-       ============================================= */
+    /* 🖥 РЕЖИМ ПК */
     body.pc-mode { padding-bottom: 20px; }
     body.pc-mode header { padding: 14px 24px 12px; }
     body.pc-mode .header-top { max-width: 1400px; margin: 0 auto 10px; }
@@ -1046,6 +1081,14 @@
         margin-bottom: 14px;
         box-shadow: 3px 3px 0 var(--ink);
     }
+    body.a4-mode .sidebar-card {
+        background: #1a1a1a;
+        border-color: #e63946;
+        box-shadow: 3px 3px 0 #e63946;
+    }
+    body.a4-mode .sidebar-card h4 { color: #ffd60a; border-bottom-color: #e63946; }
+    body.a4-mode .sidebar-card .item { color: #fff; }
+    body.a4-mode .sidebar-card .item:hover { background: #0a0a0a; color: #ffd60a; }
     .sidebar-card h4 {
         font-size: 13px;
         font-weight: 900;
@@ -1092,6 +1135,9 @@
         letter-spacing: 0.5px;
         color: var(--ink);
     }
+    body.a4-mode .pc-nav .nav-item { color: #fff; }
+    body.a4-mode .pc-nav .nav-item:hover { background: #0a0a0a; }
+    body.a4-mode .pc-nav .nav-item.active { background: #e63946; color: #fff; }
     .pc-nav .nav-item:hover { background: var(--paper-dark); }
     .pc-nav .nav-item.active { background: var(--rust); color: var(--cream); }
     .pc-nav .nav-icon { width: 22px; height: 22px; }
@@ -1105,6 +1151,14 @@
         box-shadow: 3px 3px 0 var(--moss);
         position: relative;
     }
+    body.a4-mode .winter-side {
+        background: #1a1a1a;
+        border-color: #ffd60a;
+        box-shadow: 3px 3px 0 #ffd60a;
+    }
+    body.a4-mode .winter-side::before { background: #0a0a0a; color: #ffd60a; }
+    body.a4-mode .winter-side h3 { color: #e63946; }
+    body.a4-mode .winter-side p { color: #ffd60a; }
     .winter-side::before {
         content: "❄";
         position: absolute;
@@ -1134,7 +1188,6 @@
     body.pc-mode .block { padding: 26px; }
     body.pc-mode .wait-winter { padding: 32px; }
     body.pc-mode .wait-winter h2 { font-size: 34px; }
-    body.pc-mode .a4-logo-big { font-size: 96px; }
 
     @media (max-width: 900px) {
         body.pc-mode .container { grid-template-columns: 1fr; }
@@ -1151,16 +1204,25 @@
         .pc-toggle-btn { padding: 9px 12px; }
         .a4-toggle-btn span { display: none; }
         .a4-toggle-btn { padding: 9px 12px; }
-        .a4-logo-big { font-size: 52px; }
+        .preloader-a4-logo { font-size: 80px; letter-spacing: 10px; }
     }
 </style>
 </head>
 <body>
 
+<!-- ⚡ ОБЫЧНЫЙ ПРЕЛОАДЕР -->
 <div class="preloader" id="preloader">
     <div class="preloader-leaf">🍁</div>
     <div class="preloader-logo">КУМЕРТАУ</div>
     <div class="preloader-text">Осенний вестник · 2026</div>
+</div>
+
+<!-- 🔴 ПРЕЛОАДЕР А4 -->
+<div class="preloader-a4" id="preloaderA4">
+    <div class="preloader-a4-logo">A4</div>
+    <div class="preloader-a4-name">Влад Бумага</div>
+    <div class="preloader-a4-sub">Загрузка раздела А4...</div>
+    <div class="preloader-a4-bar"><div class="preloader-a4-fill"></div></div>
 </div>
 
 <div class="autumn-leaves">
@@ -1174,6 +1236,7 @@
 
 <header>
     <div class="header-top">
+        <!-- Обычный логотип -->
         <div class="logo-wrap">
             <div class="logo-wheel">
                 <svg viewBox="0 0 100 100">
@@ -1187,14 +1250,21 @@
             </div>
             <div class="logo-text">КУМЕРТАУ</div>
         </div>
+
+        <!-- 🔴 Логотип А4 -->
+        <div class="a4-header-logo">
+            <div class="a4-badge">A4</div>
+            <div class="a4-name-small">Влад Бумага</div>
+        </div>
+
         <div class="search-wrap">
             <svg class="search-icon" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7"/>
                 <line x1="16.5" y1="16.5" x2="21" y2="21"/>
             </svg>
-            <input type="text" class="search-input" id="searchInput" placeholder="Поиск по вестнику...">
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
         </div>
-        <button class="a4-toggle-btn" id="a4Btn">🔴 <span>A4</span></button>
+        <button class="a4-toggle-btn" id="a4Btn">🔴 <span id="a4BtnText">A4</span></button>
         <button class="pc-toggle-btn" id="pcToggle">🖥 <span>ПК</span></button>
     </div>
     <div class="badges-row">
@@ -1239,42 +1309,41 @@
 
         <div class="card" data-page="settings">
             <div class="card-title"><span class="ico">⚙️</span> Настройки</div>
-            <div class="card-desc">Тема, шрифт, режим разработчика, режим ПК</div>
+            <div class="card-desc">Тема, шрифт, разработчик, режим А4</div>
             <span class="card-tag">Система</span>
         </div>
     </div>
 
     <!-- 🔴 БЛОГЕР А4 -->
     <div class="page" id="page-a4">
-        <div class="a4-hero-block">
-            <div class="a4-logo-big">A4</div>
-            <div class="a4-name">Влад Бумага</div>
-            <div class="a4-sub">Самый популярный блогер рунета</div>
+        <div class="hero" style="background: #1a1a1a; border-color: #e63946; box-shadow: 6px 6px 0 #e63946;">
+            <div class="hero-emoji" style="font-size: 80px; color: #e63946; text-shadow: 4px 4px 0 #ffd60a; font-weight: 900; font-family: Georgia, serif; animation: none;">A4</div>
+            <h1 style="color: #e63946; text-shadow: 3px 3px 0 #ffd60a;">Влад Бумага</h1>
+            <div class="hero-divider" style="color: #ffd60a;">★</div>
+            <div class="hero-sub" style="color: #ffd60a;">Самый популярный блогер рунета</div>
         </div>
 
-        <!-- 📊 Инфо -->
-        <div class="a4-info-grid">
-            <div class="a4-info-item">
-                <div class="label">Родился</div>
-                <div class="value">05.06.1996</div>
+        <div class="a4-info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px;">
+            <div class="a4-info-item" style="background: #1a1a1a; border: 2px solid #e63946; border-radius: 3px; padding: 14px 12px; text-align: center; color: #fff; box-shadow: 3px 3px 0 #e63946;">
+                <div style="font-size: 10px; color: #ffd60a; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; margin-bottom: 6px;">Родился</div>
+                <div style="font-size: 16px; font-weight: 900; color: #fff;">05.06.1996</div>
             </div>
-            <div class="a4-info-item">
-                <div class="label">Город</div>
-                <div class="value">Минск</div>
+            <div class="a4-info-item" style="background: #1a1a1a; border: 2px solid #e63946; border-radius: 3px; padding: 14px 12px; text-align: center; color: #fff; box-shadow: 3px 3px 0 #e63946;">
+                <div style="font-size: 10px; color: #ffd60a; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; margin-bottom: 6px;">Город</div>
+                <div style="font-size: 16px; font-weight: 900; color: #fff;">Минск</div>
             </div>
-            <div class="a4-info-item">
-                <div class="label">Канал создан</div>
-                <div class="value">2014</div>
+            <div class="a4-info-item" style="background: #1a1a1a; border: 2px solid #e63946; border-radius: 3px; padding: 14px 12px; text-align: center; color: #fff; box-shadow: 3px 3px 0 #e63946;">
+                <div style="font-size: 10px; color: #ffd60a; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; margin-bottom: 6px;">Канал создан</div>
+                <div style="font-size: 16px; font-weight: 900; color: #fff;">2014</div>
             </div>
-            <div class="a4-info-item">
-                <div class="label">Подписчики</div>
-                <div class="value">10M+</div>
+            <div class="a4-info-item" style="background: #1a1a1a; border: 2px solid #e63946; border-radius: 3px; padding: 14px 12px; text-align: center; color: #fff; box-shadow: 3px 3px 0 #e63946;">
+                <div style="font-size: 10px; color: #ffd60a; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; margin-bottom: 6px;">Подписчики</div>
+                <div style="font-size: 16px; font-weight: 900; color: #fff;">10M+</div>
             </div>
         </div>
 
-        <!-- 📖 Кто такой -->
-        <div class="block" style="border-left-color: var(--a4-red);">
-            <h3 style="color: var(--a4-red);">📖 Кто такой Влад А4</h3>
+        <div class="block" style="border-left-color: #e63946;">
+            <h3 style="color: #ffd60a;">📖 Кто такой Влад А4</h3>
             <p>
                 <b>Влад Бумага</b> (настоящее имя — Владислав Бумага) — один из самых
                 популярных русскоязычных видеоблогеров. Родился <b>5 июня 1996 года</b>
@@ -1286,9 +1355,8 @@
             </p>
         </div>
 
-        <!-- 📈 Путь к славе -->
-        <div class="block" style="border-left-color: var(--a4-yellow);">
-            <h3 style="color: var(--a4-yellow);">📈 Путь к славе</h3>
+        <div class="block" style="border-left-color: #ffd60a;">
+            <h3 style="color: #ffd60a;">📈 Путь к славе</h3>
             <ul>
                 <li><b>2014</b> — Зарегистрировал YouTube-канал <b>«А4»</b> (29 ноября). Первые ролики — челленджи и розыгрыши.</li>
                 <li><b>2016</b> — Настоящий прорыв после видео <b>«24 часа в батутном центре»</b> — подписчики выросли с 250 тыс. до миллиона.</li>
@@ -1297,9 +1365,8 @@
             </ul>
         </div>
 
-        <!-- 🎬 Контент -->
-        <div class="block" style="border-left-color: var(--a4-black);">
-            <h3 style="color: var(--a4-black);">🎬 Контент и музыка</h3>
+        <div class="block" style="border-left-color: #e63946;">
+            <h3 style="color: #ffd60a;">🎬 Контент и музыка</h3>
             <p>
                 Основной формат — <b>дорогие челленджи, испытания и соревнования</b> с друзьями.
             </p>
@@ -1310,9 +1377,8 @@
             </p>
         </div>
 
-        <!-- 💼 Бизнес -->
-        <div class="block" style="border-left-color: var(--moss);">
-            <h3 style="color: var(--moss);">💼 Бизнес</h3>
+        <div class="block" style="border-left-color: #ffd60a;">
+            <h3 style="color: #ffd60a;">💼 Бизнес</h3>
             <p>
                 Запустил бренд снеков и напитков <b>Lava-Lava</b>,
                 а также сеть пиццерий <b>«A4 pizza»</b>.
@@ -1321,50 +1387,23 @@
             </p>
         </div>
 
-        <!-- 💬 Цитата -->
-        <div class="a4-quote">
-            В 2024 году Влад Бумага лично задал вопрос Владимиру Путину
-            на «Прямой линии» о работе YouTube в России и похвастался
-            рождением дочери.
-            <span class="author">— Интересный факт</span>
-        </div>
-
-        <!-- 🔗 Ссылки -->
-        <div class="a4-links">
-            <a class="a4-link-btn" href="https://www.youtube.com/@A4" target="_blank" rel="noopener">
-                ▶ YouTube А4
-            </a>
-            <a class="a4-link-btn" href="https://vk.com/a4" target="_blank" rel="noopener">
-                🔵 ВКонтакте
-            </a>
-            <a class="a4-link-btn" href="https://t.me/a4" target="_blank" rel="noopener">
-                ✈ Telegram
-            </a>
-        </div>
-
-        <!-- 📸 Галерея -->
-        <div class="block">
-            <h3>📸 Галерея А4</h3>
-            <p style="margin-bottom:12px;"><em>Фотографии и стиль блогера</em></p>
-            <div class="a4-gallery">
-                <div class="a4-gallery-item">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Vlad_Bumaga_2021.jpg/320px-Vlad_Bumaga_2021.jpg" alt="Влад А4" onerror="this.style.background='linear-gradient(135deg,#e63946,#1a1a1a)';this.style.height='160px';">
-                    <div class="caption">Влад А4</div>
-                </div>
-                <div class="a4-gallery-item">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/YouTube_logo_%282017%29.svg/320px-YouTube_logo_%282017%29.svg.png" alt="YouTube" style="background:#fff;object-fit:contain;padding:20px;">
-                    <div class="caption">YouTube-канал</div>
-                </div>
-                <div class="a4-gallery-item">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/A4_paper_%28blue%29.jpg/320px-A4_paper_%28blue%29.jpg" alt="А4" onerror="this.style.background='linear-gradient(135deg,#ffd60a,#e63946)';this.style.height='160px';">
-                    <div class="caption">Символ А4</div>
-                </div>
-            </div>
+        <div class="block" style="border-left-color: #e63946; background: #1a1a1a; border-color: #e63946; border-left: 6px solid #ffd60a;">
+            <h3 style="color: #ffd60a;">💬 Интересный факт</h3>
+            <p style="font-style: italic;">
+                В 2024 году Влад Бумага лично задал вопрос Владимиру Путину
+                на «Прямой линии» о работе YouTube в России и похвастался
+                рождением дочери.
+            </p>
         </div>
 
         <div class="btn-row" style="margin-top:16px;">
-            <button class="btn" onclick="showPage('home')">← Назад</button>
-            <button class="btn btn-outline" onclick="location.reload()">🔄 Обновить</button>
+            <a class="btn" href="https://www.youtube.com/@A4" target="_blank" rel="noopener">▶ YouTube А4</a>
+            <a class="btn" href="https://vk.com/a4" target="_blank" rel="noopener">🔵 ВКонтакте</a>
+            <a class="btn" href="https://t.me/a4" target="_blank" rel="noopener">✈ Telegram</a>
+        </div>
+
+        <div class="btn-row" style="margin-top:16px;">
+            <button class="btn btn-outline" onclick="showPage('home')">← Назад</button>
         </div>
     </div>
 
@@ -1385,22 +1424,10 @@
                 <span class="highlight">Республики Башкортостан</span>.
             </p>
 
-            <div class="info-row">
-                <span>📅</span>
-                <div><b>Регистрация:</b> с 1 сентября по 31 октября</div>
-            </div>
-            <div class="info-row">
-                <span>🏫</span>
-                <div><b>Место:</b> все школы Республики Башкортостан</div>
-            </div>
-            <div class="info-row">
-                <span>👨‍🎓</span>
-                <div><b>Участники:</b> ученики 1–8 классов</div>
-            </div>
-            <div class="info-row">
-                <span>📌</span>
-                <div><b>Регистрация:</b> во всех школах РБ</div>
-            </div>
+            <div class="info-row"><span>📅</span><div><b>Регистрация:</b> с 1 сентября по 31 октября</div></div>
+            <div class="info-row"><span>🏫</span><div><b>Место:</b> все школы Республики Башкортостан</div></div>
+            <div class="info-row"><span>👨‍🎓</span><div><b>Участники:</b> ученики 1–8 классов</div></div>
+            <div class="info-row"><span>📌</span><div><b>Регистрация:</b> во всех школах РБ</div></div>
         </div>
 
         <div class="block">
@@ -1486,8 +1513,13 @@
         </div>
 
         <div class="settings-row">
-            <span class="settings-label">🔴 Блогер А4</span>
-            <button class="btn btn-outline" onclick="showPage('a4')">🔴 Открыть раздел</button>
+            <span class="settings-label">🔴 Режим А4</span>
+            <button class="btn btn-outline" id="a4ToggleSettings">🔴 Включить А4</button>
+        </div>
+
+        <div class="settings-row">
+            <span class="settings-label">🔄 Перезапуск браузера</span>
+            <button class="btn btn-danger" id="restartBrowser">🔄 Вернуть всё в начало</button>
         </div>
 
         <div class="block">
@@ -1519,6 +1551,7 @@
                 <button class="btn btn-outline" id="devTheme" style="background:#f4e8d0;">🎨 Тема</button>
                 <button class="btn btn-outline" id="devFont" style="background:#f4e8d0;">🔤 Шрифт+</button>
                 <button class="btn btn-outline" id="devPC" style="background:#f4e8d0;">🖥 ПК</button>
+                <button class="btn btn-outline" id="devA4" style="background:#f4e8d0;">🔴 А4</button>
                 <button class="btn btn-outline" id="devClearFav" style="background:#f4e8d0;">🗑 Избранное</button>
                 <button class="btn btn-outline" id="devAlert" style="background:#f4e8d0;">📢 Алерт</button>
                 <button class="btn btn-danger" id="devClearAll">💥 Сброс</button>
@@ -1530,6 +1563,7 @@
             <p>Режим: <b style="color:var(--gold);">РАЗРАБОТЧИК</b></p>
             <p>Пароль: <b style="color:var(--gold);">520667</b></p>
             <p>View: <b id="devViewMode" style="color:var(--gold);">📱 мобильный</b></p>
+            <p>A4: <b id="devA4Mode" style="color:var(--gold);">выкл</b></p>
         </div>
 
         <div class="block">
@@ -1680,11 +1714,22 @@
     let fontScale = parseFloat(localStorage.getItem('kumertau_font') || '1');
     let nightTheme = localStorage.getItem('kumertau_theme') === 'night';
     let pcMode = localStorage.getItem('kumertau_pc') === 'true';
+    let a4Mode = localStorage.getItem('kumertau_a4') === 'true';
 
+    // 🎬 ЕСЛИ РЕЖИМ А4 ВКЛЮЧЁН — показываем прелоадер А4
     window.addEventListener('load', () => {
-        setTimeout(() => {
+        if (a4Mode) {
             document.getElementById('preloader').classList.add('hide');
-        }, 2200);
+            document.getElementById('preloaderA4').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('preloaderA4').classList.add('hide');
+            }, 2500);
+        } else {
+            document.getElementById('preloaderA4').classList.add('hide');
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hide');
+            }, 2200);
+        }
     });
 
     function showPage(name) {
@@ -1718,9 +1763,12 @@
         });
     });
 
-    // 🔴 Кнопка А4 — переход на раздел
+    // 🔴 КНОПКА А4 — ВКЛЮЧАЕТ РЕЖИМ И ПЕРЕЗАГРУЖАЕТ СТРАНИЦУ
     document.getElementById('a4Btn').addEventListener('click', () => {
-        showPage('a4');
+        a4Mode = !a4Mode;
+        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
+        // 🔄 ПЕРЕЗАГРУЗКА
+        location.reload();
     });
 
     const searchInput = document.getElementById('searchInput');
@@ -1863,11 +1911,60 @@
         });
     }
 
+    // 🔴 ФУНКЦИЯ РЕЖИМА А4
+    function applyA4() {
+        if (a4Mode) {
+            document.body.classList.add('a4-mode');
+            const btnText = document.getElementById('a4BtnText');
+            if (btnText) btnText.textContent = 'ВЫКЛ';
+            const btn2 = document.getElementById('a4ToggleSettings');
+            if (btn2) btn2.textContent = '🔴 Выключить А4';
+            const dev = document.getElementById('devA4Mode');
+            if (dev) dev.textContent = 'ВКЛ';
+        } else {
+            document.body.classList.remove('a4-mode');
+            const btnText = document.getElementById('a4BtnText');
+            if (btnText) btnText.textContent = 'A4';
+            const btn2 = document.getElementById('a4ToggleSettings');
+            if (btn2) btn2.textContent = '🔴 Включить А4';
+            const dev = document.getElementById('devA4Mode');
+            if (dev) dev.textContent = 'выкл';
+        }
+        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
+    }
+
+    // 🔴 Переключатель в настройках
+    const a4ToggleSettings = document.getElementById('a4ToggleSettings');
+    if (a4ToggleSettings) {
+        a4ToggleSettings.addEventListener('click', () => {
+            a4Mode = !a4Mode;
+            localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
+            location.reload();
+        });
+    }
+
+    // 🔄 ПЕРЕЗАПУСК БРАУЗЕРА
+    document.getElementById('restartBrowser').addEventListener('click', () => {
+        if (confirm('🔄 Вернуть всё в начало? Все настройки сбросятся, страница перезагрузится.')) {
+            localStorage.clear();
+            location.reload();
+        }
+    });
+
     const devPC = document.getElementById('devPC');
     if (devPC) {
         devPC.addEventListener('click', () => {
             pcMode = !pcMode;
             applyPC();
+        });
+    }
+
+    const devA4 = document.getElementById('devA4');
+    if (devA4) {
+        devA4.addEventListener('click', () => {
+            a4Mode = !a4Mode;
+            localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
+            location.reload();
         });
     }
 
@@ -1955,9 +2052,11 @@
         lunaFallback.classList.remove('show');
     });
 
+    // 🚀 СТАРТ
     applyTheme();
     applyFont();
     applyPC();
+    applyA4();
     showPage('home');
     document.getElementById('searchResults').innerHTML =
         '<div class="empty"><div class="empty-emoji">🔍</div><em>Введи запрос...</em></div>';
