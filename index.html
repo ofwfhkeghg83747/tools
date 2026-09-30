@@ -213,7 +213,35 @@
         pointer-events: none;
     }
 
-    .badges-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    /* 🖥 Кнопка режима ПК */
+    .pc-toggle-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        background: linear-gradient(90deg, rgba(255, 140, 66, 0.15), rgba(255, 204, 0, 0.15));
+        border: 1px solid var(--autumn-1);
+        border-radius: 20px;
+        color: var(--autumn-4);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+    .pc-toggle-btn:hover {
+        box-shadow: 0 0 16px rgba(255, 140, 66, 0.5);
+        transform: translateY(-1px);
+    }
+    .pc-toggle-btn:active { transform: scale(0.95); }
+    .pc-toggle-btn.active {
+        background: linear-gradient(90deg, var(--autumn-1), var(--autumn-2));
+        color: #fff;
+    }
+
+    .badges-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
     .autumn-badge, .creator-badge {
         display: inline-flex;
         align-items: center;
@@ -416,7 +444,6 @@
     .block li b { color: var(--autumn-1); }
     .block p { font-size: 14px; line-height: 1.7; color: var(--text); }
 
-    /* 🏆 Кубок Гагарина */
     .gagarin-block {
         background: linear-gradient(135deg, rgba(255, 204, 0, 0.15), rgba(255, 140, 66, 0.15));
         border: 2px solid var(--neon-yellow);
@@ -447,7 +474,6 @@
     }
     body.light-theme .info-row { background: #fff; }
 
-    /* 📺 Луномосик */
     .live-hero {
         background: linear-gradient(135deg, #2a0010 0%, #4a0030 100%);
         border: 2px solid var(--neon-red);
@@ -719,12 +745,166 @@
         letter-spacing: 1px;
     }
 
+    /* =============================================
+       🖥 РЕЖИМ ПК (DESKTOP MODE)
+       ============================================= */
+    body.pc-mode {
+        padding-bottom: 20px;
+    }
+    body.pc-mode header {
+        padding: 14px 24px;
+    }
+    body.pc-mode .header-top {
+        max-width: 1400px;
+        margin: 0 auto 8px;
+    }
+    body.pc-mode .badges-row {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    body.pc-mode .container {
+        max-width: 1400px;
+        padding: 30px 24px;
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        align-items: start;
+    }
+    body.pc-mode .page {
+        grid-column: 1;
+        min-width: 0;
+    }
+    body.pc-mode .page.active {
+        display: block;
+    }
+    /* Сайдбар для ПК */
+    .pc-sidebar {
+        display: none;
+        grid-column: 2;
+        position: sticky;
+        top: 100px;
+    }
+    body.pc-mode .pc-sidebar {
+        display: block;
+    }
+    .sidebar-card {
+        background: var(--bg-card);
+        border: 1px solid var(--autumn-1);
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 14px;
+        backdrop-filter: blur(10px);
+    }
+    .sidebar-card h4 {
+        font-size: 13px;
+        font-weight: 900;
+        color: var(--autumn-4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .sidebar-card .item {
+        display: block;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        color: var(--text);
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        margin-bottom: 4px;
+    }
+    .sidebar-card .item:hover {
+        background: rgba(255, 140, 66, 0.15);
+        transform: translateX(4px);
+        color: var(--autumn-4);
+    }
+    body.pc-mode .bottom-nav {
+        display: none;
+    }
+    /* ПК-версия нижнего меню — горизонтальное в сайдбаре */
+    .pc-nav {
+        display: none;
+    }
+    body.pc-mode .pc-nav {
+        display: block;
+    }
+    .pc-nav .nav-item {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 12px;
+        font-size: 13px;
+        border-radius: 10px;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--text);
+    }
+    .pc-nav .nav-item:hover {
+        background: rgba(255, 140, 66, 0.15);
+    }
+    .pc-nav .nav-item.active {
+        background: linear-gradient(90deg, rgba(255, 140, 66, 0.2), transparent);
+        color: var(--autumn-4);
+    }
+    .pc-nav .nav-icon {
+        width: 22px; height: 22px;
+    }
+    /* Кнопка "Ждём зиму" в сайдбаре */
+    .winter-side {
+        background: linear-gradient(135deg, rgba(0, 224, 255, 0.15), rgba(255, 255, 255, 0.05));
+        border: 2px solid var(--neon-cyan);
+        border-radius: 16px;
+        padding: 16px;
+        text-align: center;
+        box-shadow: 0 0 24px rgba(0, 224, 255, 0.25);
+        animation: winterPulse 3s infinite;
+    }
+    .winter-side h3 {
+        font-size: 16px;
+        font-weight: 900;
+        color: var(--neon-cyan);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        text-shadow: 0 0 12px rgba(0, 224, 255, 0.6);
+    }
+    .winter-side p { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; }
+
+    /* Большие герои в ПК-режиме */
+    body.pc-mode .hero {
+        padding: 48px 30px;
+    }
+    body.pc-mode .hero h1 { font-size: 42px; }
+    body.pc-mode .hero-emoji { font-size: 80px; }
+    body.pc-mode .card {
+        padding: 22px;
+    }
+    body.pc-mode .card-title { font-size: 19px; }
+    body.pc-mode .block { padding: 24px; }
+    body.pc-mode .wait-winter { padding: 28px; }
+    body.pc-mode .wait-winter h2 { font-size: 32px; }
+
+    @media (max-width: 900px) {
+        body.pc-mode .container {
+            grid-template-columns: 1fr;
+        }
+        body.pc-mode .pc-sidebar {
+            position: static;
+        }
+    }
+
     @media (max-width: 500px) {
         .logo-text { font-size: 15px; }
         .hero h1 { font-size: 20px; }
         .hero-emoji { font-size: 50px; }
         .live-hero h1 { font-size: 22px; }
         .wait-winter h2 { font-size: 20px; }
+        .pc-toggle-btn span { display: none; }
+        .pc-toggle-btn { padding: 8px 10px; }
     }
 </style>
 </head>
@@ -769,6 +949,9 @@
             </svg>
             <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
         </div>
+        <button class="pc-toggle-btn" id="pcToggle">
+            🖥 <span>Режим ПК</span>
+        </button>
     </div>
     <div class="badges-row">
         <span class="autumn-badge">🍂 Осенний выпуск 2026</span>
@@ -778,9 +961,8 @@
 
 <div class="container">
 
-    <!-- 🏠 ГЛАВНАЯ -->
+    <!-- 📚 Основной контент -->
     <div class="page active" id="page-home">
-        <!-- ❄️ ЖДЁМ ЗИМУ -->
         <div class="wait-winter">
             <h2>❄️ ЖДЁМ ЗИМУ ❄️</h2>
             <p>Осень 2026 · Кумертау</p>
@@ -811,7 +993,6 @@
         </div>
     </div>
 
-    <!-- 🏆 КУБОК ГАГАРИНА -->
     <div class="page" id="page-gagarin">
         <div class="hero">
             <div class="hero-emoji">🏆</div>
@@ -857,7 +1038,6 @@
         </div>
     </div>
 
-    <!-- 🌙 ЛУНОМОСИК -->
     <div class="page" id="page-luna">
         <div class="live-hero">
             <div class="live-badge-top">● ПРЯМОЙ ЭФИР</div>
@@ -882,10 +1062,7 @@
 
         <div class="block">
             <h3>🌙 О Луномосике</h3>
-            <p>
-                <b>Луномосик</b> — любимый канал компании РУ СИК.
-                Смотри прямые эфиры, новости и много интересного!
-            </p>
+            <p><b>Луномосик</b> — любимый канал компании РУ СИК.</p>
         </div>
 
         <div class="block">
@@ -902,7 +1079,6 @@
         </div>
     </div>
 
-    <!-- ⚙️ НАСТРОЙКИ -->
     <div class="page" id="page-settings">
         <div class="hero">
             <div class="hero-emoji">⚙️</div>
@@ -924,6 +1100,11 @@
             </div>
         </div>
 
+        <div class="settings-row">
+            <span class="settings-label">🖥 Режим ПК</span>
+            <button class="btn btn-outline" id="pcToggleSettings">🖥 Включить</button>
+        </div>
+
         <div class="block">
             <h3>🛠 Режим разработчика</h3>
             <p style="margin-bottom:12px;">Введите пароль для входа.</p>
@@ -937,7 +1118,6 @@
         </div>
     </div>
 
-    <!-- 🛠 DEV -->
     <div class="page" id="page-dev">
         <div class="hero">
             <div class="hero-emoji">🛠</div>
@@ -951,6 +1131,7 @@
                 <button class="btn btn-green" id="devReload">🔄 Перезагрузить</button>
                 <button class="btn btn-outline" id="devTheme">🎨 Сменить тему</button>
                 <button class="btn btn-outline" id="devFont">🔤 Шрифт+</button>
+                <button class="btn btn-outline" id="devPC">🖥 Режим ПК</button>
                 <button class="btn btn-outline" id="devClearFav">🗑 Очистить избранное</button>
                 <button class="btn btn-outline" id="devAlert">📢 Тест-алерт</button>
                 <button class="btn btn-danger" id="devClearAll">💥 Сброс всего</button>
@@ -961,6 +1142,7 @@
             <h3 style="color: var(--autumn-1);">📋 Информация</h3>
             <p style="font-size:13px;color:var(--text);">Режим: <b style="color:var(--neon-green);">РАЗРАБОТЧИК</b></p>
             <p style="font-size:13px;color:var(--text);">Пароль: <b style="color:var(--neon-green);">520667</b></p>
+            <p style="font-size:13px;color:var(--text);">View: <b id="devViewMode" style="color:var(--neon-green);">📱 мобильный</b></p>
         </div>
 
         <div class="block">
@@ -969,7 +1151,6 @@
         </div>
     </div>
 
-    <!-- ⭐ ИЗБРАННОЕ -->
     <div class="page" id="page-fav">
         <div class="hero">
             <div class="hero-emoji">⭐</div>
@@ -989,7 +1170,6 @@
         <div id="favList"></div>
     </div>
 
-    <!-- 🔍 ПОИСК -->
     <div class="page" id="page-search">
         <div class="hero">
             <div class="hero-emoji">🔍</div>
@@ -999,9 +1179,55 @@
         <div id="searchResults"></div>
     </div>
 
+    <!-- 🖥 САЙДБАР (только для ПК) -->
+    <aside class="pc-sidebar">
+        <div class="winter-side">
+            <h3>❄️ Ждём зиму</h3>
+            <p>Осень 2026 · Кумертау</p>
+        </div>
+
+        <div class="sidebar-card pc-nav">
+            <h4>📱 Навигация</h4>
+            <div class="nav-item active" data-target="home">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+                </div>
+                <span>Главная</span>
+            </div>
+            <div class="nav-item" data-target="search">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+                </div>
+                <span>Поиск</span>
+            </div>
+            <div class="nav-item" data-target="fav">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
+                </div>
+                <span>Избранное</span>
+            </div>
+            <div class="nav-item" data-target="settings">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </div>
+                <span>Настройки</span>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h4>🔥 Быстрые ссылки</h4>
+            <a class="item" data-page="gagarin">🏆 Кубок Гагарина</a>
+            <a class="item" data-page="luna">🌙 Луномосик</a>
+            <a class="item" data-page="settings">⚙️ Настройки</a>
+        </div>
+    </aside>
+
 </div>
 
-<!-- 📱 МЕНЮ 4К -->
+<!-- 📱 МЕНЮ 4К (мобильный) -->
 <nav class="bottom-nav">
     <div class="nav-item active" data-target="home">
         <div class="nav-icon">
@@ -1062,6 +1288,7 @@
     let devMode = false;
     let fontScale = parseFloat(localStorage.getItem('kumertau_font') || '1');
     let lightTheme = localStorage.getItem('kumertau_theme') === 'light';
+    let pcMode = localStorage.getItem('kumertau_pc') === 'true';
 
     window.addEventListener('load', () => {
         setTimeout(() => {
@@ -1077,6 +1304,7 @@
     }
     window.showPage = showPage;
 
+    // Все nav-item (мобильный + ПК сайдбар)
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -1089,10 +1317,20 @@
         });
     });
 
+    // Карточки
     document.querySelectorAll('.card[data-page]').forEach(card => {
         card.addEventListener('click', () => showPage(card.dataset.page));
     });
 
+    // Ссылки в сайдбаре
+    document.querySelectorAll('.sidebar-card .item[data-page]').forEach(item => {
+        item.addEventListener('click', () => {
+            showPage(item.dataset.page);
+            if (item.dataset.page === 'fav') renderFavorites();
+        });
+    });
+
+    // ПОИСК
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', () => {
         const q = searchInput.value.trim().toLowerCase();
@@ -1120,6 +1358,7 @@
         });
     });
 
+    // ИЗБРАННОЕ
     function renderFavorites() {
         const list = document.getElementById('favList');
         if (favorites.length === 0) {
@@ -1168,6 +1407,7 @@
         }
     });
 
+    // ТЕМА
     function applyTheme() {
         if (lightTheme) {
             document.body.classList.add('light-theme');
@@ -1184,6 +1424,7 @@
         applyTheme();
     });
 
+    // ШРИФТ
     function applyFont() {
         document.documentElement.style.setProperty('--font-scale', fontScale);
         document.getElementById('fontValue').textContent = Math.round(fontScale * 100) + '%';
@@ -1199,6 +1440,50 @@
         applyFont();
     });
 
+    // 🖥 РЕЖИМ ПК
+    function applyPC() {
+        if (pcMode) {
+            document.body.classList.add('pc-mode');
+            document.getElementById('pcToggle').classList.add('active');
+            document.getElementById('pcToggle').innerHTML = '📱 <span>Режим Моб.</span>';
+            const btn2 = document.getElementById('pcToggleSettings');
+            if (btn2) btn2.textContent = '📱 Выключить';
+            const dev = document.getElementById('devViewMode');
+            if (dev) { dev.textContent = '🖥 ПК'; dev.style.color = 'var(--autumn-4)'; }
+        } else {
+            document.body.classList.remove('pc-mode');
+            document.getElementById('pcToggle').classList.remove('active');
+            document.getElementById('pcToggle').innerHTML = '🖥 <span>Режим ПК</span>';
+            const btn2 = document.getElementById('pcToggleSettings');
+            if (btn2) btn2.textContent = '🖥 Включить';
+            const dev = document.getElementById('devViewMode');
+            if (dev) { dev.textContent = '📱 мобильный'; dev.style.color = 'var(--neon-green)'; }
+        }
+        localStorage.setItem('kumertau_pc', pcMode ? 'true' : 'false');
+    }
+
+    document.getElementById('pcToggle').addEventListener('click', () => {
+        pcMode = !pcMode;
+        applyPC();
+    });
+
+    const pcToggleSettings = document.getElementById('pcToggleSettings');
+    if (pcToggleSettings) {
+        pcToggleSettings.addEventListener('click', () => {
+            pcMode = !pcMode;
+            applyPC();
+        });
+    }
+
+    const devPC = document.getElementById('devPC');
+    if (devPC) {
+        devPC.addEventListener('click', () => {
+            pcMode = !pcMode;
+            applyPC();
+        });
+    }
+
+    // ПАРОЛЬ / DEV
     const lockScreen = document.getElementById('lockScreen');
     const lockInput = document.getElementById('lockInput');
     const lockError = document.getElementById('lockError');
@@ -1266,6 +1551,7 @@
         }
     });
 
+    // ЛУНОМОСИК
     const lunaFrame = document.getElementById('lunaFrame');
     const lunaFallback = document.getElementById('lunaFallback');
     
@@ -1273,9 +1559,7 @@
         let loaded = false;
         lunaFrame.addEventListener('load', () => { loaded = true; });
         setTimeout(() => {
-            if (!loaded) {
-                lunaFallback.classList.add('show');
-            }
+            if (!loaded) lunaFallback.classList.add('show');
         }, 3500);
     }
 
@@ -1285,8 +1569,10 @@
         lunaFallback.classList.remove('show');
     });
 
+    // СТАРТ
     applyTheme();
     applyFont();
+    applyPC();
     showPage('home');
     document.getElementById('searchResults').innerHTML =
         '<div class="empty"><div class="empty-emoji">🔍</div>Введи запрос</div>';
