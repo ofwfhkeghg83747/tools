@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Кумертау · Анонимный чат 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кумертау · Будущее 2026</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -23,6 +23,8 @@
         --neon-yellow: #ffd60a;
         --neon-red: #ff2d55;
         --font-scale: 1;
+        --main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        --heading-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     body.a4-mode {
@@ -44,13 +46,16 @@
     html, body {
         background: var(--bg);
         color: var(--text);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: var(--main-font);
         min-height: 100vh;
         overflow-x: hidden;
         padding-bottom: 80px;
         font-size: calc(16px * var(--font-scale));
         transition: background 0.5s, color 0.5s;
-        -webkit-text-size-adjust: 100%;
+    }
+
+    h1, h2, h3, .hero h1, .card-title, .block h3, .wait-winter h2 {
+        font-family: var(--heading-font);
     }
 
     body::before {
@@ -69,22 +74,21 @@
             radial-gradient(circle at 85% 30%, rgba(230, 57, 70, 0.15) 0%, transparent 40%);
     }
 
-    /* ⚡ Прелоадер */
+    /* Прелоадеры */
     .preloader {
         position: fixed; inset: 0;
         background: var(--bg);
         z-index: 99999;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
-        gap: 18px;
+        gap: 20px;
         transition: opacity 0.6s, visibility 0.6s;
-        padding: 20px;
     }
     .preloader.hide { opacity: 0; visibility: hidden; }
     .preloader-logo {
-        font-size: 36px;
+        font-size: 42px;
         font-weight: 900;
-        letter-spacing: 8px;
+        letter-spacing: 10px;
         background: linear-gradient(90deg, #00e5ff, #a855f7, #00ff9d, #00e5ff);
         background-size: 400% 100%;
         -webkit-background-clip: text;
@@ -106,7 +110,6 @@
     }
     @keyframes ringSpin { to { transform: rotate(360deg); } }
 
-    /* 🔴 Прелоадер А4 */
     .preloader-a4 {
         position: fixed; inset: 0;
         background: #0a0800;
@@ -114,7 +117,7 @@
         display: none;
         flex-direction: column;
         align-items: center; justify-content: center;
-        gap: 18px;
+        gap: 20px;
         padding: 20px;
         transition: opacity 0.6s, visibility 0.6s;
     }
@@ -123,10 +126,10 @@
     .preloader-a4-img {
         max-width: 60vw;
         max-height: 45vh;
-        width: 260px;
+        width: 280px;
         border-radius: 12px;
         border: 4px solid #ffd60a;
-        box-shadow: 0 0 40px rgba(255, 214, 10, 0.6);
+        box-shadow: 0 0 50px rgba(255, 214, 10, 0.6);
         animation: a4Pulse 1.5s ease-in-out infinite;
         object-fit: contain;
         background: #fff;
@@ -137,14 +140,14 @@
         50% { transform: scale(1.04); }
     }
     .preloader-a4-name {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 900;
         letter-spacing: 8px;
         color: #ffd60a;
         text-transform: uppercase;
     }
 
-    /* 🧊 HEADER */
+    /* HEADER */
     header {
         position: sticky; top: 0;
         z-index: 100;
@@ -152,31 +155,31 @@
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--border);
-        padding: 10px 12px 8px;
+        padding: 10px 16px;
     }
     body.a4-mode header {
         border-bottom-color: var(--border-strong);
         box-shadow: 0 4px 20px rgba(255, 214, 10, 0.15);
     }
 
-    .header-row {
+    .header-inner {
+        max-width: 1400px;
+        margin: 0 auto;
         display: flex;
         align-items: center;
-        gap: 8px;
-        flex-wrap: nowrap;
+        gap: 12px;
     }
 
     .logo-wrap {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
         flex-shrink: 0;
     }
     .logo-wheel {
-        width: 32px; height: 32px;
+        width: 36px; height: 36px;
         animation: spin 10s linear infinite;
-        filter: drop-shadow(0 0 6px var(--neon-cyan));
-        flex-shrink: 0;
+        filter: drop-shadow(0 0 8px var(--neon-cyan));
     }
     @keyframes spin {
         from { transform: rotate(0deg); }
@@ -184,9 +187,9 @@
     }
     .logo-wheel svg { width: 100%; height: 100%; }
     .logo-text {
-        font-size: 15px;
+        font-size: 17px;
         font-weight: 900;
-        letter-spacing: 1.5px;
+        letter-spacing: 2px;
         background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
         -webkit-background-clip: text;
         background-clip: text;
@@ -194,65 +197,37 @@
         white-space: nowrap;
     }
 
-    .a4-header-logo { display: none; align-items: center; gap: 6px; }
+    .a4-header-logo { display: none; align-items: center; gap: 8px; }
     body.a4-mode .a4-header-logo { display: flex; }
     body.a4-mode .logo-wrap { display: none; }
     .a4-header-img {
-        width: 32px; height: 32px;
+        width: 36px; height: 36px;
         object-fit: cover;
         border-radius: 6px;
         border: 2px solid #ffd60a;
         background: #fff;
         padding: 2px;
-        flex-shrink: 0;
     }
     .a4-name-small {
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 900;
         letter-spacing: 2px;
         color: #ffd60a;
         text-transform: uppercase;
-        white-space: nowrap;
     }
 
-    .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-left: auto;
-        flex-shrink: 0;
-    }
-
-    .icon-btn {
-        width: 36px; height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-        color: var(--text);
-        font-size: 16px;
-        padding: 0;
-        font-family: inherit;
-    }
-    .icon-btn:active { transform: scale(0.92); }
-    .icon-btn.a4 { background: linear-gradient(135deg, #ffd60a, #ffb700); color: #0a0800; border-color: #ffd60a; }
-    .icon-btn.pc.active { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #fff; }
-
-    /* 🔍 ПОИСК */
-    .search-row {
-        margin-top: 8px;
+    .search-wrap {
+        flex: 1;
         position: relative;
+        max-width: 400px;
+        min-width: 120px;
     }
     .search-input {
         width: 100%;
-        padding: 9px 12px 9px 36px;
+        padding: 10px 14px 10px 40px;
         background: var(--glass);
         border: 1px solid var(--border);
-        border-radius: 20px;
+        border-radius: 22px;
         color: var(--text);
         font-size: 13px;
         outline: none;
@@ -262,7 +237,7 @@
     .search-input::placeholder { color: var(--text-dim); }
     .search-icon {
         position: absolute;
-        left: 12px; top: 50%;
+        left: 14px; top: 50%;
         transform: translateY(-50%);
         width: 16px; height: 16px;
         stroke: var(--neon-cyan);
@@ -272,10 +247,44 @@
     }
     body.a4-mode .search-icon { stroke: var(--neon-yellow); }
 
+    .header-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .icon-btn {
+        width: 40px; height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+        color: var(--text);
+        font-size: 18px;
+        padding: 0;
+        font-family: inherit;
+    }
+    .icon-btn:active { transform: scale(0.92); }
+    .icon-btn.a4 {
+        background: linear-gradient(135deg, #ffd60a, #ffb700);
+        color: #0a0800;
+        border-color: #ffd60a;
+        box-shadow: 0 0 15px rgba(255, 214, 10, 0.4);
+    }
+    .icon-btn.pc.active {
+        background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+        color: #fff;
+    }
+
+    /* Контейнер */
     .container {
         max-width: 900px;
         margin: 0 auto;
-        padding: 16px 12px;
+        padding: 20px 16px;
         position: relative;
         z-index: 2;
     }
@@ -287,35 +296,175 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* HERO */
+    /* 🚨 СРОЧНАЯ НОВОСТЬ */
+    .urgent-news {
+        background: linear-gradient(135deg, rgba(255, 45, 85, 0.25), rgba(255, 214, 10, 0.15));
+        border: 2px solid var(--neon-red);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+        position: relative;
+        overflow: hidden;
+        animation: urgentPulse 2s infinite;
+        box-shadow: 0 0 30px rgba(255, 45, 85, 0.3);
+    }
+    @keyframes urgentPulse {
+        0%, 100% { box-shadow: 0 0 30px rgba(255, 45, 85, 0.3); }
+        50% { box-shadow: 0 0 50px rgba(255, 45, 85, 0.6); }
+    }
+    .urgent-news::before {
+        content: "";
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shine 3s infinite;
+    }
+    @keyframes shine {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+    .urgent-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--neon-red);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 900;
+        padding: 4px 10px;
+        border-radius: 10px;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        animation: blink 1s infinite;
+    }
+    .urgent-news h3 {
+        font-size: 16px;
+        font-weight: 900;
+        color: #fff;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+        position: relative;
+        z-index: 1;
+    }
+    .urgent-news p {
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+    }
+    .urgent-news .from {
+        font-size: 11px;
+        color: var(--neon-yellow);
+        font-weight: 800;
+        margin-top: 8px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    /* ☕ ЧАЙНОЕ РАСПИСАНИЕ */
+    .tea-schedule {
+        background: linear-gradient(135deg, rgba(255, 214, 10, 0.15), rgba(230, 57, 70, 0.1));
+        border: 2px solid var(--neon-yellow);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+        box-shadow: 0 0 25px rgba(255, 214, 10, 0.25);
+    }
+    .tea-schedule h3 {
+        font-size: 16px;
+        font-weight: 900;
+        color: var(--neon-yellow);
+        margin-bottom: 14px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-shadow: 0 0 10px rgba(255, 214, 10, 0.5);
+    }
+    .tea-times {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+    .tea-time {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: 0.2s;
+    }
+    body.a4-mode .tea-time { background: rgba(0, 0, 0, 0.5); }
+    .tea-time:hover {
+        border-color: var(--neon-yellow);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 214, 10, 0.3);
+    }
+    .tea-time .time {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--neon-yellow);
+        font-family: monospace;
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+        text-shadow: 0 0 10px rgba(255, 214, 10, 0.5);
+    }
+    .tea-time .label {
+        font-size: 10px;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+    }
+    .tea-time.current {
+        border-color: var(--neon-green);
+        background: rgba(0, 255, 157, 0.15);
+        animation: teaPulse 2s infinite;
+    }
+    @keyframes teaPulse {
+        0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 157, 0.3); }
+        50% { box-shadow: 0 0 30px rgba(0, 255, 157, 0.6); }
+    }
+    .tea-time.current .time { color: var(--neon-green); }
+    .tea-time.current .label::before {
+        content: "● ";
+        color: var(--neon-green);
+        animation: blink 1s infinite;
+    }
+
     .hero {
         background: var(--glass);
         backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 24px 16px;
+        border-radius: 18px;
+        padding: 32px 20px;
         text-align: center;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
         position: relative;
         overflow: hidden;
     }
     body.a4-mode .hero { border-color: var(--border-strong); }
     .hero-emoji {
-        font-size: 44px;
-        margin-bottom: 8px;
+        font-size: 56px;
+        margin-bottom: 10px;
         display: inline-block;
-        filter: drop-shadow(0 0 15px var(--neon-cyan));
+        filter: drop-shadow(0 0 20px var(--neon-cyan));
     }
-    body.a4-mode .hero-emoji { filter: drop-shadow(0 0 15px #ffd60a); }
+    body.a4-mode .hero-emoji { filter: drop-shadow(0 0 20px #ffd60a); }
     .hero h1 {
-        font-size: 22px;
+        font-size: 26px;
         font-weight: 900;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
         background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         text-transform: uppercase;
     }
     body.a4-mode .hero h1 {
@@ -324,90 +473,103 @@
         background-clip: text;
     }
     .hero-sub {
-        font-size: 11px;
+        font-size: 12px;
         color: var(--text-dim);
-        letter-spacing: 1.5px;
+        letter-spacing: 2px;
         text-transform: uppercase;
         font-weight: 600;
     }
     body.a4-mode .hero-sub { color: #ffd60a; }
 
-    /* Ждём зиму */
     .wait-winter {
         background: var(--glass);
         backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 16px;
-        margin-bottom: 14px;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
         text-align: center;
     }
     .wait-winter h2 {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 900;
-        letter-spacing: 4px;
+        letter-spacing: 5px;
         color: var(--neon-cyan);
         text-transform: uppercase;
         margin-bottom: 4px;
     }
     body.a4-mode .wait-winter h2 { color: #ffd60a; }
     .wait-winter p {
-        font-size: 10px;
+        font-size: 11px;
         color: var(--text-dim);
-        letter-spacing: 1.5px;
+        letter-spacing: 2px;
         text-transform: uppercase;
     }
 
-    /* CARD */
+    .cards-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
     .card {
         background: var(--glass);
         backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 14px;
-        margin-bottom: 10px;
-        transition: 0.2s;
+        border-radius: 16px;
+        padding: 18px;
+        transition: 0.25s;
         cursor: pointer;
         position: relative;
+        overflow: hidden;
     }
-    .card:active { transform: scale(0.98); }
+    .card:hover {
+        transform: translateY(-3px);
+        border-color: var(--border-strong);
+        box-shadow: 0 10px 30px rgba(0, 229, 255, 0.2);
+    }
+    body.a4-mode .card:hover {
+        box-shadow: 0 10px 30px rgba(255, 214, 10, 0.3);
+        border-color: #ffd60a;
+    }
+    .card:active { transform: translateY(-1px) scale(0.99); }
     .card-title {
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 800;
         color: var(--text);
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
     }
-    .card-title .ico { font-size: 20px; }
+    .card-title .ico { font-size: 24px; }
     .card-desc {
-        font-size: 12px;
+        font-size: 13px;
         color: var(--text-dim);
-        line-height: 1.4;
+        line-height: 1.5;
     }
     .card-tag {
         display: inline-block;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 3px 8px;
-        border-radius: 10px;
+        letter-spacing: 1.5px;
+        padding: 4px 12px;
+        border-radius: 12px;
         background: rgba(0, 229, 255, 0.15);
         color: var(--neon-cyan);
         border: 1px solid rgba(0, 229, 255, 0.4);
-        margin-top: 8px;
+        margin-top: 12px;
     }
     .card-tag.a4 {
         background: rgba(255, 214, 10, 0.15);
         color: #ffd60a;
         border-color: rgba(255, 214, 10, 0.5);
     }
-    .card-tag.chat {
-        background: rgba(0, 255, 157, 0.15);
-        color: var(--neon-green);
-        border-color: rgba(0, 255, 157, 0.5);
+    .card-tag.tea {
+        background: rgba(255, 214, 10, 0.2);
+        color: var(--neon-yellow);
+        border-color: rgba(255, 214, 10, 0.6);
     }
     .card-tag.live {
         background: rgba(255, 45, 149, 0.15);
@@ -415,221 +577,69 @@
         border-color: rgba(255, 45, 149, 0.5);
         animation: blink 1.2s infinite;
     }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-    /* BLOCK */
     .block {
         background: var(--glass);
         backdrop-filter: blur(20px);
         border: 1px solid var(--border);
         border-left: 3px solid var(--neon-cyan);
         border-radius: 14px;
-        padding: 16px;
-        margin-bottom: 12px;
+        padding: 18px;
+        margin-bottom: 14px;
     }
     body.a4-mode .block { border-left-color: #ffd60a; }
     .block h3 {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 800;
         color: var(--neon-cyan);
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         letter-spacing: 0.5px;
     }
     body.a4-mode .block h3 { color: #ffd60a; }
-    .block ol, .block ul { margin-left: 18px; font-size: 13px; line-height: 1.7; color: var(--text); }
+    .block ol, .block ul { margin-left: 22px; font-size: 14px; line-height: 1.8; color: var(--text); }
     .block li { margin-bottom: 6px; }
-    .block p { font-size: 13px; line-height: 1.6; color: var(--text); }
+    .block li b { color: var(--neon-cyan); }
+    body.a4-mode .block li b { color: #ffd60a; }
+    .block p { font-size: 14px; line-height: 1.7; color: var(--text); }
 
-    /* 💬 ЧАТ */
-    .chat-container {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 200px);
-        min-height: 400px;
-        max-height: 600px;
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
+    .a4-page-img {
+        display: block;
+        margin: 0 auto 16px;
+        max-width: 70%;
+        width: 240px;
+        border-radius: 14px;
+        border: 3px solid #ffd60a;
+        box-shadow: 0 0 40px rgba(255, 214, 10, 0.5);
+        background: #fff;
+        padding: 5px;
+    }
+
+    .video-wrapper {
+        background: #000;
+        border: 1px solid var(--border-strong);
         border-radius: 14px;
         overflow: hidden;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
     }
-    body.a4-mode .chat-container { border-color: var(--border-strong); }
-
-    .chat-header {
-        padding: 12px 14px;
-        background: rgba(0, 229, 255, 0.08);
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    body.a4-mode .chat-header {
-        background: rgba(255, 214, 10, 0.08);
-    }
-    .chat-header .online-dot {
-        width: 8px; height: 8px;
-        background: var(--neon-green);
-        border-radius: 50%;
-        box-shadow: 0 0 8px var(--neon-green);
-        animation: blink 1.5s infinite;
-    }
-    .chat-header .chat-title {
-        font-size: 13px;
-        font-weight: 800;
-        color: var(--text);
-        flex: 1;
-    }
-    .chat-header .online-count {
-        font-size: 11px;
-        color: var(--text-dim);
-        font-weight: 600;
+    .video-wrapper iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 0;
+        display: block;
     }
 
-    .chat-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        scroll-behavior: smooth;
-    }
-
-    .chat-msg {
-        max-width: 85%;
-        padding: 8px 12px;
-        border-radius: 12px;
-        font-size: 13px;
-        line-height: 1.4;
-        word-wrap: break-word;
-        animation: msgIn 0.3s;
-    }
-    @keyframes msgIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .chat-msg .msg-name {
-        font-size: 10px;
-        font-weight: 900;
-        margin-bottom: 3px;
-        letter-spacing: 0.5px;
-    }
-    .chat-msg .msg-time {
-        font-size: 9px;
-        opacity: 0.6;
-        margin-top: 3px;
-        text-align: right;
-    }
-    .chat-msg.other {
-        align-self: flex-start;
-        background: rgba(0, 229, 255, 0.12);
-        border: 1px solid rgba(0, 229, 255, 0.3);
-        color: var(--text);
-    }
-    .chat-msg.other .msg-name { color: var(--neon-cyan); }
-    body.a4-mode .chat-msg.other {
-        background: rgba(255, 214, 10, 0.12);
-        border-color: rgba(255, 214, 10, 0.35);
-    }
-    body.a4-mode .chat-msg.other .msg-name { color: #ffd60a; }
-    .chat-msg.me {
-        align-self: flex-end;
-        background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 229, 255, 0.25));
-        border: 1px solid rgba(168, 85, 247, 0.5);
-        color: var(--text);
-    }
-    .chat-msg.me .msg-name { color: var(--neon-purple); }
-    body.a4-mode .chat-msg.me {
-        background: linear-gradient(135deg, rgba(230, 57, 70, 0.3), rgba(255, 214, 10, 0.3));
-        border-color: rgba(230, 57, 70, 0.6);
-    }
-    body.a4-mode .chat-msg.me .msg-name { color: #e63946; }
-
-    .chat-msg.system {
-        align-self: center;
-        background: rgba(255, 214, 10, 0.1);
-        border: 1px solid rgba(255, 214, 10, 0.3);
-        color: var(--text-dim);
-        font-size: 11px;
-        font-style: italic;
-        text-align: center;
-        max-width: 90%;
-    }
-
-    .chat-input-row {
-        display: flex;
-        gap: 6px;
-        padding: 10px;
-        border-top: 1px solid var(--border);
-        background: rgba(0, 0, 0, 0.2);
-    }
-    body.a4-mode .chat-input-row {
-        background: rgba(0, 0, 0, 0.4);
-    }
-    .chat-input {
-        flex: 1;
-        padding: 10px 14px;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        color: var(--text);
-        font-size: 13px;
-        outline: none;
-        font-family: inherit;
-        min-width: 0;
-    }
-    .chat-input:focus { border-color: var(--border-strong); }
-    .chat-send {
-        padding: 10px 16px;
-        background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-        border: none;
-        border-radius: 20px;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 800;
-        cursor: pointer;
-        font-family: inherit;
-        flex-shrink: 0;
-    }
-    .chat-send:active { transform: scale(0.95); }
-    body.a4-mode .chat-send {
-        background: linear-gradient(135deg, #ffd60a, #ffb700);
-        color: #0a0800;
-    }
-
-    /* Имя в чате */
-    .nick-row {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 10px;
-    }
-    .nick-input {
-        flex: 1;
-        padding: 10px 14px;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        color: var(--text);
-        font-size: 13px;
-        outline: none;
-        font-family: inherit;
-        min-width: 0;
-    }
-    .nick-input:focus { border-color: var(--border-strong); }
-
-    /* Кнопки */
     .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        padding: 10px 18px;
+        padding: 11px 20px;
         background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
         border: none;
-        border-radius: 20px;
+        border-radius: 22px;
         color: #fff;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 800;
         letter-spacing: 1px;
         text-transform: uppercase;
@@ -661,38 +671,72 @@
         background: linear-gradient(90deg, #00ff9d, #00e5ff);
         color: #0a0800;
     }
-    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
     .settings-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        padding: 12px;
+        gap: 12px;
+        padding: 14px 16px;
         background: var(--glass);
         border: 1px solid var(--border);
-        border-radius: 12px;
-        margin-bottom: 8px;
+        border-radius: 14px;
+        margin-bottom: 10px;
         flex-wrap: wrap;
     }
     body.a4-mode .settings-row { border-color: var(--border-strong); }
     .settings-label {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
         color: var(--text);
     }
     .settings-value {
-        font-size: 12px;
+        font-size: 13px;
         color: var(--neon-cyan);
         font-weight: 800;
         font-family: monospace;
         background: rgba(0, 229, 255, 0.1);
-        padding: 3px 8px;
-        border-radius: 6px;
+        padding: 4px 10px;
+        border-radius: 8px;
     }
     body.a4-mode .settings-value { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
 
-    /* МЕНЮ СНИЗУ — компактное */
+    /* Выбор шрифта */
+    .font-picker {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+    .font-option {
+        padding: 8px 14px;
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .font-option:hover { border-color: var(--border-strong); }
+    .font-option.active {
+        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+        color: #fff;
+        border-color: transparent;
+    }
+    body.a4-mode .font-option.active {
+        background: linear-gradient(90deg, #ffd60a, #ffb700);
+        color: #0a0800;
+    }
+
+    .font-serif { font-family: Georgia, "Times New Roman", serif !important; }
+    .font-mono { font-family: "Courier New", monospace !important; }
+    .font-comic { font-family: "Comic Sans MS", cursive, sans-serif !important; }
+    .font-rounded { font-family: "Segoe UI", "Helvetica Neue", sans-serif !important; border-radius: 20px; }
+    .font-system { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; }
+
     .bottom-nav {
         position: fixed;
         bottom: 0; left: 0; right: 0;
@@ -702,7 +746,7 @@
         border-top: 1px solid var(--border);
         display: flex;
         justify-content: space-around;
-        padding: 6px 4px 8px;
+        padding: 8px 8px 12px;
         z-index: 200;
     }
     body.a4-mode .bottom-nav {
@@ -713,20 +757,19 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 2px;
+        gap: 3px;
         cursor: pointer;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 700;
         color: var(--text-dim);
         transition: 0.2s;
-        padding: 4px 2px;
+        padding: 4px;
         border-radius: 10px;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
-        text-align: center;
     }
     .nav-icon {
-        width: 22px; height: 22px;
+        width: 24px; height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -738,14 +781,13 @@
         fill: none;
     }
     .nav-item.active { color: var(--neon-cyan); }
-    .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 6px var(--neon-cyan)); }
+    .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 8px var(--neon-cyan)); }
     body.a4-mode .nav-item.active { color: #ffd60a; }
-    body.a4-mode .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 6px #ffd60a); }
+    body.a4-mode .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 8px #ffd60a); }
 
-    .empty { text-align: center; padding: 30px 16px; color: var(--text-dim); font-size: 13px; }
-    .empty-emoji { font-size: 36px; margin-bottom: 8px; opacity: 0.5; }
+    .empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 14px; }
+    .empty-emoji { font-size: 44px; margin-bottom: 12px; opacity: 0.5; }
 
-    /* 🔐 Lock */
     .lock-screen {
         position: fixed; inset: 0;
         background: rgba(0, 0, 0, 0.95);
@@ -760,14 +802,14 @@
         background: var(--bg-2);
         border: 2px solid var(--neon-green);
         border-radius: 16px;
-        padding: 24px 20px;
-        max-width: 360px;
+        padding: 26px 22px;
+        max-width: 380px;
         width: 100%;
         text-align: center;
     }
     .lock-box h2 {
         color: var(--neon-green);
-        font-size: 16px;
+        font-size: 17px;
         margin-bottom: 14px;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -796,44 +838,44 @@
 
     .fav-input {
         width: 100%;
-        padding: 10px 12px;
+        padding: 12px 14px;
         background: var(--glass);
         border: 1px solid var(--border);
         border-radius: 12px;
         color: var(--text);
-        font-size: 13px;
+        font-size: 14px;
         outline: none;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         font-family: inherit;
         resize: vertical;
-        min-height: 50px;
+        min-height: 60px;
     }
     .fav-item {
         background: var(--glass);
         border: 1px solid var(--border);
         border-left: 3px solid var(--neon-cyan);
-        border-radius: 10px;
-        padding: 12px;
-        margin-bottom: 8px;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
         position: relative;
     }
     body.a4-mode .fav-item { border-left-color: #ffd60a; }
     .fav-item-text {
-        font-size: 13px;
+        font-size: 14px;
         color: var(--text);
-        line-height: 1.4;
+        line-height: 1.5;
         word-wrap: break-word;
-        padding-right: 26px;
+        padding-right: 30px;
     }
     .fav-item-del {
         position: absolute;
-        top: 8px; right: 8px;
-        width: 24px; height: 24px;
+        top: 10px; right: 10px;
+        width: 26px; height: 26px;
         border-radius: 50%;
         background: rgba(255, 45, 85, 0.2);
         border: 1px solid var(--neon-red);
         color: var(--neon-red);
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 900;
         cursor: pointer;
         display: flex;
@@ -844,9 +886,9 @@
     .dev-panel {
         background: rgba(0, 20, 30, 0.9);
         border: 1px solid var(--neon-green);
-        border-radius: 12px;
-        padding: 14px;
-        margin-bottom: 12px;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 14px;
         font-family: "Courier New", monospace;
     }
     body.a4-mode .dev-panel {
@@ -855,75 +897,92 @@
     }
     .dev-panel h3 {
         color: var(--neon-green);
-        font-size: 13px;
-        margin-bottom: 10px;
+        font-size: 14px;
+        margin-bottom: 12px;
         text-transform: uppercase;
         letter-spacing: 2px;
     }
     body.a4-mode .dev-panel h3 { color: #ffd60a; }
-    .dev-panel p { color: var(--text); font-size: 12px; }
+    .dev-panel p { color: var(--text); font-size: 13px; }
 
     footer {
         text-align: center;
-        font-size: 10px;
+        font-size: 11px;
         color: var(--text-dim);
-        padding: 20px 12px 12px;
+        padding: 30px 20px 20px;
         letter-spacing: 1.5px;
         font-style: italic;
-        max-width: 900px;
+        max-width: 1400px;
         margin: 20px auto 0;
     }
 
-    /* 🖥 ПК */
-    body.pc-mode { padding-bottom: 16px; }
+    /* ПК */
+    body.pc-mode { padding-bottom: 20px; }
     body.pc-mode .container {
-        max-width: 1200px;
-        padding: 20px 20px;
+        max-width: 1400px;
+        padding: 24px 24px;
         display: grid;
-        grid-template-columns: 1fr 280px;
-        gap: 20px;
+        grid-template-columns: 1fr 300px;
+        gap: 24px;
         align-items: start;
     }
     body.pc-mode .page { grid-column: 1; min-width: 0; }
-    body.pc-mode .page.active { display: block; }
+    body.pc-mode .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
+    body.pc-mode .hero { padding: 48px 32px; }
+    body.pc-mode .hero h1 { font-size: 40px; letter-spacing: 6px; }
+    body.pc-mode .hero-emoji { font-size: 80px; }
+    body.pc-mode .hero-sub { font-size: 14px; }
+    body.pc-mode .wait-winter { padding: 28px; }
+    body.pc-mode .wait-winter h2 { font-size: 26px; letter-spacing: 8px; }
+    body.pc-mode .card { padding: 22px; }
+    body.pc-mode .card-title { font-size: 18px; }
     body.pc-mode .bottom-nav { display: none; }
-    body.pc-mode .hero h1 { font-size: 28px; }
-    body.pc-mode .hero-emoji { font-size: 56px; }
-    body.pc-mode .chat-container { height: calc(100vh - 200px); }
 
     .pc-sidebar { display: none; grid-column: 2; position: sticky; top: 100px; }
     body.pc-mode .pc-sidebar { display: block; }
 
     .sidebar-card {
         background: var(--glass);
+        backdrop-filter: blur(20px);
         border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 12px;
-        margin-bottom: 10px;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 14px;
     }
+    body.a4-mode .sidebar-card { border-color: var(--border-strong); }
     .sidebar-card h4 {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 900;
         color: var(--neon-cyan);
         text-transform: uppercase;
-        letter-spacing: 1.5px;
-        margin-bottom: 8px;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
     }
-    body.a4-mode .sidebar-card h4 { color: #ffd60a; }
+    body.a4-mode .sidebar-card h4 { color: #ffd60a; border-bottom-color: var(--border-strong); }
     .sidebar-card .item {
         display: block;
-        padding: 6px 8px;
-        border-radius: 6px;
-        font-size: 12px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 13px;
         color: var(--text);
         cursor: pointer;
         transition: 0.2s;
         text-decoration: none;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
     }
     .sidebar-card .item:hover {
         background: rgba(0, 229, 255, 0.1);
         color: var(--neon-cyan);
+        transform: translateX(4px);
+    }
+    body.a4-mode .sidebar-card .item:hover {
+        background: rgba(255, 214, 10, 0.1);
+        color: #ffd60a;
     }
 
     .pc-nav { display: none; }
@@ -931,38 +990,61 @@
     .pc-nav .nav-item {
         flex-direction: row;
         justify-content: flex-start;
-        gap: 10px;
-        padding: 8px 10px;
-        font-size: 12px;
+        gap: 12px;
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 8px;
         text-transform: none;
     }
+    .pc-nav .nav-item:hover { background: rgba(0, 229, 255, 0.1); }
+    body.a4-mode .pc-nav .nav-item:hover { background: rgba(255, 214, 10, 0.1); }
+    .pc-nav .nav-item.active { background: rgba(0, 229, 255, 0.15); color: var(--neon-cyan); }
+    body.a4-mode .pc-nav .nav-item.active { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
+    .pc-nav .nav-icon { width: 20px; height: 20px; }
 
-    /* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ */
-    @media (max-width: 500px) {
-        .logo-text { font-size: 13px; letter-spacing: 1px; }
-        .logo-wheel { width: 28px; height: 28px; }
-        .hero h1 { font-size: 18px; }
-        .hero-emoji { font-size: 36px; }
-        .wait-winter h2 { font-size: 15px; letter-spacing: 2px; }
-        .chat-container { height: calc(100vh - 190px); min-height: 340px; }
-        .chat-msg { font-size: 12px; padding: 7px 10px; }
+    .winter-side {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        text-align: center;
+    }
+    body.a4-mode .winter-side { border-color: var(--border-strong); }
+    .winter-side h3 {
+        font-size: 15px;
+        font-weight: 900;
+        color: var(--neon-cyan);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    body.a4-mode .winter-side h3 { color: #ffd60a; }
+    .winter-side p { font-size: 11px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+
+    @media (max-width: 900px) {
+        body.pc-mode .container { grid-template-columns: 1fr; }
+        body.pc-mode .pc-sidebar { position: static; }
     }
 
-    @media (max-width: 360px) {
-        .logo-text { font-size: 11px; }
-        .icon-btn { width: 32px; height: 32px; font-size: 14px; }
+    @media (max-width: 500px) {
+        .logo-text { font-size: 15px; letter-spacing: 1px; }
+        .logo-wheel { width: 32px; height: 32px; }
+        .hero h1 { font-size: 20px; letter-spacing: 2px; }
+        .hero-emoji { font-size: 44px; }
+        .wait-winter h2 { font-size: 16px; letter-spacing: 3px; }
+        .icon-btn { width: 36px; height: 36px; font-size: 16px; }
+        .tea-time .time { font-size: 18px; }
     }
 </style>
 </head>
 <body>
 
-<!-- ПРЕЛОАДЕР -->
 <div class="preloader" id="preloader">
     <div class="preloader-logo">КУМЕРТАУ</div>
     <div class="preloader-ring"></div>
 </div>
 
-<!-- ПРЕЛОАДЕР А4 -->
 <div class="preloader-a4" id="preloaderA4">
     <img class="preloader-a4-img"
          src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
@@ -972,7 +1054,7 @@
 </div>
 
 <header>
-    <div class="header-row">
+    <div class="header-inner">
         <div class="logo-wrap">
             <div class="logo-wheel">
                 <svg viewBox="0 0 100 100">
@@ -995,17 +1077,18 @@
             <div class="a4-name-small">Влад Бумага</div>
         </div>
 
+        <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
+        </div>
+
         <div class="header-actions">
             <button class="icon-btn a4" id="a4Btn" title="Режим А4">🔴</button>
             <button class="icon-btn pc" id="pcToggle" title="Режим ПК">🖥</button>
         </div>
-    </div>
-    <div class="search-row">
-        <svg class="search-icon" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7"/>
-            <line x1="16.5" y1="16.5" x2="21" y2="21"/>
-        </svg>
-        <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
     </div>
 </header>
 
@@ -1013,6 +1096,42 @@
 
     <!-- 🏠 ГЛАВНАЯ -->
     <div class="page active" id="page-home">
+        <!-- 🚨 СРОЧНАЯ НОВОСТЬ -->
+        <div class="urgent-news">
+            <div class="urgent-badge">⚠ СРОЧНО</div>
+            <h3>📡 Внимание! Интернет скоро пропадёт</h3>
+            <p>
+                Внимание! От администрации компании <b>Уфанет</b> поступило
+                срочное уведомление: <b>интернет скоро пропадёт</b>.
+                Возможны перебои с соединением. Сохраните важные данные
+                и не отключайте оборудование.
+            </p>
+            <div class="from">📢 Источник: Администрация Уфанет</div>
+        </div>
+
+        <!-- ☕ ЧАЙНОЕ РАСПИСАНИЕ -->
+        <div class="tea-schedule">
+            <h3>☕ Чайное расписание</h3>
+            <div class="tea-times" id="teaTimes">
+                <div class="tea-time" data-hour="7">
+                    <div class="time">07:00</div>
+                    <div class="label">Утренний чай</div>
+                </div>
+                <div class="tea-time" data-hour="16">
+                    <div class="time">16:00</div>
+                    <div class="label">Дневной чай</div>
+                </div>
+                <div class="tea-time" data-hour="18.5">
+                    <div class="time">18:30</div>
+                    <div class="label">Вечерний чай</div>
+                </div>
+                <div class="tea-time" data-hour="20">
+                    <div class="time">20:00</div>
+                    <div class="label">Ночной чай</div>
+                </div>
+            </div>
+        </div>
+
         <div class="wait-winter">
             <h2>❄ ЖДЁМ ЗИМУ ❄</h2>
             <p>Осень 2026 · Кумертау</p>
@@ -1024,94 +1143,40 @@
             <div class="hero-sub">Республика Башкортостан · 2026</div>
         </div>
 
-        <div class="card" data-page="chat">
-            <div class="card-title"><span class="ico">💬</span> Анонимный чат</div>
-            <div class="card-desc">Общайся с людьми со всего мира без регистрации</div>
-            <span class="card-tag chat">● ОНЛАЙН</span>
-        </div>
+        <div class="cards-grid">
+            <div class="card" data-page="a4">
+                <div class="card-title"><span class="ico">🔴</span> Блогер А4 — Влад Бумага</div>
+                <div class="card-desc">Биография, факты, музыка, бизнес</div>
+                <span class="card-tag a4">А4</span>
+            </div>
 
-        <div class="card" data-page="a4">
-            <div class="card-title"><span class="ico">🔴</span> Блогер А4 — Влад Бумага</div>
-            <div class="card-desc">Биография, факты, музыка, бизнес</div>
-            <span class="card-tag a4">А4</span>
-        </div>
+            <div class="card" data-page="gagarin">
+                <div class="card-title"><span class="ico">🏆</span> Кубок Гагарина</div>
+                <div class="card-desc">Олимпиада школьников 1–8 классов РБ</div>
+                <span class="card-tag">Олимпиада</span>
+            </div>
 
-        <div class="card" data-page="gagarin">
-            <div class="card-title"><span class="ico">🏆</span> Кубок Гагарина</div>
-            <div class="card-desc">Олимпиада школьников 1–8 классов РБ</div>
-            <span class="card-tag">Олимпиада</span>
-        </div>
+            <div class="card" data-page="luna">
+                <div class="card-title"><span class="ico">🌙</span> Луномосик — Прямой эфир</div>
+                <div class="card-desc">Смотреть прямо на сайте</div>
+                <span class="card-tag live">● LIVE</span>
+            </div>
 
-        <div class="card" data-page="luna">
-            <div class="card-title"><span class="ico">🌙</span> Луномосик — Прямой эфир</div>
-            <div class="card-desc">Смотреть прямо на сайте</div>
-            <span class="card-tag live">● LIVE</span>
-        </div>
-
-        <div class="card" data-page="settings">
-            <div class="card-title"><span class="ico">⚙️</span> Настройки</div>
-            <div class="card-desc">Тема, шрифт, режимы, разработчик</div>
-            <span class="card-tag">Система</span>
+            <div class="card" data-page="settings">
+                <div class="card-title"><span class="ico">⚙️</span> Настройки</div>
+                <div class="card-desc">Шрифт, режим А4, разработчик</div>
+                <span class="card-tag">Система</span>
+            </div>
         </div>
     </div>
 
-    <!-- 💬 АНОНИМНЫЙ ЧАТ -->
-    <div class="page" id="page-chat">
-        <div class="hero" style="padding: 18px 12px;">
-            <div class="hero-emoji">💬</div>
-            <h1>Анонимный чат</h1>
-            <div class="hero-sub">Люди со всего мира · Без регистрации</div>
-        </div>
-
-        <!-- Имя -->
-        <div class="nick-row">
-            <input type="text" class="nick-input" id="nickInput" placeholder="Твой ник (например: Гость1234)" maxlength="20">
-            <button class="btn btn-outline" id="nickSave">✓</button>
-        </div>
-
-        <!-- Чат -->
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="online-dot"></div>
-                <div class="chat-title">🌍 Мировой чат</div>
-                <div class="online-count" id="onlineCount">Онлайн: 1</div>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="chat-msg system">
-                    🌍 Добро пожаловать в анонимный чат! Общайся с людьми со всего мира.
-                </div>
-            </div>
-            <div class="chat-input-row">
-                <input type="text" class="chat-input" id="chatInput" placeholder="Напиши сообщение..." maxlength="500">
-                <button class="chat-send" id="chatSend">➤</button>
-            </div>
-        </div>
-
-        <div class="block">
-            <h3>💡 О чате</h3>
-            <p>
-                Это <b>анонимный чат</b> — общайся с людьми со всего мира без регистрации.
-                Просто введи ник и пиши.
-            </p>
-            <p style="margin-top:8px;font-size:12px;color:var(--text-dim);">
-                ⚠️ Не сообщай личные данные. Администрация не несёт ответственности.
-            </p>
-        </div>
-
-        <div class="btn-row">
-            <button class="btn btn-danger" id="chatClear">🗑 Очистить чат</button>
-            <button class="btn btn-outline" onclick="showPage('home')">← Назад</button>
-        </div>
-    </div>
-
-    <!-- 🔴 СТРАНИЦА А4 -->
+    <!-- 🔴 А4 -->
     <div class="page" id="page-a4">
         <div class="hero">
             <img class="a4-page-img"
                  src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
                  alt="A4"
-                 onerror="this.style.display='none'"
-                 style="display:block;margin:0 auto 12px;max-width:70%;width:220px;border-radius:12px;border:3px solid #ffd60a;box-shadow:0 0 30px rgba(255,214,10,0.5);background:#fff;padding:4px;">
+                 onerror="this.style.display='none'">
             <h1>Влад Бумага</h1>
             <div class="hero-sub">Самый популярный блогер рунета</div>
         </div>
@@ -1120,7 +1185,7 @@
             <h3>📊 Кратко</h3>
             <ul>
                 <li><b>Родился:</b> 5 июня 1996, Минск</li>
-                <li><b>Канал:</b> 2014</li>
+                <li><b>Канал создан:</b> 2014</li>
                 <li><b>Подписчики:</b> 10M+</li>
             </ul>
         </div>
@@ -1129,7 +1194,7 @@
             <h3>📖 Кто такой Влад А4</h3>
             <p>
                 <b>Влад Бумага</b> — один из самых популярных русскоязычных видеоблогеров.
-                Псевдоним <b>«А4»</b> — отсылка к формату бумажного листа.
+                Псевдоним <b>«А4»</b> — отсылка к формату бумажного листа и его фамилии.
             </p>
         </div>
 
@@ -1156,7 +1221,7 @@
         </div>
     </div>
 
-    <!-- 🏆 КУБОК ГАГАРИНА -->
+    <!-- 🏆 ГАГАРИН -->
     <div class="page" id="page-gagarin">
         <div class="hero">
             <div class="hero-emoji">🏆</div>
@@ -1164,7 +1229,7 @@
             <div class="hero-sub">Олимпиада школьников</div>
         </div>
 
-        <div class="block" style="border-left-color: var(--neon-yellow);">
+        <div class="block">
             <h3>🏆 Кубок Гагарина 2026</h3>
             <p>
                 <b>Олимпиада школьников 1–8 классов</b> проводится во всех школах
@@ -1190,14 +1255,12 @@
             <div class="hero-sub">Прямой эфир</div>
         </div>
 
-        <div class="video-wrapper" style="background:#000;border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;margin-bottom:12px;">
+        <div class="video-wrapper">
             <iframe
-                id="lunaFrame"
                 src="https://vk.com/video_ext.php?oid=-107101070&id=456243981&hd=2"
                 allow="autoplay; encrypted-media; fullscreen"
                 allowfullscreen
-                frameborder="0"
-                style="width:100%;aspect-ratio:16/9;border:0;display:block;">
+                frameborder="0">
             </iframe>
         </div>
 
@@ -1218,8 +1281,19 @@
             <div class="hero-sub">Персонализация</div>
         </div>
 
+        <div class="settings-row" style="flex-direction: column; align-items: flex-start;">
+            <span class="settings-label">🔤 Шрифт сайта</span>
+            <div class="font-picker" id="fontPicker">
+                <div class="font-option font-system active" data-font="system">Системный</div>
+                <div class="font-option font-serif" data-font="serif">Serif</div>
+                <div class="font-option font-mono" data-font="mono">Mono</div>
+                <div class="font-option font-comic" data-font="comic">Comic</div>
+                <div class="font-option font-rounded" data-font="rounded">Rounded</div>
+            </div>
+        </div>
+
         <div class="settings-row">
-            <span class="settings-label">🔤 Размер шрифта</span>
+            <span class="settings-label">🔤 Размер текста</span>
             <div class="btn-row">
                 <button class="btn btn-outline" id="fontDown">А−</button>
                 <span class="settings-value" id="fontValue">100%</span>
@@ -1279,6 +1353,7 @@
             <p>Пароль: <b style="color:var(--neon-green);">520667</b></p>
             <p>View: <b id="devViewMode" style="color:var(--neon-green);">📱</b></p>
             <p>A4: <b id="devA4Mode" style="color:var(--neon-green);">выкл</b></p>
+            <p>Шрифт: <b id="devFontMode" style="color:var(--neon-green);">system</b></p>
         </div>
 
         <button class="btn btn-danger" id="devExitBtn">Выйти</button>
@@ -1316,30 +1391,37 @@
 
     <!-- САЙДБАР ПК -->
     <aside class="pc-sidebar">
-        <div class="sidebar-card">
+        <div class="winter-side">
+            <h3>❄ Ждём зиму</h3>
+            <p>Осень 2026 · Кумертау</p>
+        </div>
+
+        <div class="sidebar-card pc-nav">
             <h4>📖 Навигация</h4>
-            <div class="pc-nav">
-                <div class="nav-item active" data-target="home">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
-                    <span>Главная</span>
-                </div>
-                <div class="nav-item" data-target="chat">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                    <span>Чат</span>
-                </div>
-                <div class="nav-item" data-target="search">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></div>
-                    <span>Поиск</span>
-                </div>
-                <div class="nav-item" data-target="fav">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
-                    <span>Избранное</span>
-                </div>
-                <div class="nav-item" data-target="settings">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>
-                    <span>Настройки</span>
-                </div>
+            <div class="nav-item active" data-target="home">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
+                <span>Главная</span>
             </div>
+            <div class="nav-item" data-target="search">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></div>
+                <span>Поиск</span>
+            </div>
+            <div class="nav-item" data-target="fav">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
+                <span>Избранное</span>
+            </div>
+            <div class="nav-item" data-target="settings">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>
+                <span>Настройки</span>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h4>🍁 Разделы</h4>
+            <a class="item" data-page="a4">🔴 Блогер А4</a>
+            <a class="item" data-page="gagarin">🏆 Кубок Гагарина</a>
+            <a class="item" data-page="luna">🌙 Луномосик</a>
+            <a class="item" data-page="settings">⚙️ Настройки</a>
         </div>
     </aside>
 
@@ -1350,10 +1432,6 @@
     <div class="nav-item active" data-target="home">
         <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
         <span>Главная</span>
-    </div>
-    <div class="nav-item" data-target="chat">
-        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <span>Чат</span>
     </div>
     <div class="nav-item" data-target="search">
         <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></div>
@@ -1369,7 +1447,7 @@
     </div>
 </nav>
 
-<!-- 🔐 ПАРОЛЬ -->
+<!-- ПАРОЛЬ -->
 <div class="lock-screen" id="lockScreen">
     <div class="lock-box">
         <h2>🔐 Пароль</h2>
@@ -1387,13 +1465,11 @@
 </footer>
 
 <script>
-    // ==================== ДАННЫЕ ====================
     const ARTICLES = [
-        { id: 'chat',     ico: '💬', title: 'Анонимный чат',           desc: 'Общайся с людьми мира' },
         { id: 'a4',       ico: '🔴', title: 'Блогер А4 — Влад Бумага', desc: 'Биография, факты' },
         { id: 'gagarin',  ico: '🏆', title: 'Кубок Гагарина',          desc: 'Олимпиада 1–8 классов' },
         { id: 'luna',     ico: '🌙', title: 'Луномосик',               desc: 'Прямой эфир' },
-        { id: 'settings', ico: '⚙️', title: 'Настройки',               desc: 'Тема, шрифт' }
+        { id: 'settings', ico: '⚙️', title: 'Настройки',               desc: 'Шрифт, тема, режимы' }
     ];
 
     const DEV_PASSWORD = "520667";
@@ -1401,25 +1477,9 @@
     let favorites = JSON.parse(localStorage.getItem('kumertau_favs') || '[]');
     let devMode = false;
     let fontScale = parseFloat(localStorage.getItem('kumertau_font') || '1');
+    let mainFont = localStorage.getItem('kumertau_mainfont') || 'system';
     let pcMode = localStorage.getItem('kumertau_pc') === 'true';
     let a4Mode = localStorage.getItem('kumertau_a4') === 'true';
-
-    // ==================== ЧАТ ====================
-    let chatMessages = JSON.parse(localStorage.getItem('kumertau_chat') || '[]');
-    let userNick = localStorage.getItem('kumertau_nick') || '';
-    let onlineCount = 1;
-
-    // 🎭 Демо-сообщения для "мирового чата"
-    const FAKE_MESSAGES = [
-        { name: 'Alex (USA)', text: 'Hello from New York! 🌆', time: '...' },
-        { name: 'Yuki (Japan)', text: 'こんにちは! Konnichiwa! 🌸', time: '...' },
-        { name: 'Marco (Italy)', text: 'Ciao a tutti! 🍕', time: '...' },
-        { name: 'Hans (Germany)', text: 'Guten Tag! 🇩🇪', time: '...' },
-        { name: 'Ahmed (Egypt)', text: 'مرحبا من مصر! 🐪', time: '...' },
-        { name: 'Ivan (Russia)', text: 'Привет из Москвы! 🇷🇺', time: '...' },
-        { name: 'Sofia (Brazil)', text: 'Olá do Brasil! 🌴', time: '...' },
-        { name: 'Chen (China)', text: '你好！来自中国 🌸', time: '...' }
-    ];
 
     // ==================== ПРЕЛОАДЕР ====================
     window.addEventListener('load', () => {
@@ -1443,31 +1503,19 @@
         const page = document.getElementById('page-' + name);
         if (page) page.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // Обновляем активную вкладку
         document.querySelectorAll('.nav-item').forEach(i => {
             if (i.dataset.target === name) i.classList.add('active');
             else i.classList.remove('active');
         });
-
-        if (name === 'chat') {
-            setTimeout(scrollChat, 100);
-        }
     }
     window.showPage = showPage;
 
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             const t = item.dataset.target;
-            if (t === 'search') {
-                showPage('search');
-                document.getElementById('searchInput').focus();
-            } else if (t === 'fav') {
-                showPage('fav');
-                renderFavorites();
-            } else {
-                showPage(t);
-            }
+            if (t === 'search') { showPage('search'); document.getElementById('searchInput').focus(); }
+            else if (t === 'fav') { showPage('fav'); renderFavorites(); }
+            else showPage(t);
         });
     });
 
@@ -1475,7 +1523,13 @@
         card.addEventListener('click', () => {
             showPage(card.dataset.page);
             if (card.dataset.page === 'fav') renderFavorites();
-            if (card.dataset.page === 'chat') setTimeout(scrollChat, 100);
+        });
+    });
+
+    document.querySelectorAll('.sidebar-card .item[data-page]').forEach(item => {
+        item.addEventListener('click', () => {
+            showPage(item.dataset.page);
+            if (item.dataset.page === 'fav') renderFavorites();
         });
     });
 
@@ -1506,123 +1560,58 @@
         });
     });
 
-    // ==================== ЧАТ ====================
-    function renderChat() {
-        const box = document.getElementById('chatMessages');
-        box.innerHTML = '';
+    // ==================== ШРИФТ ====================
+    function applyMainFont() {
+        const fonts = {
+            system: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            serif: 'Georgia, "Times New Roman", serif',
+            mono: '"Courier New", "Consolas", monospace',
+            comic: '"Comic Sans MS", "Chalkboard SE", cursive, sans-serif',
+            rounded: '"SF Pro Rounded", "Segoe UI", "Helvetica Neue", sans-serif'
+        };
+        const headingFonts = {
+            system: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            serif: 'Georgia, "Times New Roman", serif',
+            mono: '"Courier New", "Consolas", monospace',
+            comic: '"Comic Sans MS", cursive, sans-serif',
+            rounded: '"SF Pro Rounded", "Segoe UI", sans-serif'
+        };
+        document.documentElement.style.setProperty('--main-font', fonts[mainFont] || fonts.system);
+        document.documentElement.style.setProperty('--heading-font', headingFonts[mainFont] || headingFonts.system);
 
-        if (chatMessages.length === 0) {
-            box.innerHTML = '<div class="chat-msg system">🌍 Добро пожаловать! Начни первым.</div>';
-        } else {
-            chatMessages.forEach(msg => {
-                const div = document.createElement('div');
-                div.className = 'chat-msg ' + (msg.me ? 'me' : 'other');
-                div.innerHTML = `
-                    <div class="msg-name">${escapeHtml(msg.name)}</div>
-                    <div>${escapeHtml(msg.text)}</div>
-                    <div class="msg-time">${msg.time || ''}</div>
-                `;
-                box.appendChild(div);
-            });
-        }
-
-        scrollChat();
-    }
-
-    function scrollChat() {
-        const box = document.getElementById('chatMessages');
-        if (box) box.scrollTop = box.scrollHeight;
-    }
-
-    function escapeHtml(s) {
-        return String(s).replace(/[&<>"']/g, c => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        }[c]));
-    }
-
-    function getTime() {
-        const d = new Date();
-        return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
-    }
-
-    function saveChat() {
-        localStorage.setItem('kumertau_chat', JSON.stringify(chatMessages.slice(-100)));
-    }
-
-    // Сохранить ник
-    document.getElementById('nickSave').addEventListener('click', () => {
-        const val = document.getElementById('nickInput').value.trim();
-        if (!val) {
-            alert('Введи ник');
-            return;
-        }
-        userNick = val;
-        localStorage.setItem('kumertau_nick', userNick);
-        addSystemMessage(`✓ Ник сохранён: ${userNick}`);
-    });
-
-    // Отправить сообщение
-    function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
-
-        if (!userNick) {
-            alert('Сначала введи ник');
-            return;
-        }
-
-        chatMessages.push({
-            name: userNick,
-            text: text,
-            time: getTime(),
-            me: true
+        // Обновить активную кнопку
+        document.querySelectorAll('.font-option').forEach(opt => {
+            if (opt.dataset.font === mainFont) opt.classList.add('active');
+            else opt.classList.remove('active');
         });
-        saveChat();
-        renderChat();
 
-        input.value = '';
+        const dev = document.getElementById('devFontMode');
+        if (dev) dev.textContent = mainFont;
 
-        // Демо-ответ (случайный "иностранец" отвечает через 2-5 сек)
-        setTimeout(() => {
-            const fake = FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)];
-            chatMessages.push({
-                name: fake.name,
-                text: fake.text,
-                time: getTime(),
-                me: false
-            });
-            saveChat();
-            renderChat();
-            onlineCount = Math.floor(Math.random() * 50) + 10;
-            document.getElementById('onlineCount').textContent = 'Онлайн: ' + onlineCount;
-        }, 2000 + Math.random() * 3000);
+        localStorage.setItem('kumertau_mainfont', mainFont);
     }
 
-    document.getElementById('chatSend').addEventListener('click', sendMessage);
-    document.getElementById('chatInput').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
-
-    document.getElementById('chatClear').addEventListener('click', () => {
-        if (confirm('Очистить всю переписку?')) {
-            chatMessages = [];
-            saveChat();
-            renderChat();
-        }
-    });
-
-    function addSystemMessage(text) {
-        chatMessages.push({
-            name: 'Система',
-            text: text,
-            time: getTime(),
-            me: false,
-            system: true
+    document.querySelectorAll('.font-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            mainFont = opt.dataset.font;
+            applyMainFont();
         });
-        saveChat();
-        renderChat();
+    });
+
+    function applyFontSize() {
+        document.documentElement.style.setProperty('--font-scale', fontScale);
+        document.getElementById('fontValue').textContent = Math.round(fontScale * 100) + '%';
+        localStorage.setItem('kumertau_font', fontScale);
     }
+
+    document.getElementById('fontUp').addEventListener('click', () => {
+        fontScale = Math.min(1.5, fontScale + 0.1);
+        applyFontSize();
+    });
+    document.getElementById('fontDown').addEventListener('click', () => {
+        fontScale = Math.max(0.8, fontScale - 0.1);
+        applyFontSize();
+    });
 
     // ==================== ИЗБРАННОЕ ====================
     function renderFavorites() {
@@ -1646,6 +1635,12 @@
         });
     }
 
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
     document.getElementById('favAddBtn').addEventListener('click', () => {
         const val = document.getElementById('favInput').value.trim();
         if (!val) return;
@@ -1661,22 +1656,6 @@
             localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
             renderFavorites();
         }
-    });
-
-    // ==================== ШРИФТ ====================
-    function applyFont() {
-        document.documentElement.style.setProperty('--font-scale', fontScale);
-        document.getElementById('fontValue').textContent = Math.round(fontScale * 100) + '%';
-        localStorage.setItem('kumertau_font', fontScale);
-    }
-
-    document.getElementById('fontUp').addEventListener('click', () => {
-        fontScale = Math.min(1.5, fontScale + 0.1);
-        applyFont();
-    });
-    document.getElementById('fontDown').addEventListener('click', () => {
-        fontScale = Math.max(0.8, fontScale - 0.1);
-        applyFont();
     });
 
     // ==================== ПК ====================
@@ -1746,7 +1725,7 @@
     }
 
     document.getElementById('restartBrowser').addEventListener('click', () => {
-        if (confirm('Сбросить всё? Настройки очистятся.')) {
+        if (confirm('Сбросить всё?')) {
             localStorage.clear();
             location.reload();
         }
@@ -1819,30 +1798,45 @@
         }
     });
 
+    // ==================== ☕ ЧАЙНОЕ РАСПИСАНИЕ — выделение текущего ====================
+    function updateTeaTime() {
+        const now = new Date();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        const current = hour + minute / 60;
+
+        const teaTimes = [
+            { hour: 7,    end: 7.5 },
+            { hour: 16,   end: 16.5 },
+            { hour: 18.5, end: 19 },
+            { hour: 20,   end: 20.5 }
+        ];
+
+        document.querySelectorAll('.tea-time').forEach(el => {
+            const h = parseFloat(el.dataset.hour);
+            let isCurrent = false;
+            teaTimes.forEach(t => {
+                if (h === t.hour && current >= t.hour && current < t.end) {
+                    isCurrent = true;
+                }
+            });
+            if (isCurrent) el.classList.add('current');
+            else el.classList.remove('current');
+        });
+    }
+
     // ==================== СТАРТ ====================
-    applyFont();
+    applyMainFont();
+    applyFontSize();
     applyPC();
     applyA4();
     showPage('home');
-
-    // Загружаем ник
-    if (userNick) {
-        document.getElementById('nickInput').value = userNick;
-    }
-
-    // Рендер чата
-    renderChat();
-
-    // Обновление онлайн-счётчика
-    setInterval(() => {
-        onlineCount = Math.floor(Math.random() * 50) + 5;
-        const el = document.getElementById('onlineCount');
-        if (el) el.textContent = 'Онлайн: ' + onlineCount;
-    }, 5000);
+    renderFavorites();
+    updateTeaTime();
+    setInterval(updateTeaTime, 60000); // Каждую минуту
 
     document.getElementById('searchResults').innerHTML =
         '<div class="empty"><div class="empty-emoji">🔍</div>Введи запрос</div>';
-    renderFavorites();
 </script>
 
 </body>
