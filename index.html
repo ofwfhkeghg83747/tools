@@ -2,1745 +2,533 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Кумертау · Будущее 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сайт</title>
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+  }
 
-    :root {
-        --bg: #05060f;
-        --bg-2: #0a0d1f;
-        --glass: rgba(20, 25, 50, 0.55);
-        --glass-2: rgba(15, 20, 45, 0.9);
-        --border: rgba(120, 200, 255, 0.25);
-        --border-strong: rgba(120, 220, 255, 0.6);
-        --text: #e8f0ff;
-        --text-dim: #8892b8;
-        --neon-cyan: #00e5ff;
-        --neon-purple: #a855f7;
-        --neon-pink: #ff2d95;
-        --neon-green: #00ff9d;
-        --neon-yellow: #ffd60a;
-        --neon-red: #ff2d55;
-        --font-scale: 1;
-        --main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+  /* ================= СИНИЙ ЭКРАН ================= */
+  #bsod {
+    position: fixed; inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6vh 6vw;
+    background: #0078d7;
+    z-index: 10;
+  }
+  .face {
+    font-size: clamp(70px, 18vw, 140px);
+    line-height: 1;
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+  .title {
+    font-size: clamp(20px, 5vw, 30px);
+    font-weight: 300;
+    margin-bottom: 26px;
+    line-height: 1.3;
+  }
+  .text {
+    font-size: clamp(13px, 3.4vw, 17px);
+    line-height: 1.5;
+    max-width: 760px;
+    margin-bottom: 26px;
+    opacity: .95;
+  }
+  .percent {
+    font-size: clamp(14px, 3.5vw, 18px);
+    margin-bottom: 30px;
+    opacity: .95;
+  }
+  .bottom {
+    display: flex;
+    gap: 26px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    font-size: clamp(11px, 2.8vw, 14px);
+    opacity: .9;
+  }
+  .qr {
+    width: 84px; height: 84px;
+    background:
+      linear-gradient(90deg, #fff 50%, #0078d7 50%) 0 0 / 12px 12px,
+      linear-gradient(#fff 50%, #0078d7 50%) 0 0 / 12px 12px;
+    border: 6px solid #fff;
+    flex-shrink: 0;
+  }
+  .stop { line-height: 1.5; }
+  .stop b { font-weight: 600; }
 
-    body.a4-mode {
-        --bg: #0a0800;
-        --bg-2: #14100a;
-        --glass: rgba(40, 30, 0, 0.6);
-        --glass-2: rgba(30, 22, 0, 0.9);
-        --border: rgba(255, 214, 10, 0.3);
-        --border-strong: rgba(255, 214, 10, 0.8);
-        --text: #fff9e0;
-        --text-dim: #c9a84a;
-        --neon-cyan: #ffd60a;
-        --neon-purple: #ffd60a;
-        --neon-green: #ffd60a;
-        --neon-yellow: #ffd60a;
-        --neon-red: #e63946;
-    }
+  /* ================= ОКНА ОШИБКИ ================= */
+  .errorWin {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 16px;
+  }
+  .errorWin.show { display: flex; }
 
-    html, body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--main-font);
-        min-height: 100vh;
-        overflow-x: hidden;
-        padding-bottom: 76px;
-        font-size: calc(16px * var(--font-scale));
-        transition: background 0.4s, color 0.4s;
-    }
+  .win {
+    width: min(420px, 92vw);
+    background: #f0f0f0;
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.45);
+    overflow: hidden;
+    color: #000;
+  }
+  .win-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px;
+    background: linear-gradient(#fdfdfd, #e8e8e8);
+    border-bottom: 1px solid #d0d0d0;
+    font-size: 13px;
+  }
+  .win-bar .icon {
+    width: 16px; height: 16px; flex-shrink: 0;
+    background: #4a90d9; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff;
+  }
+  .win-bar .t { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .win-bar .x {
+    width: 30px; height: 20px; border: 0; background: transparent;
+    font-size: 15px; line-height: 1; cursor: pointer; color: #333;
+  }
+  .win-bar .x:hover { background: #e81123; color: #fff; }
 
-    body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background:
-            radial-gradient(circle at 15% 15%, rgba(0, 229, 255, 0.15) 0%, transparent 40%),
-            radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
-        pointer-events: none;
-        z-index: 0;
-    }
-    body.a4-mode::before {
-        background:
-            radial-gradient(circle at 15% 15%, rgba(255, 214, 10, 0.2) 0%, transparent 40%),
-            radial-gradient(circle at 85% 30%, rgba(230, 57, 70, 0.15) 0%, transparent 40%);
-    }
+  .win-body { padding: 20px 18px 10px; }
+  .win-msg {
+    display: flex; gap: 14px; align-items: flex-start;
+    font-size: 13px; line-height: 1.5;
+  }
+  .warn-icon {
+    width: 34px; height: 34px; flex-shrink: 0;
+    background: #ffd54d; border: 2px solid #b38b00; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: bold; color: #7a5c00;
+  }
+  .win-foot {
+    display: flex; justify-content: center;
+    padding: 18px 18px 20px;
+  }
+  .ok-btn {
+    min-width: 110px; padding: 6px 18px;
+    font-family: inherit; font-size: 13px;
+    background: #e1e1e1; border: 1px solid #adadad;
+    border-radius: 2px; cursor: pointer;
+  }
+  .ok-btn:hover { background: #d5d5d5; }
+  .ok-btn:active { background: #c8c8c8; }
 
-    /* Прелоадеры */
-    .preloader {
-        position: fixed; inset: 0;
-        background: var(--bg);
-        z-index: 99999;
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        gap: 16px;
-        transition: opacity 0.5s, visibility 0.5s;
-    }
-    .preloader.hide { opacity: 0; visibility: hidden; }
-    .preloader-logo {
-        font-size: 32px;
-        font-weight: 900;
-        letter-spacing: 8px;
-        background: linear-gradient(90deg, #00e5ff, #a855f7, #00ff9d, #00e5ff);
-        background-size: 400% 100%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        animation: gradientMove 2.5s linear infinite;
-    }
-    @keyframes gradientMove {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 400% 50%; }
-    }
-    .preloader-ring {
-        width: 44px; height: 44px;
-        border-radius: 50%;
-        border: 3px solid transparent;
-        border-top-color: #00e5ff;
-        border-right-color: #a855f7;
-        animation: ringSpin 1s linear infinite;
-    }
-    @keyframes ringSpin { to { transform: rotate(360deg); } }
+  /* ================= ЗАГРУЗКА WINDOWS 7 ================= */
+  #win7boot {
+    position: fixed; inset: 0;
+    background: #000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    color: #cfd8e8;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  }
+  #win7boot.show { display: flex; }
 
-    .preloader-a4 {
-        position: fixed; inset: 0;
-        background: #0a0800;
-        z-index: 99999;
-        display: none;
-        flex-direction: column;
-        align-items: center; justify-content: center;
-        gap: 16px;
-        padding: 20px;
-    }
-    .preloader-a4.show { display: flex; }
-    .preloader-a4.hide { opacity: 0; visibility: hidden; }
-    .preloader-a4-img {
-        max-width: 55vw;
-        max-height: 40vh;
-        width: 220px;
-        border-radius: 10px;
-        border: 3px solid #ffd60a;
-        box-shadow: 0 0 40px rgba(255, 214, 10, 0.6);
-        animation: a4Pulse 1.5s ease-in-out infinite;
-        object-fit: contain;
-        background: #fff;
-        padding: 4px;
-    }
-    @keyframes a4Pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.04); }
-    }
-    .preloader-a4-name {
-        font-size: 15px;
-        font-weight: 900;
-        letter-spacing: 6px;
-        color: #ffd60a;
-        text-transform: uppercase;
-    }
+  .win7-logo {
+    text-align: center;
+    margin-bottom: 46px;
+    font-size: clamp(26px, 7vw, 38px);
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+  .win7-logo .w {
+    display: flex; justify-content: center; gap: 6px; margin-bottom: 12px;
+  }
+  .win7-logo .w span {
+    width: clamp(14px, 4vw, 20px);
+    height: clamp(14px, 4vw, 20px);
+    display: block;
+  }
+  .win7-logo .w span:nth-child(1) { background: #f65314; }
+  .win7-logo .w span:nth-child(2) { background: #7cbb00; }
+  .win7-logo .w span:nth-child(3) { background: #00a1f1; }
+  .win7-logo .w span:nth-child(4) { background: #ffbb00; }
+  .win7-logo .txt { color: #fff; }
+  .win7-logo .txt small {
+    display: block; font-size: 12px; color: #9fb0c8;
+    letter-spacing: 2px; margin-top: 6px;
+  }
+  .win7-status { font-size: 13px; color: #a7b6cc; margin-bottom: 22px; }
+  .dots-load { display: flex; gap: 8px; }
+  .dots-load span {
+    width: 8px; height: 8px; border-radius: 50%; background: #5b8dd6;
+    animation: dotPulse 1.2s infinite ease-in-out;
+  }
+  .dots-load span:nth-child(2) { animation-delay: .15s; }
+  .dots-load span:nth-child(3) { animation-delay: .3s; }
+  .dots-load span:nth-child(4) { animation-delay: .45s; }
+  .dots-load span:nth-child(5) { animation-delay: .6s; }
+  @keyframes dotPulse {
+    0%, 80%, 100% { opacity: .2; transform: scale(.8); }
+    40%           { opacity: 1; transform: scale(1.2); }
+  }
 
-    /* HEADER — компактный */
-    header {
-        position: sticky; top: 0;
-        z-index: 100;
-        background: var(--glass-2);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border);
-        padding: 8px 10px;
-    }
-    body.a4-mode header {
-        border-bottom-color: var(--border-strong);
-    }
+  /* ================= БЕСКОНЕЧНЫЕ ОКНА ================= */
+  #errorSpam {
+    position: fixed; inset: 0;
+    display: none;
+    z-index: 400;
+    background: rgba(0,0,0,.35);
+    overflow: hidden;
+  }
+  #errorSpam.show { display: block; }
 
-    .header-inner {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+  .popup-win {
+    position: absolute;
+    width: 340px;
+    max-width: 90vw;
+    background: #f0f0f0;
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+    color: #000;
+    animation: popIn .08s ease-out;
+  }
+  @keyframes popIn {
+    from { transform: scale(.92); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
 
-    .logo-wrap {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-shrink: 0;
-    }
-    .logo-wheel {
-        width: 30px; height: 30px;
-        animation: spin 10s linear infinite;
-        filter: drop-shadow(0 0 6px var(--neon-cyan));
-    }
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    .logo-wheel svg { width: 100%; height: 100%; }
-    .logo-text {
-        font-size: 13px;
-        font-weight: 900;
-        letter-spacing: 1.5px;
-        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        white-space: nowrap;
-    }
+  .popup-win .bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px;
+    background: linear-gradient(#fdfdfd, #e8e8e8);
+    border-bottom: 1px solid #d0d0d0;
+    font-size: 12px;
+  }
+  .popup-win .bar .ic {
+    width: 16px; height: 16px; flex-shrink: 0;
+    background: #d13438; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff;
+  }
+  .popup-win .bar .tt { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .popup-win .bar .bx {
+    width: 26px; height: 18px; border: 0; background: transparent;
+    font-size: 13px; line-height: 1; cursor: pointer; color: #333;
+  }
+  .popup-win .bar .bx:hover { background: #e81123; color: #fff; }
 
-    .a4-header-logo { display: none; align-items: center; gap: 6px; }
-    body.a4-mode .a4-header-logo { display: flex; }
-    body.a4-mode .logo-wrap { display: none; }
-    .a4-header-img {
-        width: 30px; height: 30px;
-        object-fit: cover;
-        border-radius: 5px;
-        border: 2px solid #ffd60a;
-        background: #fff;
-        padding: 2px;
-    }
-    .a4-name-small {
-        font-size: 9px;
-        font-weight: 900;
-        letter-spacing: 1.5px;
-        color: #ffd60a;
-        text-transform: uppercase;
-    }
-
-    .search-wrap {
-        flex: 1;
-        position: relative;
-        min-width: 0;
-    }
-    .search-input {
-        width: 100%;
-        padding: 8px 10px 8px 32px;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        color: var(--text);
-        font-size: 12px;
-        outline: none;
-        font-family: inherit;
-    }
-    .search-input:focus { border-color: var(--border-strong); }
-    .search-input::placeholder { color: var(--text-dim); }
-    .search-icon {
-        position: absolute;
-        left: 10px; top: 50%;
-        transform: translateY(-50%);
-        width: 14px; height: 14px;
-        stroke: var(--neon-cyan);
-        stroke-width: 2.5;
-        fill: none;
-        pointer-events: none;
-    }
-    body.a4-mode .search-icon { stroke: var(--neon-yellow); }
-
-    .header-actions {
-        display: flex;
-        gap: 5px;
-        flex-shrink: 0;
-    }
-
-    .icon-btn {
-        width: 34px; height: 34px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-        color: var(--text);
-        font-size: 14px;
-        padding: 0;
-        font-family: inherit;
-        flex-shrink: 0;
-    }
-    .icon-btn:active { transform: scale(0.9); }
-    .icon-btn.a4 {
-        background: linear-gradient(135deg, #ffd60a, #ffb700);
-        color: #0a0800;
-        border-color: #ffd60a;
-        font-size: 12px;
-    }
-    .icon-btn.pc.active {
-        background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-        color: #fff;
-    }
-
-    /* Контейнер */
-    .container {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 12px 10px;
-        position: relative;
-        z-index: 2;
-    }
-
-    .page { display: none; animation: fadeIn 0.3s; }
-    .page.active { display: block; }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(6px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* 🚨 СРОЧНАЯ НОВОСТЬ — компактная */
-    .urgent-news {
-        background: linear-gradient(135deg, rgba(255, 45, 85, 0.2), rgba(255, 214, 10, 0.1));
-        border: 1.5px solid var(--neon-red);
-        border-radius: 12px;
-        padding: 10px 12px;
-        margin-bottom: 10px;
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-    }
-    .urgent-icon {
-        font-size: 22px;
-        flex-shrink: 0;
-        animation: blink 1.5s infinite;
-    }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .urgent-content { flex: 1; min-width: 0; }
-    .urgent-title {
-        font-size: 13px;
-        font-weight: 900;
-        color: #fff;
-        margin-bottom: 3px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-    .urgent-badge {
-        display: inline-block;
-        background: var(--neon-red);
-        color: #fff;
-        font-size: 8px;
-        font-weight: 900;
-        padding: 2px 6px;
-        border-radius: 6px;
-        letter-spacing: 1px;
-    }
-    .urgent-text {
-        font-size: 11px;
-        color: var(--text-dim);
-        line-height: 1.4;
-    }
-    .urgent-text b { color: var(--neon-yellow); }
-    .urgent-from {
-        font-size: 9px;
-        color: var(--neon-yellow);
-        font-weight: 800;
-        margin-top: 4px;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
-
-    /* ☕ ЧАЙНОЕ РАСПИСАНИЕ — компактное */
-    .tea-schedule {
-        background: linear-gradient(135deg, rgba(255, 214, 10, 0.12), rgba(230, 57, 70, 0.08));
-        border: 1.5px solid var(--neon-yellow);
-        border-radius: 12px;
-        padding: 12px;
-        margin-bottom: 10px;
-    }
-    .tea-schedule h3 {
-        font-size: 13px;
-        font-weight: 900;
-        color: var(--neon-yellow);
-        margin-bottom: 10px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .tea-times {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-    }
-    .tea-time {
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 8px 6px;
-        text-align: center;
-        transition: 0.2s;
-        min-width: 0;
-    }
-    body.a4-mode .tea-time { background: rgba(0, 0, 0, 0.5); }
-    .tea-time .time {
-        font-size: 16px;
-        font-weight: 900;
-        color: var(--neon-yellow);
-        font-family: monospace;
-        letter-spacing: 1px;
-        margin-bottom: 2px;
-    }
-    .tea-time .label {
-        font-size: 8px;
-        color: var(--text-dim);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 700;
-    }
-    .tea-time.current {
-        border-color: var(--neon-green);
-        background: rgba(0, 255, 157, 0.15);
-        animation: teaPulse 2s infinite;
-    }
-    @keyframes teaPulse {
-        0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 157, 0.3); }
-        50% { box-shadow: 0 0 20px rgba(0, 255, 157, 0.6); }
-    }
-    .tea-time.current .time { color: var(--neon-green); }
-    .tea-time.current .label::before {
-        content: "● ";
-        color: var(--neon-green);
-    }
-
-    /* HERO */
-    .hero {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 20px 14px;
-        text-align: center;
-        margin-bottom: 10px;
-        position: relative;
-        overflow: hidden;
-    }
-    body.a4-mode .hero { border-color: var(--border-strong); }
-    .hero-emoji {
-        font-size: 38px;
-        margin-bottom: 6px;
-        display: inline-block;
-        filter: drop-shadow(0 0 15px var(--neon-cyan));
-    }
-    body.a4-mode .hero-emoji { filter: drop-shadow(0 0 15px #ffd60a); }
-    .hero h1 {
-        font-size: 18px;
-        font-weight: 900;
-        letter-spacing: 2px;
-        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-    }
-    body.a4-mode .hero h1 {
-        background: linear-gradient(90deg, #ffd60a, #e63946);
-        -webkit-background-clip: text;
-        background-clip: text;
-    }
-    .hero-sub {
-        font-size: 10px;
-        color: var(--text-dim);
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        font-weight: 600;
-    }
-    body.a4-mode .hero-sub { color: #ffd60a; }
-
-    /* Ждём зиму */
-    .wait-winter {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 12px;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-    .wait-winter h2 {
-        font-size: 14px;
-        font-weight: 900;
-        letter-spacing: 3px;
-        color: var(--neon-cyan);
-        text-transform: uppercase;
-        margin-bottom: 2px;
-    }
-    body.a4-mode .wait-winter h2 { color: #ffd60a; }
-    .wait-winter p {
-        font-size: 9px;
-        color: var(--text-dim);
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-    }
-
-    /* Cards */
-    .cards-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-
-    .card {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 12px;
-        transition: 0.2s;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-    .card:active { transform: scale(0.98); }
-    .card-title {
-        font-size: 14px;
-        font-weight: 800;
-        color: var(--text);
-        margin-bottom: 4px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .card-title .ico { font-size: 20px; }
-    .card-desc {
-        font-size: 11px;
-        color: var(--text-dim);
-        line-height: 1.4;
-    }
-    .card-tag {
-        display: inline-block;
-        font-size: 9px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 3px 8px;
-        border-radius: 8px;
-        background: rgba(0, 229, 255, 0.15);
-        color: var(--neon-cyan);
-        border: 1px solid rgba(0, 229, 255, 0.4);
-        margin-top: 8px;
-    }
-    .card-tag.a4 {
-        background: rgba(255, 214, 10, 0.15);
-        color: #ffd60a;
-        border-color: rgba(255, 214, 10, 0.5);
-    }
-    .card-tag.live {
-        background: rgba(255, 45, 149, 0.15);
-        color: var(--neon-pink);
-        border-color: rgba(255, 45, 149, 0.5);
-        animation: blink 1.2s infinite;
-    }
-
-    .block {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--neon-cyan);
-        border-radius: 12px;
-        padding: 14px;
-        margin-bottom: 10px;
-    }
-    body.a4-mode .block { border-left-color: #ffd60a; }
-    .block h3 {
-        font-size: 13px;
-        font-weight: 800;
-        color: var(--neon-cyan);
-        margin-bottom: 8px;
-    }
-    body.a4-mode .block h3 { color: #ffd60a; }
-    .block ol, .block ul { margin-left: 18px; font-size: 12px; line-height: 1.7; color: var(--text); }
-    .block li { margin-bottom: 4px; }
-    .block li b { color: var(--neon-cyan); }
-    body.a4-mode .block li b { color: #ffd60a; }
-    .block p { font-size: 12px; line-height: 1.6; color: var(--text); }
-
-    .a4-page-img {
-        display: block;
-        margin: 0 auto 10px;
-        max-width: 60%;
-        width: 180px;
-        border-radius: 10px;
-        border: 3px solid #ffd60a;
-        box-shadow: 0 0 30px rgba(255, 214, 10, 0.5);
-        background: #fff;
-        padding: 4px;
-    }
-
-    .video-wrapper {
-        background: #000;
-        border: 1px solid var(--border-strong);
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 10px;
-    }
-    .video-wrapper iframe {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        border: 0;
-        display: block;
-    }
-
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        padding: 9px 16px;
-        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-        border: none;
-        border-radius: 20px;
-        color: #fff;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.8px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: 0.2s;
-        font-family: inherit;
-        text-decoration: none;
-    }
-    .btn:active { transform: scale(0.95); }
-    .btn-outline {
-        background: var(--glass);
-        border: 1px solid var(--border-strong);
-        color: var(--neon-cyan);
-    }
-    body.a4-mode .btn {
-        background: linear-gradient(90deg, #ffd60a, #ffb700);
-        color: #0a0800;
-    }
-    body.a4-mode .btn-outline {
-        background: transparent;
-        border-color: #ffd60a;
-        color: #ffd60a;
-    }
-    .btn-danger {
-        background: linear-gradient(90deg, #ff2d55, #ff2d95);
-        color: #fff;
-    }
-    .btn-green {
-        background: linear-gradient(90deg, #00ff9d, #00e5ff);
-        color: #0a0800;
-    }
-    .btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
-
-    .settings-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        padding: 10px 12px;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        margin-bottom: 8px;
-        flex-wrap: wrap;
-    }
-    body.a4-mode .settings-row { border-color: var(--border-strong); }
-    .settings-label {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--text);
-    }
-    .settings-value {
-        font-size: 11px;
-        color: var(--neon-cyan);
-        font-weight: 800;
-        font-family: monospace;
-        background: rgba(0, 229, 255, 0.1);
-        padding: 3px 8px;
-        border-radius: 6px;
-    }
-    body.a4-mode .settings-value { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
-
-    .font-picker {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        margin-top: 6px;
-    }
-    .font-option {
-        padding: 6px 10px;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        color: var(--text);
-        cursor: pointer;
-        transition: 0.2s;
-        font-size: 11px;
-        font-weight: 700;
-    }
-    .font-option.active {
-        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-        color: #fff;
-        border-color: transparent;
-    }
-    body.a4-mode .font-option.active {
-        background: linear-gradient(90deg, #ffd60a, #ffb700);
-        color: #0a0800;
-    }
-
-    .font-serif { font-family: Georgia, serif; }
-    .font-mono { font-family: "Courier New", monospace; }
-    .font-comic { font-family: "Comic Sans MS", cursive; }
-
-    /* 🧭 МЕНЮ СНИЗУ — компактное, все влезает */
-    .bottom-nav {
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        background: var(--glass-2);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border-top: 1px solid var(--border);
-        display: flex;
-        justify-content: space-around;
-        padding: 5px 4px 8px;
-        z-index: 200;
-        padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    }
-    body.a4-mode .bottom-nav {
-        border-top-color: var(--border-strong);
-    }
-    .nav-item {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1px;
-        cursor: pointer;
-        font-size: 8px;
-        font-weight: 700;
-        color: var(--text-dim);
-        transition: 0.2s;
-        padding: 3px 1px;
-        border-radius: 8px;
-        letter-spacing: 0.3px;
-        text-transform: uppercase;
-        text-align: center;
-        max-width: 80px;
-    }
-    .nav-icon {
-        width: 20px; height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .nav-icon svg {
-        width: 100%; height: 100%;
-        stroke: currentColor;
-        stroke-width: 2;
-        fill: none;
-    }
-    .nav-item.active { color: var(--neon-cyan); }
-    .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 5px var(--neon-cyan)); }
-    body.a4-mode .nav-item.active { color: #ffd60a; }
-    body.a4-mode .nav-item.active .nav-icon svg { filter: drop-shadow(0 0 5px #ffd60a); }
-
-    .empty { text-align: center; padding: 30px 16px; color: var(--text-dim); font-size: 12px; }
-    .empty-emoji { font-size: 36px; margin-bottom: 8px; opacity: 0.5; }
-
-    /* Lock */
-    .lock-screen {
-        position: fixed; inset: 0;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 99999;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-    }
-    .lock-screen.show { display: flex; }
-    .lock-box {
-        background: var(--bg-2);
-        border: 2px solid var(--neon-green);
-        border-radius: 14px;
-        padding: 22px 18px;
-        max-width: 340px;
-        width: 100%;
-        text-align: center;
-    }
-    .lock-box h2 {
-        color: var(--neon-green);
-        font-size: 15px;
-        margin-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-    .lock-input {
-        width: 100%;
-        padding: 10px;
-        background: var(--glass);
-        border: 1px solid var(--neon-green);
-        border-radius: 10px;
-        color: var(--text);
-        font-size: 16px;
-        text-align: center;
-        letter-spacing: 6px;
-        outline: none;
-        margin-bottom: 8px;
-        font-family: monospace;
-    }
-    .lock-error {
-        color: var(--neon-red);
-        font-size: 11px;
-        font-weight: 800;
-        min-height: 14px;
-        margin-bottom: 6px;
-    }
-
-    .fav-input {
-        width: 100%;
-        padding: 10px 12px;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        color: var(--text);
-        font-size: 12px;
-        outline: none;
-        margin-bottom: 8px;
-        font-family: inherit;
-        resize: vertical;
-        min-height: 50px;
-    }
-    .fav-item {
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--neon-cyan);
-        border-radius: 10px;
-        padding: 10px;
-        margin-bottom: 8px;
-        position: relative;
-    }
-    body.a4-mode .fav-item { border-left-color: #ffd60a; }
-    .fav-item-text {
-        font-size: 12px;
-        color: var(--text);
-        line-height: 1.4;
-        word-wrap: break-word;
-        padding-right: 24px;
-    }
-    .fav-item-del {
-        position: absolute;
-        top: 8px; right: 8px;
-        width: 22px; height: 22px;
-        border-radius: 50%;
-        background: rgba(255, 45, 85, 0.2);
-        border: 1px solid var(--neon-red);
-        color: var(--neon-red);
-        font-size: 12px;
-        font-weight: 900;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .dev-panel {
-        background: rgba(0, 20, 30, 0.9);
-        border: 1px solid var(--neon-green);
-        border-radius: 12px;
-        padding: 14px;
-        margin-bottom: 10px;
-        font-family: "Courier New", monospace;
-    }
-    body.a4-mode .dev-panel {
-        background: rgba(30, 22, 0, 0.9);
-        border-color: #ffd60a;
-    }
-    .dev-panel h3 {
-        color: var(--neon-green);
-        font-size: 12px;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-    body.a4-mode .dev-panel h3 { color: #ffd60a; }
-    .dev-panel p { color: var(--text); font-size: 11px; }
-
-    footer {
-        text-align: center;
-        font-size: 10px;
-        color: var(--text-dim);
-        padding: 20px 12px 12px;
-        letter-spacing: 1px;
-        font-style: italic;
-        max-width: 1400px;
-        margin: 16px auto 0;
-    }
-
-    /* ПК */
-    body.pc-mode { padding-bottom: 16px; }
-    body.pc-mode .container {
-        max-width: 1300px;
-        padding: 20px 20px;
-        display: grid;
-        grid-template-columns: 1fr 280px;
-        gap: 20px;
-        align-items: start;
-    }
-    body.pc-mode .page { grid-column: 1; min-width: 0; }
-    body.pc-mode .cards-grid {
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 12px;
-    }
-    body.pc-mode .hero { padding: 40px 28px; }
-    body.pc-mode .hero h1 { font-size: 32px; letter-spacing: 4px; }
-    body.pc-mode .hero-emoji { font-size: 64px; }
-    body.pc-mode .hero-sub { font-size: 13px; }
-    body.pc-mode .wait-winter { padding: 22px; }
-    body.pc-mode .wait-winter h2 { font-size: 22px; letter-spacing: 6px; }
-    body.pc-mode .card { padding: 18px; }
-    body.pc-mode .card-title { font-size: 16px; }
-    body.pc-mode .bottom-nav { display: none; }
-    body.pc-mode .urgent-title { font-size: 15px; }
-    body.pc-mode .urgent-text { font-size: 13px; }
-    body.pc-mode .tea-times { grid-template-columns: repeat(4, 1fr); }
-    body.pc-mode .tea-time .time { font-size: 20px; }
-    body.pc-mode .tea-time .label { font-size: 10px; }
-
-    .pc-sidebar { display: none; grid-column: 2; position: sticky; top: 80px; }
-    body.pc-mode .pc-sidebar { display: block; }
-
-    .sidebar-card {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 14px;
-        margin-bottom: 12px;
-    }
-    body.a4-mode .sidebar-card { border-color: var(--border-strong); }
-    .sidebar-card h4 {
-        font-size: 11px;
-        font-weight: 900;
-        color: var(--neon-cyan);
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        margin-bottom: 8px;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 6px;
-    }
-    body.a4-mode .sidebar-card h4 { color: #ffd60a; border-bottom-color: var(--border-strong); }
-    .sidebar-card .item {
-        display: block;
-        padding: 6px 8px;
-        border-radius: 6px;
-        font-size: 12px;
-        color: var(--text);
-        cursor: pointer;
-        transition: 0.2s;
-        text-decoration: none;
-        margin-bottom: 2px;
-    }
-    .sidebar-card .item:hover {
-        background: rgba(0, 229, 255, 0.1);
-        color: var(--neon-cyan);
-    }
-    body.a4-mode .sidebar-card .item:hover {
-        background: rgba(255, 214, 10, 0.1);
-        color: #ffd60a;
-    }
-
-    .pc-nav { display: none; }
-    body.pc-mode .pc-nav { display: block; }
-    .pc-nav .nav-item {
-        flex-direction: row;
-        justify-content: flex-start;
-        gap: 10px;
-        padding: 8px 10px;
-        font-size: 12px;
-        border-radius: 6px;
-        text-transform: none;
-        max-width: none;
-    }
-    .pc-nav .nav-item:hover { background: rgba(0, 229, 255, 0.1); }
-    body.a4-mode .pc-nav .nav-item:hover { background: rgba(255, 214, 10, 0.1); }
-    .pc-nav .nav-item.active { background: rgba(0, 229, 255, 0.15); color: var(--neon-cyan); }
-    body.a4-mode .pc-nav .nav-item.active { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
-    .pc-nav .nav-icon { width: 18px; height: 18px; }
-
-    .winter-side {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 14px;
-        text-align: center;
-    }
-    body.a4-mode .winter-side { border-color: var(--border-strong); }
-    .winter-side h3 {
-        font-size: 13px;
-        font-weight: 900;
-        color: var(--neon-cyan);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 4px;
-    }
-    body.a4-mode .winter-side h3 { color: #ffd60a; }
-    .winter-side p { font-size: 10px; color: var(--text-dim); letter-spacing: 1.5px; text-transform: uppercase; }
-
-    @media (max-width: 900px) {
-        body.pc-mode .container { grid-template-columns: 1fr; }
-        body.pc-mode .pc-sidebar { position: static; }
-    }
-
-    @media (max-width: 380px) {
-        .logo-text { font-size: 11px; }
-        .logo-wheel { width: 26px; height: 26px; }
-        .icon-btn { width: 30px; height: 30px; font-size: 12px; }
-        .nav-item { font-size: 7px; }
-        .nav-icon { width: 18px; height: 18px; }
-    }
+  .popup-win .body {
+    padding: 12px 12px 8px;
+    font-size: 12px; line-height: 1.4;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .popup-win .wicon {
+    width: 26px; height: 26px; flex-shrink: 0;
+    background: #ffd54d; border: 2px solid #b38b00; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: bold; color: #7a5c00;
+  }
+  .popup-win .foot {
+    display: flex; justify-content: center;
+    padding: 4px 12px 12px;
+  }
+  .popup-win .ok {
+    min-width: 80px; padding: 4px 12px;
+    font-family: inherit; font-size: 12px;
+    background: #e1e1e1; border: 1px solid #adadad;
+    border-radius: 2px; cursor: pointer;
+  }
+  .popup-win .ok:hover { background: #d5d5d5; }
 </style>
 </head>
 <body>
 
-<div class="preloader" id="preloader">
-    <div class="preloader-logo">КУМЕРТАУ</div>
-    <div class="preloader-ring"></div>
-</div>
-
-<div class="preloader-a4" id="preloaderA4">
-    <img class="preloader-a4-img"
-         src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
-         alt="A4"
-         onerror="this.style.display='none'">
-    <div class="preloader-a4-name">Влад Бумага</div>
-</div>
-
-<header>
-    <div class="header-inner">
-        <div class="logo-wrap">
-            <div class="logo-wheel">
-                <svg viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="6" fill="none"/>
-                    <circle cx="50" cy="50" r="6" fill="currentColor"/>
-                    <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" stroke-width="3"/>
-                    <line x1="5" y1="50" x2="95" y2="50" stroke="currentColor" stroke-width="3"/>
-                    <line x1="18" y1="18" x2="82" y2="82" stroke="currentColor" stroke-width="3"/>
-                    <line x1="18" y1="82" x2="82" y2="18" stroke="currentColor" stroke-width="3"/>
-                </svg>
-            </div>
-            <div class="logo-text">КУМЕРТАУ</div>
-        </div>
-
-        <div class="a4-header-logo">
-            <img class="a4-header-img"
-                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
-                 alt="A4"
-                 onerror="this.style.display='none'">
-            <div class="a4-name-small">Влад Бумага</div>
-        </div>
-
-        <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7"/>
-                <line x1="16.5" y1="16.5" x2="21" y2="21"/>
-            </svg>
-            <input type="text" class="search-input" id="searchInput" placeholder="Поиск...">
-        </div>
-
-        <div class="header-actions">
-            <button class="icon-btn a4" id="a4Btn" title="Режим А4">🔴</button>
-            <button class="icon-btn pc" id="pcToggle" title="Режим ПК">🖥</button>
-        </div>
+  <!-- СИНИЙ ЭКРАН -->
+  <div id="bsod">
+    <div class="face">:(</div>
+    <div class="title">
+      На вашем устройстве возникла проблема, и его необходимо перезагрузить.
+      Мы собираем некоторые сведения об ошибке, после чего выполним перезагрузку.
     </div>
-</header>
-
-<div class="container">
-
-    <!-- 🏠 ГЛАВНАЯ -->
-    <div class="page active" id="page-home">
-        <!-- 🚨 СРОЧНАЯ НОВОСТЬ — компактная -->
-        <div class="urgent-news">
-            <div class="urgent-icon">📡</div>
-            <div class="urgent-content">
-                <div class="urgent-title">
-                    <span class="urgent-badge">СРОЧНО</span>
-                    Интернет скоро пропадёт
-                </div>
-                <div class="urgent-text">
-                    От <b>Уфанет</b>: возможны перебои с соединением. Сохраните данные.
-                </div>
-                <div class="urgent-from">📢 Администрация Уфанет</div>
-            </div>
-        </div>
-
-        <!-- ☕ ЧАЙНОЕ РАСПИСАНИЕ — компактное -->
-        <div class="tea-schedule">
-            <h3>☕ Чайное расписание</h3>
-            <div class="tea-times" id="teaTimes">
-                <div class="tea-time" data-hour="7">
-                    <div class="time">07:00</div>
-                    <div class="label">Утренний</div>
-                </div>
-                <div class="tea-time" data-hour="16">
-                    <div class="time">16:00</div>
-                    <div class="label">Дневной</div>
-                </div>
-                <div class="tea-time" data-hour="18.5">
-                    <div class="time">18:30</div>
-                    <div class="label">Вечерний</div>
-                </div>
-                <div class="tea-time" data-hour="20">
-                    <div class="time">20:00</div>
-                    <div class="label">Ночной</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="wait-winter">
-            <h2>❄ ЖДЁМ ЗИМУ ❄</h2>
-            <p>Осень 2026 · Кумертау</p>
-        </div>
-
-        <div class="hero">
-            <div class="hero-emoji">🏙</div>
-            <h1>Кумертау</h1>
-            <div class="hero-sub">Республика Башкортостан · 2026</div>
-        </div>
-
-        <div class="cards-grid">
-            <div class="card" data-page="a4">
-                <div class="card-title"><span class="ico">🔴</span> Блогер А4</div>
-                <div class="card-desc">Влад Бумага — биография, факты</div>
-                <span class="card-tag a4">А4</span>
-            </div>
-
-            <div class="card" data-page="gagarin">
-                <div class="card-title"><span class="ico">🏆</span> Кубок Гагарина</div>
-                <div class="card-desc">Олимпиада 1–8 классов РБ</div>
-                <span class="card-tag">Олимпиада</span>
-            </div>
-
-            <div class="card" data-page="luna">
-                <div class="card-title"><span class="ico">🌙</span> Луномосик</div>
-                <div class="card-desc">Прямой эфир на сайте</div>
-                <span class="card-tag live">● LIVE</span>
-            </div>
-
-            <div class="card" data-page="settings">
-                <div class="card-title"><span class="ico">⚙️</span> Настройки</div>
-                <div class="card-desc">Шрифт, режимы, разработчик</div>
-                <span class="card-tag">Система</span>
-            </div>
-        </div>
+    <div class="percent" id="percent">0% завершено</div>
+    <div class="text">
+      Если вы хотите узнать больше, можно выполнить поиск в Интернете по коду
+      этой ошибки позже.
     </div>
-
-    <!-- 🔴 А4 -->
-    <div class="page" id="page-a4">
-        <div class="hero">
-            <img class="a4-page-img"
-                 src="https://hatber.ru/upload/iblock/79b/nhnvm63h9ioz90m9bj1v3vliwqyni2k1.jpg"
-                 alt="A4"
-                 onerror="this.style.display='none'">
-            <h1>Влад Бумага</h1>
-            <div class="hero-sub">Самый популярный блогер</div>
-        </div>
-
-        <div class="block">
-            <h3>📊 Кратко</h3>
-            <ul>
-                <li><b>Родился:</b> 5 июня 1996, Минск</li>
-                <li><b>Канал:</b> 2014</li>
-                <li><b>Подписчики:</b> 10M+</li>
-            </ul>
-        </div>
-
-        <div class="block">
-            <h3>📖 Кто это</h3>
-            <p>Влад Бумага — популярный русскоязычный видеоблогер. Псевдоним «А4» — отсылка к формату бумажного листа.</p>
-        </div>
-
-        <div class="btn-row">
-            <a class="btn" href="https://www.youtube.com/@A4" target="_blank" rel="noopener">▶ YouTube</a>
-            <a class="btn btn-outline" href="https://vk.com/a4" target="_blank" rel="noopener">🔵 ВК</a>
-        </div>
+    <div class="bottom">
+      <div class="qr"></div>
+      <div class="stop">
+        <div>Дополнительные сведения об этой проблеме и возможные решения:</div>
+        <div>https://www.windows.com/stopcode</div>
+        <div style="margin-top:10px;">Если вы обратитесь в службу поддержки, сообщите им следующие сведения:</div>
+        <div><b>Код остановки:</b> CRITICAL_PROCESS_DIED</div>
+      </div>
     </div>
+  </div>
 
-    <!-- 🏆 ГАГАРИН -->
-    <div class="page" id="page-gagarin">
-        <div class="hero">
-            <div class="hero-emoji">🏆</div>
-            <h1>Кубок Гагарина</h1>
-            <div class="hero-sub">Олимпиада школьников</div>
+  <!-- ПЕРВОЕ ОКНО -->
+  <div id="errorWin1" class="errorWin">
+    <div class="win">
+      <div class="win-bar">
+        <div class="icon">⛭</div>
+        <div class="t">Мастер установки "КриптоАРМ"</div>
+        <button class="x" onclick="showHackWindow()">✕</button>
+      </div>
+      <div class="win-body">
+        <div class="win-msg">
+          <div class="warn-icon">!</div>
+          <div>
+            Ошибка пакета Windows Installer. Непредвиденное
+            завершение программы, являющейся частью установки.
+            Обратитесь к техническому персоналу или к поставщику пакета.
+          </div>
         </div>
-
-        <div class="block">
-            <h3>🏆 Кубок Гагарина 2026</h3>
-            <p>Олимпиада школьников <b>1–8 классов</b> — все школы Республики Башкортостан.</p>
-        </div>
-
-        <div class="block">
-            <h3>📋 Информация</h3>
-            <ul>
-                <li>📅 <b>Регистрация:</b> 1 сент — 31 окт</li>
-                <li>🏫 <b>Место:</b> все школы РБ</li>
-                <li>👨‍🎓 <b>Кто:</b> 1–8 классы</li>
-            </ul>
-        </div>
+      </div>
+      <div class="win-foot">
+        <button class="ok-btn" onclick="showHackWindow()">ОК</button>
+      </div>
     </div>
+  </div>
 
-    <!-- 🌙 ЛУНОМОСИК -->
-    <div class="page" id="page-luna">
-        <div class="hero">
-            <div class="hero-emoji">🌙</div>
-            <h1>Луномосик</h1>
-            <div class="hero-sub">Прямой эфир</div>
+  <!-- ВТОРОЕ ОКНО -->
+  <div id="errorWin2" class="errorWin">
+    <div class="win">
+      <div class="win-bar">
+        <div class="icon">⛭</div>
+        <div class="t">Мастер установки "КриптоАРМ"</div>
+        <button class="x" onclick="startWin7Boot()">✕</button>
+      </div>
+      <div class="win-body">
+        <div class="win-msg">
+          <div class="warn-icon">!</div>
+          <div>
+            <b>ВНИМАНИЕ! ВЗЛОМ!</b><br><br>
+            Мы взломали ваш Сбербанк и Госуслуги. 
+            Все ваши данные скомпрометированы.
+          </div>
         </div>
-
-        <div class="video-wrapper">
-            <iframe
-                src="https://vk.com/video_ext.php?oid=-107101070&id=456243981&hd=2"
-                allow="autoplay; encrypted-media; fullscreen"
-                allowfullscreen
-                frameborder="0">
-            </iframe>
-        </div>
-
-        <div class="btn-row">
-            <a class="btn btn-outline"
-               href="https://vkvideo.ru/video-107101070_456243981?pl=-107101070_6&t=22m45s"
-               target="_blank" rel="noopener">
-                ▶ Открыть в ВК
-            </a>
-        </div>
+      </div>
+      <div class="win-foot">
+        <button class="ok-btn" onclick="startWin7Boot()">ОК</button>
+      </div>
     </div>
+  </div>
 
-    <!-- ⚙️ НАСТРОЙКИ -->
-    <div class="page" id="page-settings">
-        <div class="hero">
-            <div class="hero-emoji">⚙️</div>
-            <h1>Настройки</h1>
-            <div class="hero-sub">Персонализация</div>
-        </div>
-
-        <div class="settings-row" style="flex-direction: column; align-items: flex-start;">
-            <span class="settings-label">🔤 Шрифт сайта</span>
-            <div class="font-picker" id="fontPicker">
-                <div class="font-option active" data-font="system">Обычный</div>
-                <div class="font-option font-serif" data-font="serif">Serif</div>
-                <div class="font-option font-mono" data-font="mono">Mono</div>
-                <div class="font-option font-comic" data-font="comic">Comic</div>
-            </div>
-        </div>
-
-        <div class="settings-row">
-            <span class="settings-label">🔤 Размер текста</span>
-            <div class="btn-row">
-                <button class="btn btn-outline" id="fontDown">А−</button>
-                <span class="settings-value" id="fontValue">100%</span>
-                <button class="btn btn-outline" id="fontUp">А+</button>
-            </div>
-        </div>
-
-        <div class="settings-row">
-            <span class="settings-label">🖥 Режим ПК</span>
-            <button class="btn btn-outline" id="pcToggleSettings">Вкл</button>
-        </div>
-
-        <div class="settings-row">
-            <span class="settings-label">🔴 Режим А4</span>
-            <button class="btn btn-outline" id="a4ToggleSettings">Вкл</button>
-        </div>
-
-        <div class="settings-row">
-            <span class="settings-label">🔄 Сброс</span>
-            <button class="btn btn-danger" id="restartBrowser">Сбросить</button>
-        </div>
-
-        <div class="block">
-            <h3>🛠 Разработчик</h3>
-            <button class="btn btn-outline" id="devModeBtn">🔓 Войти</button>
-        </div>
-
-        <div class="block">
-            <h3>ℹ️ О сайте</h3>
-            <p>Кумертау · 2026</p>
-        </div>
+  <!-- ЗАГРУЗКА WINDOWS 7 -->
+  <div id="win7boot">
+    <div class="win7-logo">
+      <div class="w"><span></span><span></span><span></span><span></span></div>
+      <div class="txt">
+        Windows 7
+        <small>ЗАПУСК WINDOWS</small>
+      </div>
     </div>
-
-    <!-- 🛠 DEV -->
-    <div class="page" id="page-dev">
-        <div class="hero">
-            <div class="hero-emoji">🛠</div>
-            <h1>Разработчик</h1>
-            <div class="hero-sub">Служебная панель</div>
-        </div>
-
-        <div class="dev-panel">
-            <h3>🎮 Управление</h3>
-            <div class="btn-row">
-                <button class="btn btn-green" id="devReload">🔄</button>
-                <button class="btn btn-outline" id="devPC">🖥 ПК</button>
-                <button class="btn btn-outline" id="devA4">🔴 А4</button>
-                <button class="btn btn-outline" id="devClearFav">🗑</button>
-                <button class="btn btn-outline" id="devAlert">📢</button>
-                <button class="btn btn-danger" id="devClearAll">💥</button>
-            </div>
-        </div>
-
-        <div class="dev-panel">
-            <h3>📋 Информация</h3>
-            <p>Пароль: <b style="color:var(--neon-green);">520667</b></p>
-            <p>View: <b id="devViewMode" style="color:var(--neon-green);">📱</b></p>
-            <p>A4: <b id="devA4Mode" style="color:var(--neon-green);">выкл</b></p>
-        </div>
-
-        <button class="btn btn-danger" id="devExitBtn">Выйти</button>
+    <div class="win7-status">Загрузка...</div>
+    <div class="dots-load">
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
+  </div>
 
-    <!-- ⭐ ИЗБРАННОЕ -->
-    <div class="page" id="page-fav">
-        <div class="hero">
-            <div class="hero-emoji">⭐</div>
-            <h1>Избранное</h1>
-            <div class="hero-sub">Твои заметки</div>
-        </div>
-
-        <div class="block">
-            <h3>➕ Добавить</h3>
-            <textarea class="fav-input" id="favInput" placeholder="Текст или заметка..."></textarea>
-            <div class="btn-row">
-                <button class="btn" id="favAddBtn">➕</button>
-                <button class="btn btn-outline" id="favClearBtn">🗑</button>
-            </div>
-        </div>
-
-        <div id="favList"></div>
-    </div>
-
-    <!-- 🔍 ПОИСК -->
-    <div class="page" id="page-search">
-        <div class="hero">
-            <div class="hero-emoji">🔍</div>
-            <h1>Поиск</h1>
-            <div class="hero-sub">Введи запрос сверху</div>
-        </div>
-        <div id="searchResults"></div>
-    </div>
-
-    <!-- САЙДБАР ПК -->
-    <aside class="pc-sidebar">
-        <div class="winter-side">
-            <h3>❄ Ждём зиму</h3>
-            <p>Осень 2026 · Кумертау</p>
-        </div>
-
-        <div class="sidebar-card pc-nav">
-            <h4>📖 Навигация</h4>
-            <div class="nav-item active" data-target="home">
-                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
-                <span>Главная</span>
-            </div>
-            <div class="nav-item" data-target="search">
-                <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></div>
-                <span>Поиск</span>
-            </div>
-            <div class="nav-item" data-target="fav">
-                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
-                <span>Избранное</span>
-            </div>
-            <div class="nav-item" data-target="settings">
-                <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>
-                <span>Настройки</span>
-            </div>
-        </div>
-
-        <div class="sidebar-card">
-            <h4>🍁 Разделы</h4>
-            <a class="item" data-page="a4">🔴 Блогер А4</a>
-            <a class="item" data-page="gagarin">🏆 Кубок Гагарина</a>
-            <a class="item" data-page="luna">🌙 Луномосик</a>
-        </div>
-    </aside>
-
-</div>
-
-<!-- МЕНЮ СНИЗУ -->
-<nav class="bottom-nav">
-    <div class="nav-item active" data-target="home">
-        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
-        <span>Главная</span>
-    </div>
-    <div class="nav-item" data-target="search">
-        <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></div>
-        <span>Поиск</span>
-    </div>
-    <div class="nav-item" data-target="fav">
-        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
-        <span>Избранное</span>
-    </div>
-    <div class="nav-item" data-target="settings">
-        <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6"/></svg></div>
-        <span>Настройки</span>
-    </div>
-</nav>
-
-<!-- ПАРОЛЬ -->
-<div class="lock-screen" id="lockScreen">
-    <div class="lock-box">
-        <h2>🔐 Пароль</h2>
-        <input type="password" class="lock-input" id="lockInput" maxlength="6" inputmode="numeric" placeholder="••••••">
-        <div class="lock-error" id="lockError"></div>
-        <div class="btn-row" style="justify-content:center;">
-            <button class="btn" id="lockOk">Войти</button>
-            <button class="btn btn-outline" id="lockCancel">Отмена</button>
-        </div>
-    </div>
-</div>
-
-<footer>
-    🚀 Кумертау · 2026 · РУ СИК
-</footer>
+  <!-- БЕСКОНЕЧНЫЕ ОКНА -->
+  <div id="errorSpam"></div>
 
 <script>
-    const ARTICLES = [
-        { id: 'a4',       ico: '🔴', title: 'Блогер А4',       desc: 'Влад Бумага' },
-        { id: 'gagarin',  ico: '🏆', title: 'Кубок Гагарина',  desc: 'Олимпиада 1–8 классов' },
-        { id: 'luna',     ico: '🌙', title: 'Луномосик',       desc: 'Прямой эфир' },
-        { id: 'settings', ico: '⚙️', title: 'Настройки',       desc: 'Шрифт, режимы' }
-    ];
+  /* ============ УЖАСНЫЙ ДОЛГИЙ ЗВУК (Web Audio) ============ */
+  let audioCtx = null;
 
-    const DEV_PASSWORD = "520667";
-
-    let favorites = JSON.parse(localStorage.getItem('kumertau_favs') || '[]');
-    let devMode = false;
-    let fontScale = parseFloat(localStorage.getItem('kumertau_font') || '1');
-    let mainFont = localStorage.getItem('kumertau_mainfont') || 'system';
-    let pcMode = localStorage.getItem('kumertau_pc') === 'true';
-    let a4Mode = localStorage.getItem('kumertau_a4') === 'true';
-
-    window.addEventListener('load', () => {
-        if (a4Mode) {
-            document.getElementById('preloader').classList.add('hide');
-            document.getElementById('preloaderA4').classList.add('show');
-            setTimeout(() => {
-                document.getElementById('preloaderA4').classList.add('hide');
-            }, 1800);
-        } else {
-            document.getElementById('preloaderA4').classList.add('hide');
-            setTimeout(() => {
-                document.getElementById('preloader').classList.add('hide');
-            }, 1400);
-        }
-    });
-
-    function showPage(name) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const page = document.getElementById('page-' + name);
-        if (page) page.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        document.querySelectorAll('.nav-item').forEach(i => {
-            if (i.dataset.target === name) i.classList.add('active');
-            else i.classList.remove('active');
-        });
+  function initAudio() {
+    if (!audioCtx) {
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) {}
     }
-    window.showPage = showPage;
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  document.addEventListener('click', initAudio, { once: true });
 
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const t = item.dataset.target;
-            if (t === 'search') { showPage('search'); document.getElementById('searchInput').focus(); }
-            else if (t === 'fav') { showPage('fav'); renderFavorites(); }
-            else showPage(t);
-        });
-    });
+  function playHorrorSound() {
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    const dur = 3.5;                       /* долгий — 3.5 сек */
 
-    document.querySelectorAll('.card[data-page]').forEach(card => {
-        card.addEventListener('click', () => showPage(card.dataset.page));
-    });
+    /* Низкий гул */
+    const bass = audioCtx.createOscillator();
+    const bassGain = audioCtx.createGain();
+    bass.type = 'sawtooth';
+    bass.frequency.setValueAtTime(110, t);
+    bass.frequency.exponentialRampToValueAtTime(38, t + dur);
 
-    document.querySelectorAll('.sidebar-card .item[data-page]').forEach(item => {
-        item.addEventListener('click', () => showPage(item.dataset.page));
-    });
+    /* Дребезг: быстрая модуляция частоты */
+    const lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+    lfo.type = 'square';
+    lfo.frequency.value = 22;
+    lfoGain.gain.value = 45;
+    lfo.connect(lfoGain).connect(bass.frequency);
 
-    // ПОИСК
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', () => {
-        const q = searchInput.value.trim().toLowerCase();
-        const results = document.getElementById('searchResults');
-        if (q.length === 0) {
-            results.innerHTML = '<div class="empty"><div class="empty-emoji">🔍</div>Введи запрос...</div>';
-            return;
-        }
-        const found = ARTICLES.filter(a =>
-            a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q)
-        );
-        if (found.length === 0) {
-            results.innerHTML = '<div class="empty"><div class="empty-emoji">😕</div>Ничего не найдено</div>';
-            return;
-        }
-        results.innerHTML = found.map(a => `
-            <div class="card" data-page="${a.id}">
-                <div class="card-title"><span class="ico">${a.ico}</span> ${a.title}</div>
-                <div class="card-desc">${a.desc}</div>
-            </div>
-        `).join('');
-        results.querySelectorAll('.card').forEach(c => {
-            c.addEventListener('click', () => showPage(c.dataset.page));
-        });
-    });
+    /* Визг поверх */
+    const scream = audioCtx.createOscillator();
+    const screamGain = audioCtx.createGain();
+    scream.type = 'sawtooth';
+    scream.frequency.setValueAtTime(1800, t);
+    scream.frequency.linearRampToValueAtTime(320, t + dur);
 
-    // ШРИФТ
-    function applyMainFont() {
-        const fonts = {
-            system: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            serif: 'Georgia, "Times New Roman", serif',
-            mono: '"Courier New", monospace',
-            comic: '"Comic Sans MS", cursive, sans-serif'
-        };
-        document.documentElement.style.setProperty('--main-font', fonts[mainFont] || fonts.system);
-        document.querySelectorAll('.font-option').forEach(opt => {
-            if (opt.dataset.font === mainFont) opt.classList.add('active');
-            else opt.classList.remove('active');
-        });
-        localStorage.setItem('kumertau_mainfont', mainFont);
+    /* Искажение */
+    const shaper = audioCtx.createWaveShaper();
+    const curve = new Float32Array(1024);
+    for (let i = 0; i < 1024; i++) {
+      const x = i * 2 / 1024 - 1;
+      curve[i] = Math.tanh(x * 6);          /* жёсткий клиппинг */
     }
+    shaper.curve = curve;
 
-    document.querySelectorAll('.font-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-            mainFont = opt.dataset.font;
-            applyMainFont();
-        });
-    });
+    /* Громкость */
+    bassGain.gain.setValueAtTime(0, t);
+    bassGain.gain.linearRampToValueAtTime(0.28, t + 0.05);
+    bassGain.gain.linearRampToValueAtTime(0.28, t + dur - 0.4);
+    bassGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
 
-    function applyFontSize() {
-        document.documentElement.style.setProperty('--font-scale', fontScale);
-        document.getElementById('fontValue').textContent = Math.round(fontScale * 100) + '%';
-        localStorage.setItem('kumertau_font', fontScale);
+    screamGain.gain.setValueAtTime(0, t);
+    screamGain.gain.linearRampToValueAtTime(0.12, t + 0.05);
+    screamGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    bass.connect(shaper);
+    scream.connect(shaper);
+    shaper.connect(bassGain);
+    bassGain.connect(audioCtx.destination);
+
+    bass.start(t); bass.stop(t + dur + 0.05);
+    lfo.start(t);  lfo.stop(t + dur + 0.05);
+    scream.start(t); scream.stop(t + dur + 0.05);
+  }
+
+  /* ============ 1. СИНИЙ ЭКРАН ============ */
+  let p = 0;
+  const el = document.getElementById('percent');
+  const timer = setInterval(() => {
+    p += Math.floor(Math.random() * 5) + 2;
+    if (p >= 100) {
+      p = 100;
+      el.textContent = p + '% завершено';
+      clearInterval(timer);
+      setTimeout(() => {
+        document.getElementById('errorWin1').classList.add('show');
+      }, 400);
+    } else {
+      el.textContent = p + '% завершено';
     }
+  }, 180);
 
-    document.getElementById('fontUp').addEventListener('click', () => {
-        fontScale = Math.min(1.5, fontScale + 0.1);
-        applyFontSize();
-    });
-    document.getElementById('fontDown').addEventListener('click', () => {
-        fontScale = Math.max(0.8, fontScale - 0.1);
-        applyFontSize();
-    });
+  /* ============ 2. ПЕРВОЕ → ВТОРОЕ ============ */
+  function showHackWindow() {
+    document.getElementById('errorWin1').classList.remove('show');
+    document.getElementById('errorWin2').classList.add('show');
+  }
 
-    // ИЗБРАННОЕ
-    function renderFavorites() {
-        const list = document.getElementById('favList');
-        if (favorites.length === 0) {
-            list.innerHTML = '<div class="empty"><div class="empty-emoji">⭐</div>Пока пусто</div>';
-            return;
-        }
-        list.innerHTML = favorites.map((f, i) => `
-            <div class="fav-item">
-                <div class="fav-item-text">${escapeHtml(f)}</div>
-                <button class="fav-item-del" data-index="${i}">✕</button>
-            </div>
-        `).join('');
-        list.querySelectorAll('.fav-item-del').forEach(btn => {
-            btn.addEventListener('click', () => {
-                favorites.splice(parseInt(btn.dataset.index), 1);
-                localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
-                renderFavorites();
-            });
-        });
-    }
+  /* ============ 3. ВТОРОЕ → ЗАГРУЗКА ============ */
+  function startWin7Boot() {
+    document.getElementById('errorWin2').classList.remove('show');
+    const boot = document.getElementById('win7boot');
+    boot.classList.add('show');
 
-    function escapeHtml(s) {
-        return String(s).replace(/[&<>"']/g, c => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        }[c]));
-    }
+    setTimeout(() => {
+      boot.classList.remove('show');
+      startErrorSpam();
+    }, 5000);
+  }
 
-    document.getElementById('favAddBtn').addEventListener('click', () => {
-        const val = document.getElementById('favInput').value.trim();
-        if (!val) return;
-        favorites.push(val);
-        localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
-        document.getElementById('favInput').value = '';
-        renderFavorites();
-    });
+  /* ============ 4. БЕСКОНЕЧНЫЕ ОКНА (БЫСТРО) ============ */
+  const spam = document.getElementById('errorSpam');
 
-    document.getElementById('favClearBtn').addEventListener('click', () => {
-        if (confirm('Удалить все записи?')) {
-            favorites = [];
-            localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
-            renderFavorites();
-        }
-    });
+  const titles = [
+    'Ошибка приложения',
+    'Windows Script Host',
+    'System Error',
+    'Ошибка в программе',
+    'Windows Installer',
+    'Microsoft Visual C++ Runtime Library',
+    'rundll32.exe — ошибка',
+    'explorer.exe — ошибка',
+    'Сбой приложения',
+    'Критическая ошибка'
+  ];
 
-    // ПК
-    function applyPC() {
-        if (pcMode) {
-            document.body.classList.add('pc-mode');
-            document.getElementById('pcToggle').classList.add('active');
-            const btn2 = document.getElementById('pcToggleSettings');
-            if (btn2) btn2.textContent = 'Выкл';
-            const dev = document.getElementById('devViewMode');
-            if (dev) dev.textContent = '🖥 ПК';
-        } else {
-            document.body.classList.remove('pc-mode');
-            document.getElementById('pcToggle').classList.remove('active');
-            const btn2 = document.getElementById('pcToggleSettings');
-            if (btn2) btn2.textContent = 'Вкл';
-            const dev = document.getElementById('devViewMode');
-            if (dev) dev.textContent = '📱 моб';
-        }
-        localStorage.setItem('kumertau_pc', pcMode ? 'true' : 'false');
-    }
+  const messages = [
+    'Инструкция по адресу "0x00007FF..." обратилась к памяти по адресу "0x00000000". Память не может быть прочитана.',
+    'Не удалось выполнить программу. Приложение будет закрыто.',
+    'Windows обнаружила неисправность и должна закрыть программу.',
+    'Программа не отвечает. Завершить работу приложения?',
+    'Произошла ошибка при обращении к реестру Windows.',
+    'Не найден указанный модуль. Переустановите программу.',
+    'Сбой в модуле ntdll.dll. Код ошибки 0xc0000005.',
+    'Ошибка 0x8007000E: недостаточно памяти для выполнения операции.',
+    'Не удалось запустить службу. Код ошибки 1053.',
+    'Критическая ошибка: система будет перезагружена.'
+  ];
 
-    document.getElementById('pcToggle').addEventListener('click', () => {
-        pcMode = !pcMode;
-        applyPC();
-    });
+  let spawnCount = 0;
 
-    const pcToggleSettings = document.getElementById('pcToggleSettings');
-    if (pcToggleSettings) pcToggleSettings.addEventListener('click', () => {
-        pcMode = !pcMode;
-        applyPC();
-    });
+  function startErrorSpam() {
+    spam.classList.add('show');
+    /* Мгновенно заполняем экран */
+    for (let i = 0; i < 6; i++) spawnPopup();
+    /* И дальше — очень часто */
+    setInterval(spawnPopup, 120);
+  }
 
-    // А4
-    function applyA4() {
-        if (a4Mode) {
-            document.body.classList.add('a4-mode');
-            const btn2 = document.getElementById('a4ToggleSettings');
-            if (btn2) btn2.textContent = 'Выкл';
-            const dev = document.getElementById('devA4Mode');
-            if (dev) dev.textContent = 'ВКЛ';
-        } else {
-            document.body.classList.remove('a4-mode');
-            const btn2 = document.getElementById('a4ToggleSettings');
-            if (btn2) btn2.textContent = 'Вкл';
-            const dev = document.getElementById('devA4Mode');
-            if (dev) dev.textContent = 'выкл';
-        }
-        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
-    }
+  function spawnPopup() {
+    spawnCount++;
+    if (spawnCount > 400) return;   /* защита от зависания браузера */
 
-    document.getElementById('a4Btn').addEventListener('click', () => {
-        a4Mode = !a4Mode;
-        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
-        location.reload();
-    });
+    const w = document.createElement('div');
+    w.className = 'popup-win';
 
-    const a4ToggleSettings = document.getElementById('a4ToggleSettings');
-    if (a4ToggleSettings) a4ToggleSettings.addEventListener('click', () => {
-        a4Mode = !a4Mode;
-        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
-        location.reload();
-    });
+    const maxX = Math.max(0, window.innerWidth  - 350);
+    const maxY = Math.max(0, window.innerHeight - 140);
+    w.style.left = Math.floor(Math.random() * maxX) + 'px';
+    w.style.top  = Math.floor(Math.random() * maxY) + 'px';
 
-    document.getElementById('restartBrowser').addEventListener('click', () => {
-        if (confirm('Сбросить всё?')) {
-            localStorage.clear();
-            location.reload();
-        }
-    });
+    const title = titles[Math.floor(Math.random() * titles.length)];
+    const msg   = messages[Math.floor(Math.random() * messages.length)];
 
-    const devPC = document.getElementById('devPC');
-    if (devPC) devPC.addEventListener('click', () => { pcMode = !pcMode; applyPC(); });
+    w.innerHTML = `
+      <div class="bar">
+        <div class="ic">✕</div>
+        <div class="tt">${title}</div>
+        <button class="bx" onclick="closePopup(this)">✕</button>
+      </div>
+      <div class="body">
+        <div class="wicon">!</div>
+        <div>${msg}</div>
+      </div>
+      <div class="foot">
+        <button class="ok" onclick="closePopup(this)">ОК</button>
+      </div>
+    `;
 
-    const devA4 = document.getElementById('devA4');
-    if (devA4) devA4.addEventListener('click', () => {
-        a4Mode = !a4Mode;
-        localStorage.setItem('kumertau_a4', a4Mode ? 'true' : 'false');
-        location.reload();
-    });
+    spam.appendChild(w);
+    playHorrorSound();
+  }
 
-    // DEV
-    const lockScreen = document.getElementById('lockScreen');
-    const lockInput = document.getElementById('lockInput');
-    const lockError = document.getElementById('lockError');
-
-    document.getElementById('devModeBtn').addEventListener('click', () => {
-        lockScreen.classList.add('show');
-        lockInput.value = '';
-        lockError.textContent = '';
-        lockInput.focus();
-    });
-
-    document.getElementById('lockCancel').addEventListener('click', () => {
-        lockScreen.classList.remove('show');
-    });
-
-    document.getElementById('lockOk').addEventListener('click', checkPassword);
-    lockInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') checkPassword();
-    });
-
-    function checkPassword() {
-        if (lockInput.value === DEV_PASSWORD) {
-            devMode = true;
-            lockScreen.classList.remove('show');
-            showPage('dev');
-        } else {
-            lockError.textContent = '❌ Неверный пароль';
-            lockInput.value = '';
-        }
-    }
-
-    document.getElementById('devExitBtn').addEventListener('click', () => {
-        devMode = false;
-        showPage('settings');
-    });
-
-    document.getElementById('devReload').addEventListener('click', () => location.reload());
-
-    document.getElementById('devClearFav').addEventListener('click', () => {
-        favorites = [];
-        localStorage.setItem('kumertau_favs', JSON.stringify(favorites));
-        renderFavorites();
-        alert('✅ Избранное очищено');
-    });
-
-    document.getElementById('devAlert').addEventListener('click', () => {
-        alert('📢 Тестовое уведомление!');
-    });
-
-    document.getElementById('devClearAll').addEventListener('click', () => {
-        if (confirm('💥 Сбросить ВСЕ данные?')) {
-            localStorage.clear();
-            location.reload();
-        }
-    });
-
-    // ☕ ЧАЙ
-    function updateTeaTime() {
-        const now = new Date();
-        const current = now.getHours() + now.getMinutes() / 60;
-        const teaTimes = [
-            { hour: 7, end: 7.5 },
-            { hour: 16, end: 16.5 },
-            { hour: 18.5, end: 19 },
-            { hour: 20, end: 20.5 }
-        ];
-        document.querySelectorAll('.tea-time').forEach(el => {
-            const h = parseFloat(el.dataset.hour);
-            let isCurrent = false;
-            teaTimes.forEach(t => {
-                if (h === t.hour && current >= t.hour && current < t.end) {
-                    isCurrent = true;
-                }
-            });
-            if (isCurrent) el.classList.add('current');
-            else el.classList.remove('current');
-        });
-    }
-
-    // СТАРТ
-    applyMainFont();
-    applyFontSize();
-    applyPC();
-    applyA4();
-    showPage('home');
-    renderFavorites();
-    updateTeaTime();
-    setInterval(updateTeaTime, 60000);
-
-    document.getElementById('searchResults').innerHTML =
-        '<div class="empty"><div class="empty-emoji">🔍</div>Введи запрос</div>';
+  function closePopup(btn) {
+    const w = btn.closest('.popup-win');
+    if (w) w.remove();
+    /* Почти мгновенно новое */
+    setTimeout(spawnPopup, 30);
+  }
 </script>
 
 </body>
