@@ -17,87 +17,43 @@
   /* ================= СИНИЙ ЭКРАН ================= */
   #bsod {
     position: fixed; inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6vh 6vw;
-    background: #0078d7;
-    z-index: 10;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 6vh 6vw; background: #0078d7; z-index: 10;
   }
-  .face {
-    font-size: clamp(70px, 18vw, 140px);
-    line-height: 1;
-    margin-bottom: 24px;
-    font-weight: 300;
-  }
-  .title {
-    font-size: clamp(20px, 5vw, 30px);
-    font-weight: 300;
-    margin-bottom: 26px;
-    line-height: 1.3;
-  }
-  .text {
-    font-size: clamp(13px, 3.4vw, 17px);
-    line-height: 1.5;
-    max-width: 760px;
-    margin-bottom: 26px;
-    opacity: .95;
-  }
-  .percent {
-    font-size: clamp(14px, 3.5vw, 18px);
-    margin-bottom: 30px;
-    opacity: .95;
-  }
-  .bottom {
-    display: flex;
-    gap: 26px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    font-size: clamp(11px, 2.8vw, 14px);
-    opacity: .9;
-  }
+  .face { font-size: clamp(70px, 18vw, 140px); line-height: 1; margin-bottom: 24px; font-weight: 300; }
+  .title { font-size: clamp(20px, 5vw, 30px); font-weight: 300; margin-bottom: 26px; line-height: 1.3; }
+  .text { font-size: clamp(13px, 3.4vw, 17px); line-height: 1.5; max-width: 760px; margin-bottom: 26px; opacity: .95; }
+  .percent { font-size: clamp(14px, 3.5vw, 18px); margin-bottom: 30px; opacity: .95; }
+  .bottom { display: flex; gap: 26px; align-items: flex-start; flex-wrap: wrap; font-size: clamp(11px, 2.8vw, 14px); opacity: .9; }
   .qr {
     width: 84px; height: 84px;
-    background:
-      linear-gradient(90deg, #fff 50%, #0078d7 50%) 0 0 / 12px 12px,
-      linear-gradient(#fff 50%, #0078d7 50%) 0 0 / 12px 12px;
-    border: 6px solid #fff;
-    flex-shrink: 0;
+    background: linear-gradient(90deg, #fff 50%, #0078d7 50%) 0 0 / 12px 12px, linear-gradient(#fff 50%, #0078d7 50%) 0 0 / 12px 12px;
+    border: 6px solid #fff; flex-shrink: 0;
   }
   .stop { line-height: 1.5; }
   .stop b { font-weight: 600; }
 
   /* ================= ОКНА ОШИБКИ ================= */
   .errorWin {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.45);
-    display: none;
-    align-items: center; justify-content: center;
-    z-index: 100;
-    padding: 16px;
+    position: fixed; inset: 0; background: rgba(0,0,0,.45);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 16px;
   }
   .errorWin.show { display: flex; }
 
   .win {
-    width: min(420px, 92vw);
-    background: #f0f0f0;
-    border: 1px solid #999;
-    border-radius: 3px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.45);
-    overflow: hidden;
-    color: #000;
+    width: min(420px, 92vw); background: #f0f0f0; border: 1px solid #999;
+    border-radius: 3px; box-shadow: 0 8px 30px rgba(0,0,0,.45);
+    overflow: hidden; color: #000;
   }
   .win-bar {
-    display: flex; align-items: center; gap: 8px;
-    padding: 7px 10px;
-    background: linear-gradient(#fdfdfd, #e8e8e8);
-    border-bottom: 1px solid #d0d0d0;
-    font-size: 13px;
+    display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+    background: linear-gradient(#fdfdfd, #e8e8e8); border-bottom: 1px solid #d0d0d0;
+    font-size: 13px; user-select: none;
   }
   .win-bar .icon {
-    width: 16px; height: 16px; flex-shrink: 0;
-    background: #4a90d9; border-radius: 2px;
-    display: flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; flex-shrink: 0; background: #4a90d9;
+    border-radius: 2px; display: flex; align-items: center; justify-content: center;
     font-size: 11px; color: #fff;
   }
   .win-bar .t { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -108,67 +64,52 @@
   .win-bar .x:hover { background: #e81123; color: #fff; }
 
   .win-body { padding: 20px 18px 10px; }
-  .win-msg {
-    display: flex; gap: 14px; align-items: flex-start;
-    font-size: 13px; line-height: 1.5;
-  }
+  .win-msg { display: flex; gap: 14px; align-items: flex-start; font-size: 13px; line-height: 1.5; }
   .warn-icon {
-    width: 34px; height: 34px; flex-shrink: 0;
-    background: #ffd54d; border: 2px solid #b38b00; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; font-weight: bold; color: #7a5c00;
+    width: 34px; height: 34px; flex-shrink: 0; background: #ffd54d;
+    border: 2px solid #b38b00; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #7a5c00;
   }
-  .win-foot {
-    display: flex; justify-content: center;
-    padding: 18px 18px 20px;
-  }
+  .win-foot { display: flex; justify-content: center; padding: 18px 18px 20px; }
   .ok-btn {
-    min-width: 110px; padding: 6px 18px;
-    font-family: inherit; font-size: 13px;
-    background: #e1e1e1; border: 1px solid #adadad;
-    border-radius: 2px; cursor: pointer;
+    min-width: 110px; padding: 6px 18px; font-family: inherit; font-size: 13px;
+    background: #e1e1e1; border: 1px solid #adadad; border-radius: 2px; cursor: pointer;
   }
   .ok-btn:hover { background: #d5d5d5; }
   .ok-btn:active { background: #c8c8c8; }
 
-  /* ================= ЗАГРУЗКА WINDOWS 7 ================= */
-  #win7boot {
+  /* ================= КОСМОС + WIN7 + ОШИБКИ ================= */
+  #spacePhase {
     position: fixed; inset: 0;
-    background: #000;
     display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    background:
+      radial-gradient(circle at 20% 10%, #2a1a6b 0%, transparent 55%),
+      radial-gradient(circle at 85% 90%, #6b1a5a 0%, transparent 55%),
+      radial-gradient(circle at 50% 50%, #0d1b3a 0%, #05060f 70%, #000 100%);
     z-index: 300;
-    color: #cfd8e8;
-    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    overflow: hidden;
   }
-  #win7boot.show { display: flex; }
+  #spacePhase.show { display: block; }
+
+  .win7-boot-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #cfd8e8;
+  }
 
   .win7-logo {
-    text-align: center;
-    margin-bottom: 46px;
-    font-size: clamp(26px, 7vw, 38px);
-    font-weight: 300;
-    letter-spacing: 1px;
+    text-align: center; margin-bottom: 46px;
+    font-size: clamp(26px, 7vw, 38px); font-weight: 300; letter-spacing: 1px;
   }
-  .win7-logo .w {
-    display: flex; justify-content: center; gap: 6px; margin-bottom: 12px;
-  }
-  .win7-logo .w span {
-    width: clamp(14px, 4vw, 20px);
-    height: clamp(14px, 4vw, 20px);
-    display: block;
-  }
+  .win7-logo .w { display: flex; justify-content: center; gap: 6px; margin-bottom: 12px; }
+  .win7-logo .w span { width: clamp(14px, 4vw, 20px); height: clamp(14px, 4vw, 20px); display: block; }
   .win7-logo .w span:nth-child(1) { background: #f65314; }
   .win7-logo .w span:nth-child(2) { background: #7cbb00; }
   .win7-logo .w span:nth-child(3) { background: #00a1f1; }
   .win7-logo .w span:nth-child(4) { background: #ffbb00; }
   .win7-logo .txt { color: #fff; }
-  .win7-logo .txt small {
-    display: block; font-size: 12px; color: #9fb0c8;
-    letter-spacing: 2px; margin-top: 6px;
-  }
+  .win7-logo .txt small { display: block; font-size: 12px; color: #9fb0c8; letter-spacing: 2px; margin-top: 6px; }
+
   .win7-status { font-size: 13px; color: #a7b6cc; margin-bottom: 22px; }
   .dots-load { display: flex; gap: 8px; }
   .dots-load span {
@@ -179,79 +120,102 @@
   .dots-load span:nth-child(3) { animation-delay: .3s; }
   .dots-load span:nth-child(4) { animation-delay: .45s; }
   .dots-load span:nth-child(5) { animation-delay: .6s; }
-  @keyframes dotPulse {
-    0%, 80%, 100% { opacity: .2; transform: scale(.8); }
-    40%           { opacity: 1; transform: scale(1.2); }
-  }
+  @keyframes dotPulse { 0%, 80%, 100% { opacity: .2; transform: scale(.8); } 40% { opacity: 1; transform: scale(1.2); } }
 
-  /* ================= БЕСКОНЕЧНЫЕ ОКНА ================= */
-  #errorSpam {
-    position: fixed; inset: 0;
-    display: none;
-    z-index: 400;
-    background: rgba(0,0,0,.35);
-    overflow: hidden;
-  }
-  #errorSpam.show { display: block; }
-
+  /* Окна ошибок поверх космоса */
   .popup-win {
-    position: absolute;
-    width: 340px;
-    max-width: 90vw;
-    background: #f0f0f0;
-    border: 1px solid #999;
-    border-radius: 3px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.5);
-    color: #000;
-    animation: popIn .08s ease-out;
+    position: absolute; width: 340px; max-width: 90vw;
+    background: #f0f0f0; border: 1px solid #999; border-radius: 3px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.7); color: #000;
+    animation: popIn .05s ease-out;
   }
-  @keyframes popIn {
-    from { transform: scale(.92); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
-  }
-
-  .popup-win .bar {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 8px;
-    background: linear-gradient(#fdfdfd, #e8e8e8);
-    border-bottom: 1px solid #d0d0d0;
-    font-size: 12px;
-  }
-  .popup-win .bar .ic {
-    width: 16px; height: 16px; flex-shrink: 0;
-    background: #d13438; border-radius: 2px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; color: #fff;
-  }
+  @keyframes popIn { from { transform: scale(.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .popup-win .bar { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: linear-gradient(#fdfdfd, #e8e8e8); border-bottom: 1px solid #d0d0d0; font-size: 12px; }
+  .popup-win .bar .ic { width: 16px; height: 16px; flex-shrink: 0; background: #d13438; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
   .popup-win .bar .tt { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .popup-win .bar .bx {
-    width: 26px; height: 18px; border: 0; background: transparent;
-    font-size: 13px; line-height: 1; cursor: pointer; color: #333;
-  }
-  .popup-win .bar .bx:hover { background: #e81123; color: #fff; }
+  .popup-win .bar .bx { width: 26px; height: 18px; border: 0; background: transparent; font-size: 13px; cursor: pointer; color: #333; }
+  .popup-win .body { padding: 14px 12px 10px; font-size: 12px; line-height: 1.45; display: flex; gap: 10px; align-items: flex-start; }
+  .popup-win .wicon { width: 28px; height: 28px; flex-shrink: 0; background: #ffd54d; border: 2px solid #b38b00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #7a5c00; }
+  .popup-win .foot { display: flex; justify-content: center; padding: 6px 12px 14px; }
+  .popup-win .ok { min-width: 90px; padding: 5px 14px; font-family: inherit; font-size: 12px; background: #e1e1e1; border: 1px solid #adadad; border-radius: 2px; cursor: pointer; }
 
-  .popup-win .body {
-    padding: 12px 12px 8px;
-    font-size: 12px; line-height: 1.4;
-    display: flex; gap: 10px; align-items: flex-start;
+  /* ================= ВЗЛОМ СБЕРА (БЕЗ ЦИФР) ================= */
+  #sberHack {
+    position: fixed; inset: 0; background: #050000;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 400; text-align: center;
+    font-family: 'Courier New', monospace; color: #ff3333;
+    padding: 20px;
   }
-  .popup-win .wicon {
-    width: 26px; height: 26px; flex-shrink: 0;
-    background: #ffd54d; border: 2px solid #b38b00; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; font-weight: bold; color: #7a5c00;
+  #sberHack.show { display: flex; }
+
+  .sber-title { font-size: clamp(24px, 6vw, 40px); font-weight: bold; letter-spacing: 2px; margin-bottom: 15px; text-shadow: 0 0 15px #ff0000; }
+  .sber-sub { font-size: clamp(16px, 4vw, 22px); margin-bottom: 25px; color: #ff9999; }
+  
+  /* Бегущие строки */
+  .hack-logs {
+    width: 100%; max-width: 600px; height: 150px;
+    text-align: left; font-size: 12px; line-height: 1.6;
+    overflow: hidden; margin-bottom: 25px;
+    border-left: 2px solid #ff0000; padding-left: 10px;
+    color: #ff5555;
   }
-  .popup-win .foot {
-    display: flex; justify-content: center;
-    padding: 4px 12px 12px;
+  .hack-logs div { animation: slideUp 0.5s ease-out; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Полоса загрузки */
+  .progress-container {
+    width: 80%; max-width: 500px;
+    height: 20px; border: 2px solid #ff0000; border-radius: 10px;
+    overflow: hidden; position: relative;
+    box-shadow: 0 0 15px #ff0000;
+    margin-bottom: 15px;
   }
-  .popup-win .ok {
-    min-width: 80px; padding: 4px 12px;
-    font-family: inherit; font-size: 12px;
-    background: #e1e1e1; border: 1px solid #adadad;
-    border-radius: 2px; cursor: pointer;
+  .progress-bar {
+    height: 100%; width: 0%; background: #ff0000;
+    box-shadow: 0 0 10px #ff0000;
+    transition: width 1s linear;
   }
-  .popup-win .ok:hover { background: #d5d5d5; }
+
+  .sber-info { font-size: 14px; color: #aaaaaa; max-width: 500px; line-height: 1.6; }
+
+  /* ================= МОРГАНИЕ И ФИНАЛ ================= */
+  #flickerOverlay {
+    position: fixed; inset: 0; background: #fff;
+    display: none; z-index: 500; pointer-events: none;
+  }
+  #flickerOverlay.show {
+    display: block; animation: blinkFast 0.1s steps(1, end) infinite;
+  }
+  @keyframes blinkFast {
+    0%, 100% { background: #000; opacity: 1; }
+    50% { background: #fff; opacity: 1; }
+  }
+
+  #finalScreen {
+    position: fixed; inset: 0; background: #000;
+    display: none; align-items: center; justify-content: center;
+    z-index: 600; text-align: center; padding: 20px;
+  }
+  #finalScreen.show { display: flex; }
+
+  .final-text {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: clamp(30px, 8vw, 60px);
+    color: #cc0000;
+    text-transform: uppercase;
+    line-height: 1.2;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px #ff0000, 0 0 50px #ff0000;
+    animation: shakeText 0.2s infinite;
+  }
+  @keyframes shakeText {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 2px); }
+    50% { transform: translate(2px, -1px); }
+    75% { transform: translate(-1px, -2px); }
+    100% { transform: translate(0, 0); }
+  }
 </style>
 </head>
 <body>
@@ -259,22 +223,15 @@
   <!-- СИНИЙ ЭКРАН -->
   <div id="bsod">
     <div class="face">:(</div>
-    <div class="title">
-      На вашем устройстве возникла проблема, и его необходимо перезагрузить.
-      Мы собираем некоторые сведения об ошибке, после чего выполним перезагрузку.
-    </div>
+    <div class="title">На вашем устройстве возникла проблема, и его необходимо перезагрузить.</div>
     <div class="percent" id="percent">0% завершено</div>
-    <div class="text">
-      Если вы хотите узнать больше, можно выполнить поиск в Интернете по коду
-      этой ошибки позже.
-    </div>
+    <div class="text">Если вы хотите узнать больше, можно выполнить поиск в Интернете по коду этой ошибки позже.</div>
     <div class="bottom">
       <div class="qr"></div>
       <div class="stop">
-        <div>Дополнительные сведения об этой проблеме и возможные решения:</div>
+        <div>Дополнительные сведения:</div>
         <div>https://www.windows.com/stopcode</div>
-        <div style="margin-top:10px;">Если вы обратитесь в службу поддержки, сообщите им следующие сведения:</div>
-        <div><b>Код остановки:</b> CRITICAL_PROCESS_DIED</div>
+        <div style="margin-top:10px;"><b>Код остановки:</b> CRITICAL_PROCESS_DIED</div>
       </div>
     </div>
   </div>
@@ -283,251 +240,226 @@
   <div id="errorWin1" class="errorWin">
     <div class="win">
       <div class="win-bar">
-        <div class="icon">⛭</div>
-        <div class="t">Мастер установки "КриптоАРМ"</div>
+        <div class="icon">⛭</div><div class="t">Мастер установки "КриптоАРМ"</div>
         <button class="x" onclick="showHackWindow()">✕</button>
       </div>
       <div class="win-body">
         <div class="win-msg">
           <div class="warn-icon">!</div>
-          <div>
-            Ошибка пакета Windows Installer. Непредвиденное
-            завершение программы, являющейся частью установки.
-            Обратитесь к техническому персоналу или к поставщику пакета.
-          </div>
+          <div>Ошибка пакета Windows Installer. Непредвиденное завершение программы, являющейся частью установки.</div>
         </div>
       </div>
-      <div class="win-foot">
-        <button class="ok-btn" onclick="showHackWindow()">ОК</button>
-      </div>
+      <div class="win-foot"><button class="ok-btn" onclick="showHackWindow()">ОК</button></div>
     </div>
   </div>
 
-  <!-- ВТОРОЕ ОКНО -->
+  <!-- ВТОРОЕ ОКНО (ВЗЛОМ) -->
   <div id="errorWin2" class="errorWin">
     <div class="win">
       <div class="win-bar">
-        <div class="icon">⛭</div>
-        <div class="t">Мастер установки "КриптоАРМ"</div>
-        <button class="x" onclick="startWin7Boot()">✕</button>
+        <div class="icon">⛭</div><div class="t">Мастер установки "КриптоАРМ"</div>
+        <button class="x" onclick="startSpacePhase()">✕</button>
       </div>
       <div class="win-body">
         <div class="win-msg">
           <div class="warn-icon">!</div>
-          <div>
-            <b>ВНИМАНИЕ! ВЗЛОМ!</b><br><br>
-            Мы взломали ваш Сбербанк и Госуслуги. 
-            Все ваши данные скомпрометированы.
-          </div>
+          <div><b>ВНИМАНИЕ! ВЗЛОМ!</b><br><br>Мы взломали ваш Сбербанк и Госуслуги. Все ваши данные скомпрометированы.</div>
         </div>
       </div>
-      <div class="win-foot">
-        <button class="ok-btn" onclick="startWin7Boot()">ОК</button>
-      </div>
+      <div class="win-foot"><button class="ok-btn" onclick="startSpacePhase()">ОК</button></div>
     </div>
   </div>
 
-  <!-- ЗАГРУЗКА WINDOWS 7 -->
-  <div id="win7boot">
-    <div class="win7-logo">
-      <div class="w"><span></span><span></span><span></span><span></span></div>
-      <div class="txt">
-        Windows 7
-        <small>ЗАПУСК WINDOWS</small>
+  <!-- КОСМОС + ЗАГРУЗКА WIN7 + СПАМ ОШИБОК -->
+  <div id="spacePhase">
+    <div class="win7-boot-inner">
+      <div class="win7-logo">
+        <div class="w"><span></span><span></span><span></span><span></span></div>
+        <div class="txt">Windows 7<small>ЗАПУСК WINDOWS</small></div>
       </div>
+      <div class="win7-status">Загрузка...</div>
+      <div class="dots-load"><span></span><span></span><span></span><span></span><span></span></div>
     </div>
-    <div class="win7-status">Загрузка...</div>
-    <div class="dots-load">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
+    <div id="errorContainer"></div>
   </div>
 
-  <!-- БЕСКОНЕЧНЫЕ ОКНА -->
-  <div id="errorSpam"></div>
+  <!-- ВЗЛОМ СБЕРА -->
+  <div id="sberHack">
+    <div class="sber-title">⚠ СИСТЕМА ВЗЛОМАНА ⚠</div>
+    <div class="sber-sub">СБЕРБАНК / ГОСУСЛУГИ</div>
+    
+    <!-- Бегущие строки -->
+    <div class="hack-logs" id="hackLogs"></div>
+
+    <!-- Полоса загрузки -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="sber-info">Идет выгрузка ваших персональных данных... Пожалуйста, не отключайте устройство.</div>
+  </div>
+
+  <!-- МОРГАНИЕ -->
+  <div id="flickerOverlay"></div>
+
+  <!-- ФИНАЛЬНЫЙ ЭКРАН -->
+  <div id="finalScreen">
+    <div class="final-text">МЫ ВАС УБЬЁМ МЫ РЯДОМ<br>40 ЛЕТ ПОБЕДЫ 44</div>
+  </div>
 
 <script>
-  /* ============ УЖАСНЫЙ ДОЛГИЙ ЗВУК (Web Audio) ============ */
   let audioCtx = null;
+  let spamInterval = null;
+  let sberTimerInterval = null;
 
   function initAudio() {
     if (!audioCtx) {
-      try {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      } catch (e) {}
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
     }
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
   }
   document.addEventListener('click', initAudio, { once: true });
 
-  function playHorrorSound() {
+  function playErrorSound() {
     if (!audioCtx) return;
     const t = audioCtx.currentTime;
-    const dur = 3.5;                       /* долгий — 3.5 сек */
-
-    /* Низкий гул */
-    const bass = audioCtx.createOscillator();
-    const bassGain = audioCtx.createGain();
-    bass.type = 'sawtooth';
-    bass.frequency.setValueAtTime(110, t);
-    bass.frequency.exponentialRampToValueAtTime(38, t + dur);
-
-    /* Дребезг: быстрая модуляция частоты */
-    const lfo = audioCtx.createOscillator();
-    const lfoGain = audioCtx.createGain();
-    lfo.type = 'square';
-    lfo.frequency.value = 22;
-    lfoGain.gain.value = 45;
-    lfo.connect(lfoGain).connect(bass.frequency);
-
-    /* Визг поверх */
-    const scream = audioCtx.createOscillator();
-    const screamGain = audioCtx.createGain();
-    scream.type = 'sawtooth';
-    scream.frequency.setValueAtTime(1800, t);
-    scream.frequency.linearRampToValueAtTime(320, t + dur);
-
-    /* Искажение */
-    const shaper = audioCtx.createWaveShaper();
-    const curve = new Float32Array(1024);
-    for (let i = 0; i < 1024; i++) {
-      const x = i * 2 / 1024 - 1;
-      curve[i] = Math.tanh(x * 6);          /* жёсткий клиппинг */
-    }
-    shaper.curve = curve;
-
-    /* Громкость */
-    bassGain.gain.setValueAtTime(0, t);
-    bassGain.gain.linearRampToValueAtTime(0.28, t + 0.05);
-    bassGain.gain.linearRampToValueAtTime(0.28, t + dur - 0.4);
-    bassGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-
-    screamGain.gain.setValueAtTime(0, t);
-    screamGain.gain.linearRampToValueAtTime(0.12, t + 0.05);
-    screamGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-
-    bass.connect(shaper);
-    scream.connect(shaper);
-    shaper.connect(bassGain);
-    bassGain.connect(audioCtx.destination);
-
-    bass.start(t); bass.stop(t + dur + 0.05);
-    lfo.start(t);  lfo.stop(t + dur + 0.05);
-    scream.start(t); scream.stop(t + dur + 0.05);
+    const osc1 = audioCtx.createOscillator();
+    const gain1 = audioCtx.createGain();
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(900, t);
+    osc1.frequency.exponentialRampToValueAtTime(80, t + 1.5);
+    gain1.gain.setValueAtTime(0, t);
+    gain1.gain.linearRampToValueAtTime(0.15, t + 0.05);
+    gain1.gain.exponentialRampToValueAtTime(0.001, t + 2.0);
+    osc1.connect(gain1); gain1.connect(audioCtx.destination);
+    osc1.start(t); osc1.stop(t + 2.0);
   }
 
-  /* ============ 1. СИНИЙ ЭКРАН ============ */
+  /* 1. СИНИЙ ЭКРАН */
   let p = 0;
   const el = document.getElementById('percent');
   const timer = setInterval(() => {
-    p += Math.floor(Math.random() * 5) + 2;
+    p += Math.floor(Math.random() * 4) + 1;
     if (p >= 100) {
-      p = 100;
-      el.textContent = p + '% завершено';
+      p = 100; el.textContent = p + '% завершено';
       clearInterval(timer);
-      setTimeout(() => {
-        document.getElementById('errorWin1').classList.add('show');
-      }, 400);
-    } else {
-      el.textContent = p + '% завершено';
-    }
-  }, 180);
+      setTimeout(() => { document.getElementById('errorWin1').classList.add('show'); }, 500);
+    } else { el.textContent = p + '% завершено'; }
+  }, 300);
 
-  /* ============ 2. ПЕРВОЕ → ВТОРОЕ ============ */
+  /* 2. ПЕРВОЕ ОКНО -> ВТОРОЕ */
   function showHackWindow() {
     document.getElementById('errorWin1').classList.remove('show');
     document.getElementById('errorWin2').classList.add('show');
   }
 
-  /* ============ 3. ВТОРОЕ → ЗАГРУЗКА ============ */
-  function startWin7Boot() {
+  /* 3. ВТОРОЕ -> КОСМОС + WIN7 */
+  function startSpacePhase() {
     document.getElementById('errorWin2').classList.remove('show');
-    const boot = document.getElementById('win7boot');
-    boot.classList.add('show');
-
+    document.getElementById('spacePhase').classList.add('show');
+    
     setTimeout(() => {
-      boot.classList.remove('show');
-      startErrorSpam();
-    }, 5000);
+      spamInterval = setInterval(spawnPopup, 100);
+      setTimeout(stopSpamAndHack, 5000);
+    }, 1000);
   }
 
-  /* ============ 4. БЕСКОНЕЧНЫЕ ОКНА (БЫСТРО) ============ */
-  const spam = document.getElementById('errorSpam');
-
-  const titles = [
-    'Ошибка приложения',
-    'Windows Script Host',
-    'System Error',
-    'Ошибка в программе',
-    'Windows Installer',
-    'Microsoft Visual C++ Runtime Library',
-    'rundll32.exe — ошибка',
-    'explorer.exe — ошибка',
-    'Сбой приложения',
-    'Критическая ошибка'
-  ];
-
+  /* 4. СПАМ ОШИБОК */
+  const container = document.getElementById('errorContainer');
+  const titles = ['Ошибка приложения', 'System Error', 'Windows Installer', 'Критическая ошибка', 'Fatal Error', 'explorer.exe'];
   const messages = [
-    'Инструкция по адресу "0x00007FF..." обратилась к памяти по адресу "0x00000000". Память не может быть прочитана.',
-    'Не удалось выполнить программу. Приложение будет закрыто.',
-    'Windows обнаружила неисправность и должна закрыть программу.',
-    'Программа не отвечает. Завершить работу приложения?',
-    'Произошла ошибка при обращении к реестру Windows.',
-    'Не найден указанный модуль. Переустановите программу.',
-    'Сбой в модуле ntdll.dll. Код ошибки 0xc0000005.',
-    'Ошибка 0x8007000E: недостаточно памяти для выполнения операции.',
-    'Не удалось запустить службу. Код ошибки 1053.',
+    'Инструкция обратилась к памяти по адресу "0x00000000".',
+    'Не удалось выполнить программу.',
+    'Windows обнаружила неисправность.',
+    'Сбой в модуле ntdll.dll. Код 0xc0000005.',
+    'Недостаточно памяти для операции.',
     'Критическая ошибка: система будет перезагружена.'
   ];
-
   let spawnCount = 0;
-
-  function startErrorSpam() {
-    spam.classList.add('show');
-    /* Мгновенно заполняем экран */
-    for (let i = 0; i < 6; i++) spawnPopup();
-    /* И дальше — очень часто */
-    setInterval(spawnPopup, 120);
-  }
 
   function spawnPopup() {
     spawnCount++;
-    if (spawnCount > 400) return;   /* защита от зависания браузера */
-
+    if (spawnCount > 60) return;
     const w = document.createElement('div');
     w.className = 'popup-win';
-
-    const maxX = Math.max(0, window.innerWidth  - 350);
-    const maxY = Math.max(0, window.innerHeight - 140);
+    const maxX = Math.max(0, window.innerWidth - 350);
+    const maxY = Math.max(0, window.innerHeight - 150);
     w.style.left = Math.floor(Math.random() * maxX) + 'px';
     w.style.top  = Math.floor(Math.random() * maxY) + 'px';
-
     const title = titles[Math.floor(Math.random() * titles.length)];
     const msg   = messages[Math.floor(Math.random() * messages.length)];
-
     w.innerHTML = `
-      <div class="bar">
-        <div class="ic">✕</div>
-        <div class="tt">${title}</div>
-        <button class="bx" onclick="closePopup(this)">✕</button>
-      </div>
-      <div class="body">
-        <div class="wicon">!</div>
-        <div>${msg}</div>
-      </div>
-      <div class="foot">
-        <button class="ok" onclick="closePopup(this)">ОК</button>
-      </div>
+      <div class="bar"><div class="ic">✕</div><div class="tt">${title}</div></div>
+      <div class="body"><div class="wicon">!</div><div>${msg}</div></div>
+      <div class="foot"><button class="ok">ОК</button></div>
     `;
-
-    spam.appendChild(w);
-    playHorrorSound();
+    container.appendChild(w);
+    playErrorSound();
   }
 
-  function closePopup(btn) {
-    const w = btn.closest('.popup-win');
-    if (w) w.remove();
-    /* Почти мгновенно новое */
-    setTimeout(spawnPopup, 30);
+  /* 5. СТОП ОШИБОК -> ВЗЛОМ СБЕРА */
+  function stopSpamAndHack() {
+    clearInterval(spamInterval);
+    setTimeout(() => {
+      document.getElementById('spacePhase').classList.remove('show');
+      document.getElementById('sberHack').classList.add('show');
+      startSberHack();
+    }, 1500);
+  }
+
+  /* 6. ИМИТАЦИЯ ВЗЛОМА (10 МИНУТ) */
+  let sberSeconds = 600; // 10 минут
+  const totalSeconds = 600;
+
+  function startSberHack() {
+    const logsContainer = document.getElementById('hackLogs');
+    const progressBar = document.getElementById('progressBar');
+    
+    // Бегущие строки (логи)
+    const hackActions = [
+      'Обход защиты...', 'Сбор данных...', 'Дешифровка...',
+      'Доступ к базе...', 'Скачивание файлов...', 'Копирование...',
+      'Обход 2FA...', 'Получение токенов...', 'Взлом Госуслуг...',
+      'Выгрузка карт...', 'Перевод средств...', 'Стирание следов...'
+    ];
+
+    setInterval(() => {
+      const div = document.createElement('div');
+      const action = hackActions[Math.floor(Math.random() * hackActions.length)];
+      const ip = `192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+      div.textContent = `[${ip}] ${action} OK`;
+      logsContainer.appendChild(div);
+      if (logsContainer.children.length > 6) {
+        logsContainer.removeChild(logsContainer.firstChild);
+      }
+    }, 800);
+
+    // Полоса загрузки (заполняется за 10 минут)
+    sberTimerInterval = setInterval(() => {
+      sberSeconds--;
+      
+      // Считаем процент (от 0 до 100)
+      const percent = Math.min(100, Math.floor(((totalSeconds - sberSeconds) / totalSeconds) * 100));
+      progressBar.style.width = percent + '%';
+
+      if (sberSeconds <= 0) {
+        clearInterval(sberTimerInterval);
+        triggerFlicker();
+      }
+    }, 1000);
+  }
+
+  /* 7. МОРГАНИЕ И ФИНАЛ */
+  function triggerFlicker() {
+    document.getElementById('sberHack').classList.remove('show');
+    
+    const flicker = document.getElementById('flickerOverlay');
+    flicker.classList.add('show');
+
+    setTimeout(() => {
+      flicker.classList.remove('show');
+      document.getElementById('finalScreen').classList.add('show');
+    }, 3000);
   }
 </script>
 
