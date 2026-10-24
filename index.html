@@ -3,294 +3,384 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BIOS</title>
+<title>Windows 7 - Установка</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
-    height: 100%;
-    background: #000;
-    color: #d1d5db;
-    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-    overflow: hidden;
+    height: 100%; background: #000; color: #aaa;
+    font-family: 'Consolas', 'Courier New', monospace;
+    overflow: hidden; user-select: none;
   }
 
-  /* ================= ЭКРАН ЗАГРУЗКИ ================= */
-  #loadingScreen {
-    position: fixed; inset: 0;
-    background: #000;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    z-index: 1000;
-    transition: opacity 0.5s;
+  /* ================= 1. МЕНЮ ЗАГРУЗКИ ================= */
+  #bootMenu {
+    display: block;
+    width: 100%; max-width: 600px; margin: 40px auto; padding: 0 20px;
+    font-size: 13px; line-height: 1.6;
   }
-  #loadingScreen.hidden { opacity: 0; pointer-events: none; }
-  
-  .win-logo { display: flex; gap: 8px; margin-bottom: 30px; }
-  .win-logo div { width: 24px; height: 24px; }
-  .win-logo div:nth-child(1) { background: #f65314; }
-  .win-logo div:nth-child(2) { background: #7cbb00; }
-  .win-logo div:nth-child(3) { background: #00a1f1; }
-  .win-logo div:nth-child(4) { background: #ffbb00; }
-  
-  .loading-text { font-size: 16px; color: #fff; margin-bottom: 20px; }
-  .spinner {
-    width: 30px; height: 30px;
-    border: 4px solid rgba(255,255,255,0.2);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ================= ОСНОВНОЙ BIOS ================= */
-  #bios {
-    position: fixed; inset: 0;
-    background: #05080c;
-    display: none;
-    flex-direction: column;
-  }
-  #bios.show { display: flex; }
-
-  /* Шапка */
   .header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 20px;
-    background: #0a1018;
-    border-bottom: 1px solid #1d2a3a;
-    height: 60px;
+    text-align: center; color: #fff; border-bottom: 1px solid #444;
+    padding-bottom: 5px; margin-bottom: 20px; font-weight: bold;
   }
-  .header-left { display: flex; align-items: center; gap: 15px; }
-  .logo { font-size: 24px; font-weight: bold; color: #fff; letter-spacing: 1px; }
-  .title { font-size: 16px; color: #8892a0; }
-  .header-right { display: flex; align-items: center; gap: 20px; }
-  .date { font-size: 12px; color: #8892a0; text-align: right; line-height: 1.2; }
-  .time { font-size: 26px; color: #00d2ff; font-weight: 300; }
-  .time small { font-size: 11px; color: #8892a0; display: block; text-align: right; margin-top: -2px; }
-
-  /* Контент */
-  .content {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  /* Левая часть */
-  .left-col {
-    flex: 1;
-    padding: 20px;
-    display: flex; flex-direction: column; gap: 20px;
-    border-right: 1px solid #1d2a3a;
-  }
-
-  /* Правая часть */
-  .right-col {
-    width: 320px;
-    padding: 20px;
-    display: flex; flex-direction: column; gap: 20px;
-    background: #0a1018;
-  }
-
-  /* Блоки */
-  .box-title {
-    font-size: 15px; color: #00d2ff; margin-bottom: 10px;
-    border-bottom: 1px solid #1d2a3a; padding-bottom: 4px;
-  }
-  
-  .info-row {
-    display: flex; justify-content: space-between;
-    font-size: 13px; line-height: 1.7;
-  }
-  .info-row span:first-child { color: #8892a0; }
-  .info-row span:last-child { color: #fff; text-align: right; }
-
-  .big-val { font-size: 26px; color: #fff; margin-top: 4px; }
-  .big-val span { font-size: 14px; color: #8892a0; }
-
-  /* Температуры */
-  .temps { display: flex; gap: 20px; }
-  .temp-box { flex: 1; background: #05080c; border: 1px solid #1d2a3a; padding: 15px; text-align: center; }
-  .temp-box .val { font-size: 32px; color: #fff; }
-  .temp-box .lbl { font-size: 12px; color: #8892a0; margin-top: 5px; }
-
-  /* График кулера */
-  .fan-graph {
-    width: 100%; height: 100px;
-    background: #05080c; border: 1px solid #1d2a3a;
-    margin-top: 8px;
-  }
-  .fan-graph svg { width: 100%; height: 100%; }
-
-  /* Сетка SATA */
-  .sata-list { display: flex; flex-direction: column; gap: 4px; }
-  .sata-list div { font-size: 12px; color: #d1d5db; }
-  .sata-list span { color: #8892a0; margin-right: 5px; }
-
-  /* Boot Priority */
-  .boot-list { display: flex; flex-direction: column; gap: 8px; }
-  .boot-item {
-    display: flex; align-items: center; gap: 10px;
-    background: #05080c; border: 1px solid #1d2a3a;
-    padding: 10px; font-size: 12px;
-  }
-  .boot-item::before {
-    content: '💾'; font-size: 16px;
-    width: 24px; text-align: center;
-  }
-
-  /* Подвал */
+  .subtitle { color: #fff; margin-bottom: 15px; font-size: 12px; }
+  .options { list-style: none; margin-bottom: 20px; }
+  .option { padding: 2px 5px; cursor: pointer; margin-bottom: 2px; display: block; outline: none; }
+  .option.selected { background: #ddd; color: #000; }
+  .group { margin-bottom: 10px; }
+  .description { color: #fff; font-size: 12px; margin-top: 20px; line-height: 1.5; padding-bottom: 20px; min-height: 80px; }
   .footer {
-    background: #0a1018;
-    border-top: 1px solid #1d2a3a;
-    padding: 10px 20px;
-    display: flex; justify-content: flex-end; gap: 30px;
-    font-size: 12px; color: #8892a0;
-    height: 40px;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #000; border-top: 1px solid #444;
+    display: flex; justify-content: space-between; padding: 5px 20px; font-size: 12px; color: #fff;
   }
+  .footer span { font-weight: bold; }
+  .logo { position: absolute; top: 60px; right: 20px; font-size: 32px; font-family: Arial, sans-serif; font-weight: bold; letter-spacing: -1px; }
+  .logo span.green { color: #8cc63f; }
+  .logo span.red { color: #ed1c24; }
+  .logo span.gray { color: #888; font-size: 20px; vertical-align: middle; margin-left: 5px; }
+
+  /* ================= 2. КРУПНАЯ ЗАГРУЗКА ================= */
+  #loadingScreen {
+    position: fixed; inset: 0; background: #000;
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 1000; color: #fff;
+  }
+  .win-logo-big { display: flex; gap: 15px; margin-bottom: 40px; }
+  .win-logo-big div { width: 60px; height: 60px; border-radius: 4px; }
+  .win-logo-big div:nth-child(1) { background: #f65314; }
+  .win-logo-big div:nth-child(2) { background: #7cbb00; }
+  .win-logo-big div:nth-child(3) { background: #00a1f1; }
+  .win-logo-big div:nth-child(4) { background: #ffbb00; }
+  .loading-text-big { font-size: 28px; font-family: 'Segoe UI', sans-serif; margin-bottom: 40px; font-weight: 300; letter-spacing: 1px; }
+  .progress-bar-big {
+    width: 400px; height: 10px; background: #222; border-radius: 5px; overflow: hidden; border: 1px solid #444;
+  }
+  .progress-fill-big {
+    height: 100%; width: 0%; background: #fff;
+    animation: fill 10s linear forwards;
+  }
+  @keyframes fill { 0% { width: 0%; } 100% { width: 100%; } }
+
+  /* ================= 3. ОКНО АКТИВАЦИИ ================= */
+  #activationWindow {
+    position: fixed; inset: 0; background: rgba(100, 149, 237, 0.8);
+    display: none; align-items: center; justify-content: center;
+    z-index: 2000; font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  }
+  #activationWindow.show { display: flex; }
+
+  .act-win {
+    width: 700px; max-width: 95vw; background: #fff; color: #000;
+    border: 1px solid #6a8cba; border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .act-header {
+    background: linear-gradient(to bottom, #4a8bc2, #2e6da4);
+    padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;
+    color: #fff; font-size: 13px;
+  }
+  .act-header-title { display: flex; align-items: center; gap: 8px; }
+  .act-close {
+    width: 30px; height: 24px; background: transparent; border: 1px solid rgba(255,255,255,0.3);
+    color: #fff; cursor: pointer; border-radius: 3px; display: flex; align-items: center; justify-content: center;
+  }
+  .act-close:hover { background: #d00; border-color: #d00; }
+
+  .act-body { padding: 30px 40px; flex: 1; }
+  .act-title { color: #2e6da4; font-size: 20px; margin-bottom: 20px; font-weight: normal; }
+  .act-text { font-size: 14px; line-height: 1.6; color: #000; }
+  .act-text a { color: #0066cc; text-decoration: underline; cursor: pointer; }
+  .act-options { margin-top: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .act-options .arrow { color: #008000; font-size: 16px; font-weight: bold; }
+  .act-footer { padding: 15px 20px; display: flex; justify-content: flex-end; background: #f0f0f0; border-top: 1px solid #ddd; }
+  .act-btn { padding: 6px 30px; background: #e1e1e1; border: 1px solid #adadad; border-radius: 3px; cursor: pointer; font-size: 13px; color: #000; }
+  .act-btn:hover { background: #d5d5d5; }
+
+  /* ================= 4. УСТАНОВКА WINDOWS 7 (СИНИЙ ЭКРАН) ================= */
+  #win7InstallScreen {
+    position: fixed; inset: 0; background: #005a9e; /* Синий цвет установки Win7 */
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 3000; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; color: #fff;
+  }
+  #win7InstallScreen.show { display: flex; }
+
+  /* Окно установки */
+  .install-window {
+    width: 800px; max-width: 95vw; height: 500px;
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: linear-gradient(135deg, #0066cc, #003366);
+    display: flex; flex-direction: column; position: relative; overflow: hidden;
+  }
+
+  /* Шапка окна установки */
+  .install-header {
+    background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding: 8px 15px; display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px;
+  }
+  .install-header-title { display: flex; align-items: center; gap: 8px; }
+  .install-controls { display: flex; gap: 10px; font-size: 16px; }
+
+  /* Контент установки */
+  .install-content {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; position: relative;
+  }
+
+  /* Красивые линии на фоне */
+  .install-bg-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: 
+      radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%),
+      url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 200 Q 400 100 800 300' stroke='rgba(255,255,255,0.1)' fill='none' stroke-width='2'/%3E%3Cpath d='M0 250 Q 400 150 800 350' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  /* Логотип и кнопка */
+  .install-logo { font-size: 52px; font-weight: bold; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 10px; z-index: 2; }
+  .install-logo-text { font-size: 46px; font-weight: 300; font-family: 'Segoe UI', sans-serif; }
   
-  /* Кнопка перехода */
-  .adv-btn {
-    color: #00d2ff; cursor: pointer;
-    text-shadow: 0 0 5px #00d2ff;
+  .install-btn-row { display: flex; align-items: center; gap: 15px; z-index: 2; }
+  .install-text-label { font-size: 24px; font-weight: 300; }
+  .install-btn {
+    background: linear-gradient(to bottom, #e0e0e0, #b0b0b0); border: 1px solid #fff;
+    border-radius: 20px; width: 30px; height: 30px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #005a9e; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
   }
-  .adv-btn:hover { text-decoration: underline; }
+  .install-btn:hover { background: #fff; }
+
+  /* Подвал установки */
+  .install-footer {
+    padding: 20px 40px; font-size: 14px; z-index: 2; text-align: left; width: 100%;
+  }
+  .install-footer a { color: #fff; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 10px; }
+
+  /* ================= 5. БЕСКОНЕЧНОЕ МОРГАНИЕ ================= */
+  #flickerOverlay {
+    position: fixed; inset: 0; background: #000;
+    display: none; z-index: 9999; pointer-events: none;
+  }
+  #flickerOverlay.show {
+    display: block; animation: blinkInfinite 0.1s steps(1, end) infinite;
+  }
+  @keyframes blinkInfinite {
+    0%, 100% { background: #000; }
+    50% { background: #fff; }
+  }
 
 </style>
 </head>
 <body>
 
-  <!-- ЭКРАН ЗАГРУЗКИ -->
+  <!-- 1. МЕНЮ ЗАГРУЗКИ -->
+  <div id="bootMenu">
+    <div class="logo">
+      <span class="gray">smartronix</span><span class="red">.ru</span>
+    </div>
+
+    <div class="header">Дополнительные варианты загрузки</div>
+    <div class="subtitle">
+      Выберите дополнительные параметры для: Windows 7<br>
+      (Выберите нужный элемент с помощью клавиш со стрелками.)
+    </div>
+
+    <ul class="options" id="optionsList">
+      <li class="option selected" tabindex="0">Устранение неполадок компьютера</li>
+      <div class="group">
+        <li class="option" tabindex="0">Безопасный режим</li>
+        <li class="option" tabindex="0">Безопасный режим с загрузкой сетевых драйверов</li>
+        <li class="option" tabindex="0">Безопасный режим с поддержкой командной строки</li>
+      </div>
+      <div class="group">
+        <li class="option" tabindex="0">Ведение журнала загрузки</li>
+        <li class="option" tabindex="0">Включение видеорежима с низким разрешением (640x480)</li>
+      </div>
+      <div class="group">
+        <li class="option" tabindex="0">Обычная загрузка Windows</li>
+      </div>
+    </ul>
+
+    <div class="description" id="descText"></div>
+  </div>
+
+  <div class="footer">
+    <div><span>ВВОД</span>=Выбрать</div>
+    <div><span>ESC</span>=Отмена</div>
+  </div>
+
+  <!-- 2. КРУПНАЯ ЗАГРУЗКА -->
   <div id="loadingScreen">
-    <div class="win-logo"><div></div><div></div><div></div><div></div></div>
-    <div class="loading-text">Запуск Windows...</div>
-    <div class="spinner"></div>
+    <div class="win-logo-big"><div></div><div></div><div></div><div></div></div>
+    <div class="loading-text-big">Запуск Windows...</div>
+    <div class="progress-bar-big"><div class="progress-fill-big" id="loadFill"></div></div>
   </div>
 
-  <!-- BIOS -->
-  <div id="bios">
-    <!-- Шапка -->
-    <div class="header">
-      <div class="header-left">
-        <div class="logo">ASUS</div>
-        <div class="title">UEFI BIOS Utility - EZ Mode</div>
+  <!-- 3. ОКНО АКТИВАЦИИ (Для Безопасного режима) -->
+  <div id="activationWindow">
+    <div class="act-win">
+      <div class="act-header">
+        <div class="act-header-title"><span style="font-size:16px;">🛡️</span> <span>Активация Windows</span></div>
+        <button class="act-close" onclick="resetAll()">✕</button>
       </div>
-      <div class="header-right">
-        <div class="date">08/03/2083<br>Tuesday</div>
-        <div class="time">21:03<small>English</small></div>
+      <div class="act-body">
+        <div class="act-title">Активация Windows</div>
+        <div class="act-text">
+          Произошла ошибка при попытке активации Windows. Код ошибки: 0x80072F8F.<br>
+          Возможные способы устранения этой проблемы: <a>Дополнительная информация</a>.<br>
+          За помощью в разрешении этой проблемы можно обратиться в корпорацию Microsoft по <a>телефону</a>.
+          <br><br>
+          <div class="act-options"><span class="arrow">➜</span> Показать другие способы активации</div>
+        </div>
       </div>
+      <div class="act-footer"><button class="act-btn" onclick="resetAll()">Закрыть</button></div>
     </div>
+  </div>
 
-    <!-- Контент -->
-    <div class="content">
+  <!-- 4. УСТАНОВКА WINDOWS 7 -->
+  <div id="win7InstallScreen">
+    <div class="install-window">
+      <div class="install-header">
+        <div class="install-header-title"><span>💿</span> Установка Windows</div>
+        <div class="install-controls"><span>—</span><span>□</span><span>✕</span></div>
+      </div>
       
-      <!-- Левая колонка -->
-      <div class="left-col">
+      <div class="install-content">
+        <div class="install-bg-lines"></div>
         
-        <div>
-          <div class="box-title">Information</div>
-          <div class="info-row"><span>PRIME B350-PLUS</span><span>BIOS Ver. 5407</span></div>
-          <div class="info-row"><span>AMD Ryzen 7 1700 Eight-Core Processor</span><span></span></div>
-          <div class="info-row"><span>Speed: 3000 MHz</span><span></span></div>
-          <div class="info-row"><span>Memory: 4096 MB (DDR4 2133MHz)</span><span></span></div>
-        </div>
-
-        <div>
-          <div class="box-title">DRAM Status</div>
-          <div class="info-row"><span>DIMM_A1: N/A</span><span></span></div>
-          <div class="info-row"><span>DIMM_A2: SK Hynix 4096MB 2133MHz</span><span></span></div>
-          <div class="info-row"><span>DIMM_B1: N/A</span><span></span></div>
-          <div class="info-row"><span>DIMM_B2: N/A</span><span></span></div>
-        </div>
-
-        <div>
-          <div class="box-title">D.O.C.P.</div>
-          <div class="info-row"><span>Disabled</span><span></span></div>
-        </div>
-
-        <div>
-          <div class="box-title">FAN Profile</div>
-          <div class="info-row"><span>CPU FAN</span><span>2089 RPM</span></div>
-          <div class="info-row"><span>CHA1 FAN</span><span>N/A</span></div>
-        </div>
-
-        <div>
-          <div class="box-title">SATA Information</div>
-          <div class="sata-list">
-            <div><span>SATA6G_1:</span> HGST HTS725050A7E630 (500.1GB)</div>
-            <div><span>SATA6G_2:</span> INTEL SSDSC2BW256H6 (256.0GB)</div>
-            <div><span>SATA6G_3:</span> HGST HTS541010A9E680 (1000.2GB)</div>
-            <div><span>SATA6G_4:</span> Samsung SSD 860 EVO 250GB</div>
-            <div><span>SATA6G_5:</span> Micron_1100 (512.1GB)</div>
-            <div><span>SATA6G_6:</span> SanDisk SSD U110 128GB</div>
+        <!-- Логотип -->
+        <div class="install-logo">
+          <div style="display:flex; gap:2px; flex-direction:column;">
+            <div style="display:flex; gap:2px;">
+              <div style="width:20px;height:20px;background:#f65314;"></div>
+              <div style="width:20px;height:20px;background:#7cbb00;"></div>
+            </div>
+            <div style="display:flex; gap:2px;">
+              <div style="width:20px;height:20px;background:#00a1f1;"></div>
+              <div style="width:20px;height:20px;background:#ffbb00;"></div>
+            </div>
           </div>
+          <div class="install-logo-text">Windows 7</div>
         </div>
 
+        <!-- Кнопка Установить -->
+        <div class="install-btn-row">
+          <span class="install-text-label">Установить</span>
+          <button class="install-btn" onclick="startFlicker()">➜</button>
+        </div>
       </div>
 
-      <!-- Правая колонка -->
-      <div class="right-col">
-        
-        <div class="temps">
-          <div class="temp-box">
-            <div class="val">47</div>
-            <div class="lbl">CPU Temp</div>
-          </div>
-          <div class="temp-box">
-            <div class="val">37</div>
-            <div class="lbl">MB Temp</div>
-          </div>
-        </div>
-
-        <div>
-          <div class="box-title">VDDCR CPU Voltage</div>
-          <div class="big-val">1.090 <span>V</span></div>
-        </div>
-
-        <div>
-          <div class="box-title">CPU FAN Curve</div>
-          <div class="fan-graph">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              <!-- Сетка -->
-              <line x1="0" y1="80" x2="100" y2="80" stroke="#1d2a3a" stroke-width="1" />
-              <line x1="0" y1="50" x2="100" y2="50" stroke="#1d2a3a" stroke-width="1" />
-              <line x1="0" y1="20" x2="100" y2="20" stroke="#1d2a3a" stroke-width="1" />
-              <!-- График -->
-              <polyline points="0,90 20,90 60,40 80,10 100,10" fill="none" stroke="#00d2ff" stroke-width="2" />
-            </svg>
-          </div>
-        </div>
-
-        <div style="flex: 1;">
-          <div class="box-title">Boot Priority</div>
-          <div class="boot-list">
-            <div class="boot-item">SATA6G_2: INTEL SSDSC2BW256H6</div>
-            <div class="boot-item">Windows Boot Manager</div>
-          </div>
-        </div>
-
+      <div class="install-footer">
+        Что следует знать перед выполнением установки Windows<br>
+        <a>Восстановление системы</a>
+        <div style="margin-top: 15px; font-size: 11px; color: #aaa;">© Корпорация Майкрософт (Microsoft Corp.), 2009. Все права защищены.</div>
       </div>
-
-    </div>
-
-    <!-- Подвал -->
-    <div class="footer">
-      <span>Default(F5)</span>
-      <span>Save & Exit(F10)</span>
-      <span class="adv-btn" onclick="goToGigabyte()">Advanced Mode(F7)</span>
-      <span>Search on FAQ</span>
     </div>
   </div>
+
+  <!-- 5. ЭКРАН БЕСКОНЕЧНОГО МОРГАНИЯ -->
+  <div id="flickerOverlay"></div>
 
 <script>
-  // Загрузка
-  setTimeout(() => {
-    document.getElementById('loadingScreen').classList.add('hidden');
-    document.getElementById('bios').classList.add('show');
-  }, 2500);
+  let selectedIndex = 0;
+  const options = document.querySelectorAll('.option');
+  
+  const descriptions = {
+    0: "Описание: Вывод списка средств восстановления системы.",
+    1: "Описание: Загружает только основные драйверы и службы.",
+    2: "Описание: Загружает основные драйверы, службы и сетевые драйверы.",
+    3: "Описание: Загружает основные драйверы, службы и командную строку.",
+    4: "Описание: Создает файл ntbtlog.txt, в котором перечислены все драйверы.",
+    5: "Описание: Загружает Windows с низким разрешением экрана (640x480).",
+    6: "Описание: Загружает Windows в обычном режиме."
+  };
 
-  // Переход на GIGABYTE (пока пустая функция для будущего)
-  function goToGigabyte() {
-    alert("Переход в GIGABYTE BIOS...");
+  function updateSelection() {
+    options.forEach((opt, i) => {
+      opt.classList.remove('selected');
+      if (i === selectedIndex) {
+        opt.classList.add('selected');
+        opt.focus();
+      }
+    });
+    document.getElementById('descText').innerText = descriptions[selectedIndex] || "";
   }
+
+  options.forEach((opt, i) => {
+    opt.addEventListener('click', () => { selectedIndex = i; updateSelection(); });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % options.length;
+      updateSelection();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + options.length) % options.length;
+      updateSelection();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      startBoot();
+    }
+  });
+
+  /* ================= ЛОГИКА ЗАГРУЗКИ ================= */
+  function startBoot() {
+    document.getElementById('bootMenu').style.display = 'none';
+    document.querySelector('.footer').style.display = 'none';
+    
+    // Если выбран "Безопасный режим" (index 1, 2, 3)
+    if (selectedIndex >= 1 && selectedIndex <= 3) {
+      runSafeMode();
+    } 
+    // Если выбрано "Ведение журнала загрузки" (index 4)
+    else if (selectedIndex === 4) {
+      // Мгновенно переходим на экран установки
+      document.getElementById('win7InstallScreen').classList.add('show');
+    } 
+    // Обычная загрузка
+    else {
+      alert("Обычная загрузка...");
+      resetAll();
+    }
+  }
+
+  /* ================= БЕЗОПАСНЫЙ РЕЖИМ ================= */
+  function runSafeMode() {
+    document.getElementById('loadingScreen').style.display = 'flex';
+    const fill = document.getElementById('loadFill');
+    fill.style.animation = 'none';
+    void fill.offsetWidth;
+    fill.style.animation = 'fill 10s linear forwards';
+
+    setTimeout(() => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('activationWindow').classList.add('show');
+    }, 10000);
+  }
+
+  /* ================= БЕСКОНЕЧНОЕ МОРГАНИЕ ================= */
+  function startFlicker() {
+    document.getElementById('win7InstallScreen').classList.remove('show');
+    document.getElementById('flickerOverlay').classList.add('show');
+  }
+
+  /* ================= СБРОС ================= */
+  function resetAll() {
+    document.getElementById('activationWindow').classList.remove('show');
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('win7InstallScreen').classList.remove('show');
+    document.getElementById('flickerOverlay').classList.remove('show');
+    document.getElementById('bootMenu').style.display = 'block';
+    document.querySelector('.footer').style.display = 'flex';
+    selectedIndex = 0;
+    updateSelection();
+  }
+
+  // Инициализация
+  updateSelection();
 </script>
 
 </body>
