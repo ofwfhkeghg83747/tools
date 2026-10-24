@@ -3,384 +3,755 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Windows 7 - Установка</title>
+<title>ЗООПАРК 4 "А" — Баллы</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%; background: #000; color: #aaa;
-    font-family: 'Consolas', 'Courier New', monospace;
-    overflow: hidden; user-select: none;
+  body {
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    min-height: 100vh; padding: 20px 14px 80px;
+    color: #d7e3ff;
+    background:
+      radial-gradient(circle at 20% 10%, #2a1a6b 0%, transparent 55%),
+      radial-gradient(circle at 85% 90%, #6b1a5a 0%, transparent 55%),
+      radial-gradient(circle at 50% 50%, #0d1b3a 0%, #05060f 70%, #000 100%);
+    overflow-x: hidden; position: relative;
   }
 
-  /* ================= 1. МЕНЮ ЗАГРУЗКИ ================= */
-  #bootMenu {
-    display: block;
-    width: 100%; max-width: 600px; margin: 40px auto; padding: 0 20px;
-    font-size: 13px; line-height: 1.6;
+  /* Звёзды */
+  .stars { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .star { position: absolute; width: 2px; height: 2px; border-radius: 50%;
+          background: #fff; opacity: .7; animation: twinkle 3s infinite alternate; }
+  @keyframes twinkle { 0% { opacity: .2; } 100% { opacity: 1; } }
+  .shoot { position: absolute; top: -40px; width: 3px; height: 80px;
+    background: linear-gradient(to bottom, transparent, #8fd0ff, #fff);
+    border-radius: 2px; filter: drop-shadow(0 0 6px #8fd0ff);
+    animation: shoot linear infinite; transform: rotate(20deg); }
+  @keyframes shoot {
+    0%   { transform: translateY(-40px) translateX(0) rotate(20deg); opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translateY(110vh) translateX(-30vw) rotate(20deg); opacity: 0; }
   }
-  .header {
-    text-align: center; color: #fff; border-bottom: 1px solid #444;
-    padding-bottom: 5px; margin-bottom: 20px; font-weight: bold;
-  }
-  .subtitle { color: #fff; margin-bottom: 15px; font-size: 12px; }
-  .options { list-style: none; margin-bottom: 20px; }
-  .option { padding: 2px 5px; cursor: pointer; margin-bottom: 2px; display: block; outline: none; }
-  .option.selected { background: #ddd; color: #000; }
-  .group { margin-bottom: 10px; }
-  .description { color: #fff; font-size: 12px; margin-top: 20px; line-height: 1.5; padding-bottom: 20px; min-height: 80px; }
-  .footer {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: #000; border-top: 1px solid #444;
-    display: flex; justify-content: space-between; padding: 5px 20px; font-size: 12px; color: #fff;
-  }
-  .footer span { font-weight: bold; }
-  .logo { position: absolute; top: 60px; right: 20px; font-size: 32px; font-family: Arial, sans-serif; font-weight: bold; letter-spacing: -1px; }
-  .logo span.green { color: #8cc63f; }
-  .logo span.red { color: #ed1c24; }
-  .logo span.gray { color: #888; font-size: 20px; vertical-align: middle; margin-left: 5px; }
 
-  /* ================= 2. КРУПНАЯ ЗАГРУЗКА ================= */
-  #loadingScreen {
-    position: fixed; inset: 0; background: #000;
-    display: none; flex-direction: column;
+  .wrap { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; }
+
+  /* Логотип РУсик */
+  .logo-rusik {
+    display: flex; justify-content: center; margin-bottom: 10px;
+    font-size: 26px; font-weight: 900; letter-spacing: -1px;
+    filter: drop-shadow(0 0 10px rgba(0,180,255,.8));
+  }
+  .logo-rusik .ru { color: #00d4ff; text-shadow: 0 0 8px #00aaff; }
+  .logo-rusik .sik { color: #7b4dff; text-shadow: 0 0 10px #7b4dff; }
+  .logo-rusik .dot { color: #ff4dd2; margin-left: 2px; text-shadow: 0 0 10px #ff4dd2; }
+
+  /* Экран загрузки */
+  #loader {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    z-index: 1000; color: #fff;
+    padding: 24px; text-align: center;
+    background: radial-gradient(circle at 50% 40%, #1a1240 0%, #05060f 70%, #000 100%);
+    transition: opacity .8s ease, visibility .8s ease;
   }
-  .win-logo-big { display: flex; gap: 15px; margin-bottom: 40px; }
-  .win-logo-big div { width: 60px; height: 60px; border-radius: 4px; }
-  .win-logo-big div:nth-child(1) { background: #f65314; }
-  .win-logo-big div:nth-child(2) { background: #7cbb00; }
-  .win-logo-big div:nth-child(3) { background: #00a1f1; }
-  .win-logo-big div:nth-child(4) { background: #ffbb00; }
-  .loading-text-big { font-size: 28px; font-family: 'Segoe UI', sans-serif; margin-bottom: 40px; font-weight: 300; letter-spacing: 1px; }
-  .progress-bar-big {
-    width: 400px; height: 10px; background: #222; border-radius: 5px; overflow: hidden; border: 1px solid #444;
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-icon {
+    font-size: 54px; margin-bottom: 18px;
+    animation: spin 2.5s linear infinite;
+    filter: drop-shadow(0 0 18px #4d7bff);
   }
-  .progress-fill-big {
-    height: 100%; width: 0%; background: #fff;
-    animation: fill 10s linear forwards;
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-title {
+    font-size: 18px; color: #ff8ba0; font-weight: bold;
+    letter-spacing: 1px; margin-bottom: 14px;
+    text-shadow: 0 0 12px rgba(255,77,107,.8);
   }
-  @keyframes fill { 0% { width: 0%; } 100% { width: 100%; } }
+  .loader-msg { font-size: 14px; color: #d7e3ff; max-width: 340px; line-height: 1.5; margin-bottom: 6px; }
+  .loader-msg b { color: #ffb84d; text-shadow: 0 0 8px rgba(255,150,40,.7); }
+  .bar {
+    width: min(320px, 85vw); height: 12px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid #3a5ba8; border-radius: 20px;
+    overflow: hidden; margin: 22px 0 12px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,.6);
+  }
+  .bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #00d4ff, #7b4dff, #ff4dd2);
+    box-shadow: 0 0 14px #7b4dff;
+    border-radius: 20px;
+    transition: width .4s ease;
+  }
+  .loader-status { font-size: 13px; color: #8fa7d1; letter-spacing: 1px; min-height: 20px; }
+  .loader-percent { font-size: 12px; color: #6bd5ff; margin-top: 6px; text-shadow: 0 0 6px #00aaff; }
+  .loader-note { margin-top: 20px; font-size: 11px; color: #5a6a8a; max-width: 300px; }
 
-  /* ================= 3. ОКНО АКТИВАЦИИ ================= */
-  #activationWindow {
-    position: fixed; inset: 0; background: rgba(100, 149, 237, 0.8);
-    display: none; align-items: center; justify-content: center;
-    z-index: 2000; font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  /* Экран входа */
+  #login {
+    position: fixed; inset: 0; z-index: 9000;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    background: radial-gradient(circle at 50% 40%, #1a1240 0%, #05060f 70%, #000 100%);
+    transition: opacity .6s ease, visibility .6s ease;
   }
-  #activationWindow.show { display: flex; }
+  #login.hidden { opacity: 0; visibility: hidden; }
+  .login-title { font-size: 22px; color: #9fd0ff; margin-bottom: 8px; text-shadow: 0 0 12px #4d9bff; }
+  .login-sub { font-size: 14px; color: #8fa7d1; margin-bottom: 22px; }
+  .login-box { display: flex; flex-direction: column; gap: 12px; width: min(320px, 85vw); }
+  .login-box input {
+    padding: 13px; border-radius: 12px; text-align: center;
+    border: 1px solid #4d7bff; background: rgba(10,15,35,.85);
+    color: #fff; font-size: 17px; font-family: inherit;
+    box-shadow: 0 0 12px rgba(77,123,255,.4);
+  }
+  .login-box input:focus { outline: none; border-color: #6bd5ff; box-shadow: 0 0 16px #00aaff; }
+  .login-err { color: #ff8ba0; font-size: 13px; min-height: 18px; text-shadow: 0 0 8px rgba(255,77,107,.7); }
+  .login-hint { margin-top: 18px; font-size: 11px; color: #5a6a8a; }
+  .login-logo { margin-bottom: 18px; }
 
-  .act-win {
-    width: 700px; max-width: 95vw; background: #fff; color: #000;
-    border: 1px solid #6a8cba; border-radius: 6px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    overflow: hidden; display: flex; flex-direction: column;
+  /* Меню */
+  .menu {
+    display: flex; gap: 8px; margin-bottom: 18px;
+    background: linear-gradient(150deg, rgba(20,30,70,.9), rgba(40,20,80,.9));
+    border: 1px solid #4d7bff; border-radius: 14px; padding: 6px;
+    box-shadow: 0 0 14px rgba(77,123,255,.5);
   }
-  .act-header {
-    background: linear-gradient(to bottom, #4a8bc2, #2e6da4);
-    padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;
-    color: #fff; font-size: 13px;
+  .menu button {
+    flex: 1; padding: 10px 8px; border: 0; border-radius: 10px;
+    font-family: inherit; font-size: 14px; color: #9fd0ff;
+    background: transparent; cursor: pointer; letter-spacing: .5px;
+    transition: .25s;
   }
-  .act-header-title { display: flex; align-items: center; gap: 8px; }
-  .act-close {
-    width: 30px; height: 24px; background: transparent; border: 1px solid rgba(255,255,255,0.3);
-    color: #fff; cursor: pointer; border-radius: 3px; display: flex; align-items: center; justify-content: center;
+  .menu button.active {
+    color: #fff;
+    background: linear-gradient(135deg, #4d7bff, #7b4dff);
+    box-shadow: 0 0 12px rgba(123,77,255,.7);
   }
-  .act-close:hover { background: #d00; border-color: #d00; }
+  .menu button:active { transform: scale(.97); }
+  .menu button.exit { color: #ff8ba0; flex: 0 0 auto; padding: 10px 14px; }
 
-  .act-body { padding: 30px 40px; flex: 1; }
-  .act-title { color: #2e6da4; font-size: 20px; margin-bottom: 20px; font-weight: normal; }
-  .act-text { font-size: 14px; line-height: 1.6; color: #000; }
-  .act-text a { color: #0066cc; text-decoration: underline; cursor: pointer; }
-  .act-options { margin-top: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-  .act-options .arrow { color: #008000; font-size: 16px; font-weight: bold; }
-  .act-footer { padding: 15px 20px; display: flex; justify-content: flex-end; background: #f0f0f0; border-top: 1px solid #ddd; }
-  .act-btn { padding: 6px 30px; background: #e1e1e1; border: 1px solid #adadad; border-radius: 3px; cursor: pointer; font-size: 13px; color: #000; }
-  .act-btn:hover { background: #d5d5d5; }
+  .tab { display: none; }
+  .tab.active { display: block; }
 
-  /* ================= 4. УСТАНОВКА WINDOWS 7 (СИНИЙ ЭКРАН) ================= */
-  #win7InstallScreen {
-    position: fixed; inset: 0; background: #005a9e; /* Синий цвет установки Win7 */
-    display: none; flex-direction: column; justify-content: center; align-items: center;
-    z-index: 3000; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; color: #fff;
+  /* НОВОСТИ */
+  .news-card {
+    position: relative;
+    background: linear-gradient(150deg, rgba(60,5,15,.92), rgba(40,10,30,.92));
+    border: 2px solid #ff2d55; border-radius: 16px;
+    padding: 16px; margin-bottom: 14px;
+    box-shadow: 0 0 18px rgba(255,45,85,.6), 0 0 40px rgba(255,0,60,.25);
+    animation: newsPulse 1.8s ease-in-out infinite, cardAppear .5s ease;
   }
-  #win7InstallScreen.show { display: flex; }
+  @keyframes newsPulse {
+    0%,100% { box-shadow: 0 0 12px rgba(255,45,85,.45); }
+    50%     { box-shadow: 0 0 28px rgba(255,45,85,.95); }
+  }
+  .news-tag {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; font-weight: bold;
+    padding: 5px 12px; border-radius: 20px; margin-bottom: 12px;
+    color: #fff; background: linear-gradient(135deg, #ff2d55, #b0002a);
+    box-shadow: 0 0 14px rgba(255,45,85,.9);
+    animation: tagBlink 1s steps(2,end) infinite;
+  }
+  @keyframes tagBlink { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+  .news-title {
+    font-size: 17px; font-weight: bold; color: #ffb3c1;
+    margin-bottom: 10px; line-height: 1.35;
+    text-shadow: 0 0 10px rgba(255,45,85,.8);
+  }
+  .news-text { font-size: 14px; color: #ffd8e0; line-height: 1.55; }
+  .news-text b { color: #ff8ba0; }
+  .news-date { margin-top: 12px; font-size: 11px; color: #a07a88; letter-spacing: 1px; }
 
-  /* Окно установки */
-  .install-window {
-    width: 800px; max-width: 95vw; height: 500px;
-    border: 1px solid rgba(255,255,255,0.3); border-radius: 6px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: linear-gradient(135deg, #0066cc, #003366);
-    display: flex; flex-direction: column; position: relative; overflow: hidden;
+  .news-card.blue {
+    background: linear-gradient(150deg, rgba(5,25,60,.94), rgba(10,15,70,.94));
+    border-color: #4d9bff;
+    box-shadow: 0 0 18px rgba(77,155,255,.6), 0 0 40px rgba(0,120,255,.25);
+    animation: newsBluePulse 1.8s ease-in-out infinite, cardAppear .5s ease;
+  }
+  @keyframes newsBluePulse {
+    0%,100% { box-shadow: 0 0 12px rgba(77,155,255,.45); }
+    50%     { box-shadow: 0 0 28px rgba(77,155,255,.95); }
+  }
+  .news-card.blue .news-tag {
+    background: linear-gradient(135deg, #4d9bff, #0055cc);
+    box-shadow: 0 0 14px rgba(77,155,255,.9);
+  }
+  .news-card.blue .news-title { color: #b3d9ff; text-shadow: 0 0 10px rgba(77,155,255,.8); }
+  .news-card.blue .news-text { color: #d8eaff; }
+  .news-card.blue .news-text b { color: #8fc4ff; }
+  .news-card.blue .news-date { color: #7a94b8; }
+
+  /* НАСТРОЙКИ */
+  .settings {
+    background: linear-gradient(150deg, rgba(20,30,70,.9), rgba(40,20,80,.9));
+    border: 1px solid #4d7bff; border-radius: 16px;
+    padding: 14px; margin-bottom: 18px;
+    box-shadow: 0 0 14px rgba(77,123,255,.5);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .settings label { font-size: 12px; color: #8fa7d1; letter-spacing: 1px; }
+  .settings input[type="text"] {
+    width: 100%; padding: 8px; margin-top: 4px;
+    border: 1px solid #3a5ba8; border-radius: 8px;
+    background: rgba(10,15,35,.8); color: #d7e3ff; font-family: inherit; font-size: 14px;
+  }
+  .btn {
+    padding: 10px; border: 0; border-radius: 10px; cursor: pointer;
+    font-family: inherit; font-size: 14px; color: #fff;
+    background: linear-gradient(135deg, #4d7bff, #7b4dff);
+    box-shadow: 0 0 10px rgba(123,77,255,.6);
+  }
+  .btn:active { transform: scale(.98); }
+  .btn.danger { background: linear-gradient(135deg, #ff4d6b, #b0002a); box-shadow: 0 0 10px rgba(255,77,107,.6); }
+  .btn.small { padding: 7px 10px; font-size: 12px; }
+
+  /* КАРТОЧКИ */
+  .card {
+    position: relative;
+    background: linear-gradient(150deg, rgba(20,30,70,.85), rgba(40,20,80,.85));
+    border-radius: 18px; padding: 16px; margin-bottom: 16px;
+    border: 1px solid #4d7bff;
+    box-shadow: 0 0 12px rgba(77,123,255,.5), 0 0 30px rgba(120,60,255,.25),
+                inset 0 0 20px rgba(77,123,255,.1);
+    animation: cardAppear .5s ease;
+  }
+  @keyframes cardAppear {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card::before {
+    content: ""; display: block; height: 6px; border-radius: 4px; margin-bottom: 14px;
+    background: linear-gradient(90deg, #00d4ff, #7b4dff, #ff4dd2);
+    box-shadow: 0 0 10px #7b4dff;
   }
 
-  /* Шапка окна установки */
-  .install-header {
-    background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.2);
-    padding: 8px 15px; display: flex; justify-content: space-between; align-items: center;
-    font-size: 13px;
+  /* ФИКСИРОВАННАЯ ПАНЕЛЬ ГРУППЫ */
+  .group-header {
+    background: rgba(10, 15, 35, 0.7);
+    border: 1px solid #00d4ff;
+    border-radius: 18px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .install-header-title { display: flex; align-items: center; gap: 8px; }
-  .install-controls { display: flex; gap: 10px; font-size: 16px; }
-
-  /* Контент установки */
-  .install-content {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; position: relative;
+  .group-logo {
+    width: 120px; height: 120px;
+    border-radius: 50%; object-fit: cover;
+    border: 2px solid #00d4ff;
+    box-shadow: 0 0 15px #00d4ff;
+    margin-bottom: 10px;
   }
-
-  /* Красивые линии на фоне */
-  .install-bg-lines {
-    position: absolute; inset: 0; pointer-events: none;
-    background-image: 
-      radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%),
-      url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 200 Q 400 100 800 300' stroke='rgba(255,255,255,0.1)' fill='none' stroke-width='2'/%3E%3Cpath d='M0 250 Q 400 150 800 350' stroke='rgba(255,255,255,0.05)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+  .group-title {
+    font-size: 24px; font-weight: 900; color: #fff;
+    text-transform: uppercase; letter-spacing: 2px;
+    text-shadow: 0 0 15px #4d7bff;
+    margin-bottom: 5px;
   }
-
-  /* Логотип и кнопка */
-  .install-logo { font-size: 52px; font-weight: bold; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 10px; z-index: 2; }
-  .install-logo-text { font-size: 46px; font-weight: 300; font-family: 'Segoe UI', sans-serif; }
+  .group-score-box {
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 10px 25px; margin-top: 10px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .group-score-label {
+    font-size: 11px; color: #8fa7d1; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .group-score-val {
+    font-size: 32px; font-weight: bold;
+  }
   
-  .install-btn-row { display: flex; align-items: center; gap: 15px; z-index: 2; }
-  .install-text-label { font-size: 24px; font-weight: 300; }
-  .install-btn {
-    background: linear-gradient(to bottom, #e0e0e0, #b0b0b0); border: 1px solid #fff;
-    border-radius: 20px; width: 30px; height: 30px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: #005a9e; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-  }
-  .install-btn:hover { background: #fff; }
+  .score-good { color: #4dffb0; text-shadow: 0 0 15px #00ff80; }
+  .score-warn { color: #ffd700; text-shadow: 0 0 15px #ffbb00; }
+  .score-bad { color: #ff2d55; text-shadow: 0 0 15px #ff2d55; }
+  .score-zero { font-size: 18px; color: #ff0000; text-transform: uppercase; text-shadow: 0 0 20px #ff0000; animation: pulseRed 1s infinite alternate; }
+  @keyframes pulseRed { from { opacity: 0.7; } to { opacity: 1; } }
 
-  /* Подвал установки */
-  .install-footer {
-    padding: 20px 40px; font-size: 14px; z-index: 2; text-align: left; width: 100%;
-  }
-  .install-footer a { color: #fff; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 10px; }
+  /* Остальные стили карточек (67, VIP, Дима, Алиса) */
+  .card.cool { border: 2px solid transparent; background: linear-gradient(150deg, rgba(40,20,10,.92), rgba(60,30,5,.92)) padding-box, linear-gradient(120deg, #ffd700, #ff8c00, #ff4dd2, #7b4dff, #00e0ff, #ffd700) border-box; background-size: 100% 100%, 300% 300%; animation: rainbowBorder 4s linear infinite; box-shadow: 0 0 18px rgba(255,200,0,.65); }
+  @keyframes rainbowBorder { 0% { background-position: 0 0, 0% 50%; } 100% { background-position: 0 0, 300% 50%; } }
+  .card.cool::before { background: linear-gradient(90deg, #ffd700, #ff8c00, #ff4dd2, #7b4dff, #00e0ff); background-size: 300% 100%; animation: stripeMove 3s linear infinite; }
+  .card.cool .name { background: linear-gradient(90deg, #ffd700, #fff6a0, #ffd700); background-size: 200% 100%; -webkit-background-clip: text; color: transparent; animation: nameShine 2.5s linear infinite; font-size: 24px; }
+  @keyframes nameShine { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+  @keyframes stripeMove { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+  .cool-badge { display: inline-block; font-size: 11px; letter-spacing: 1.5px; font-weight: bold; padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; color: #2a1500; background: linear-gradient(135deg, #ffe066, #ffb300, #ffd700); animation: badgePulse 1.6s infinite; }
+  @keyframes badgePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  .crown { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 30px; filter: drop-shadow(0 0 10px #ffd700); animation: crownFloat 2s infinite; z-index: 2; }
+  @keyframes crownFloat { 0%,100% { transform: translateX(-50%) translateY(0) rotate(-4deg); } 50% { transform: translateX(-50%) translateY(-6px) rotate(4deg); } }
 
-  /* ================= 5. БЕСКОНЕЧНОЕ МОРГАНИЕ ================= */
-  #flickerOverlay {
-    position: fixed; inset: 0; background: #000;
-    display: none; z-index: 9999; pointer-events: none;
-  }
-  #flickerOverlay.show {
-    display: block; animation: blinkInfinite 0.1s steps(1, end) infinite;
-  }
-  @keyframes blinkInfinite {
-    0%, 100% { background: #000; }
-    50% { background: #fff; }
-  }
+  .card.sixseven { border: 2px solid transparent; background: linear-gradient(150deg, rgba(10,30,40,.92), rgba(5,20,60,.92)) padding-box, linear-gradient(120deg, #00ffb3, #00d4ff, #7b4dff, #00ffb3) border-box; background-size: 100% 100%, 300% 300%; animation: ssBorder 3s linear infinite; overflow: hidden; }
+  @keyframes ssBorder { 0% { background-position: 0 0, 0% 50%; } 100% { background-position: 0 0, 300% 50%; } }
+  .card.sixseven::before { background: linear-gradient(90deg, #00ffb3, #00d4ff, #7b4dff, #00ffb3); background-size: 300% 100%; animation: stripeMove 2.5s linear infinite; }
+  .card.sixseven .name { background: linear-gradient(90deg, #00ffb3, #a0fff0, #00d4ff, #00ffb3); background-size: 300% 100%; -webkit-background-clip: text; color: transparent; animation: nameShine67 2s linear infinite; font-size: 24px; }
+  @keyframes nameShine67 { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+  .ss-badge { display: inline-block; font-size: 12px; letter-spacing: 2px; font-weight: bold; padding: 6px 16px; border-radius: 20px; margin-bottom: 12px; color: #001a14; background: linear-gradient(135deg, #00ffb3, #00d4ff, #7b4dff); animation: ssBadge 1.2s infinite; }
+  @keyframes ssBadge { 0%,100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.08) rotate(-1deg); } }
+  .ss-floats { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: 18px; z-index: 1; }
+  .ss-float { position: absolute; font-size: 26px; font-weight: bold; color: #00ffb3; text-shadow: 0 0 10px #00ffb3; opacity: .8; animation: ssFloat linear infinite; }
+  @keyframes ssFloat { 0% { transform: translateY(110%) rotate(0deg) scale(0.6); opacity: 0; } 20% { opacity: .9; } 80% { opacity: .9; } 100% { transform: translateY(-30%) rotate(360deg) scale(1.2); opacity: 0; } }
+  .ss-image { margin: 12px 0; border-radius: 12px; border: 2px solid #00ffb3; box-shadow: 0 0 16px rgba(0,255,180,.8); overflow: hidden; position: relative; z-index: 2; background: #001a14; }
+  .ss-image img { display: block; width: 100%; height: auto; }
+  .ss-image .cap { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,10,20,.9), transparent); color: #a0fff0; font-size: 11px; padding: 16px 10px 8px; text-align: center; }
+  .copy-block { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #00ffb3; }
+  .copy-label { font-size: 10px; letter-spacing: 2px; color: #00ffb3; margin-bottom: 8px; }
+  .copy-card { background: linear-gradient(150deg, rgba(10,30,40,.7), rgba(5,20,60,.7)); border: 1px solid #00ffb3; border-radius: 12px; padding: 10px; opacity: .9; }
+  .copy-card .cn { font-size: 15px; color: #a0fff0; }
+  .copy-card .cn b { color: #00ffb3; letter-spacing: 2px; }
+  .copy-card .ci { font-size: 11px; color: #6fa7b1; margin-top: 4px; }
 
+  .card.region { border: 2px solid transparent; background: linear-gradient(150deg, rgba(5,25,50,.92), rgba(10,15,60,.92)) padding-box, linear-gradient(120deg, #00d4ff, #4d9bff, #00aaff, #00d4ff) border-box; background-size: 100% 100%, 300% 300%; animation: regBorder 3.5s linear infinite; }
+  @keyframes regBorder { 0% { background-position: 0 0, 0% 50%; } 100% { background-position: 0 0, 300% 50%; } }
+  .card.region::before { background: linear-gradient(90deg, #00d4ff, #4d9bff, #00aaff, #00d4ff); background-size: 300% 100%; animation: stripeMove 3s linear infinite; }
+  .region-box { background: linear-gradient(135deg, rgba(0,140,255,.18), rgba(0,80,200,.12)); border: 1px solid #00aaff; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; animation: regPulse 2s infinite; }
+  @keyframes regPulse { 0%,100% { box-shadow: 0 0 8px rgba(0,170,255,.35); } 50% { box-shadow: 0 0 20px rgba(0,170,255,.85); } }
+  .region-box .title { font-size: 13px; font-weight: bold; color: #8fe0ff; margin-bottom: 6px; }
+  .region-box .line { font-size: 13px; color: #cfeaff; margin-top: 3px; }
+  .region-box .dots::after { content: ""; animation: dots 1.4s steps(4,end) infinite; }
+  @keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+  .region-pin { display: inline-block; animation: pinBounce 1.5s infinite; }
+  @keyframes pinBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+  .card.nocard { border: 2px solid transparent; background: radial-gradient(circle at 20% 20%, rgba(176,107,255,.22) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0,212,255,.18) 0%, transparent 50%), linear-gradient(150deg, rgba(30,10,55,.96), rgba(5,10,45,.96)) padding-box, linear-gradient(120deg, #b06bff, #ff4dd2, #7b4dff, #00d4ff, #b06bff) border-box; background-size: auto, auto, 100% 100%, 300% 300%; animation: ncBorder 4s linear infinite; box-shadow: 0 0 20px rgba(176,107,255,.7); overflow: hidden; }
+  @keyframes ncBorder { 0% { background-position: 20% 20%, 80% 80%, 0 0, 0% 50%; } 100% { background-position: 20% 20%, 80% 80%, 0 0, 300% 50%; } }
+  .card.nocard::before { background: linear-gradient(90deg, #b06bff, #ff4dd2, #7b4dff, #00d4ff, #b06bff); background-size: 300% 100%; animation: stripeMove 3s linear infinite; }
+  .card.nocard .name { background: linear-gradient(90deg, #b06bff, #ffb3f0, #00d4ff, #b06bff); background-size: 300% 100%; -webkit-background-clip: text; color: transparent; animation: nameShine67 2.5s linear infinite; font-size: 24px; }
+  .future-badge { display: inline-block; font-size: 11px; letter-spacing: 1.5px; font-weight: bold; padding: 6px 14px; border-radius: 20px; margin-bottom: 12px; color: #0a0014; background: linear-gradient(135deg, #b06bff, #ff4dd2, #00d4ff, #b06bff); animation: futBadge 1.8s infinite; }
+  @keyframes futBadge { 0%,100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+  .nocard-box { background: linear-gradient(135deg, rgba(176,107,255,.16), rgba(0,212,255,.1)); border: 1px solid #b06bff; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; animation: ncPulse 2s infinite; }
+  @keyframes ncPulse { 0%,100% { box-shadow: 0 0 8px rgba(176,107,255,.35); } 50% { box-shadow: 0 0 22px rgba(176,107,255,.9); } }
+  .nocard-box .title { font-size: 13px; font-weight: bold; color: #e0b3ff; margin-bottom: 6px; }
+  .nocard-box .line { font-size: 13px; color: #f0d8ff; margin-top: 3px; }
+
+  /* Баллы на карте */
+  .score-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px; margin-bottom: 14px; text-align: center; }
+  .score-label { font-size: 11px; color: #8fa7d1; text-transform: uppercase; margin-bottom: 5px; }
+  .score-val { font-size: 26px; font-weight: bold; transition: color 0.3s; }
+
+  .vip { position: absolute; top: 26px; right: 14px; font-size: 11px; letter-spacing: 2px; font-weight: bold; padding: 4px 12px; border-radius: 20px; color: #0a0a1a; background: linear-gradient(135deg, #00e0ff, #b06bff); }
+  .num { font-size: 13px; letter-spacing: 2px; color: #8fa7d1; margin-bottom: 10px; text-transform: uppercase; }
+  .num b { font-size: 18px; color: #6bd5ff; text-shadow: 0 0 8px #00aaff; letter-spacing: 3px; }
+  .name { font-size: 22px; margin-bottom: 14px; color: #fff; text-shadow: 0 0 10px #7b4dff; }
+  .status { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; }
+  .status.out { background: rgba(120,130,160,.25); color: #aab6d0; border: 1px solid #3a4560; }
+  .status.in  { background: rgba(0,255,150,.15); color: #4dffb0; border: 1px solid #00b36b; }
+  .times { display: flex; gap: 10px; margin-bottom: 12px; }
+  .tbox { flex: 1; background: rgba(10,15,35,.7); border-radius: 10px; padding: 8px; border: 1px solid #2e3d6b; text-align: center; }
+  .tbox .lbl { font-size: 11px; color: #8fa7d1; }
+  .tbox .val { font-size: 16px; color: #6bd5ff; margin-top: 2px; }
+  .tbox .val.empty { color: #4a5a7a; }
+  .actions { display: flex; gap: 10px; margin-top: 10px; }
+  .actions .btn { flex: 1; }
+  .note { font-size: 12px; color: #8fa7d1; margin-top: 12px; }
+  .note input { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #3a5ba8; border-radius: 8px; background: rgba(10,15,35,.8); color: #d7e3ff; font-family: inherit; }
+
+  /* Модалка */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
+  .modal-overlay.show { display: flex; }
+  .modal-box { background: rgba(15, 25, 50, 0.95); border: 1px solid #00d4ff; border-radius: 16px; padding: 25px; width: 350px; max-width: 90vw; text-align: center; }
+  .modal-title { font-size: 18px; color: #00d4ff; margin-bottom: 10px; font-weight: bold; }
+  .modal-desc { font-size: 12px; color: #8fa7d1; margin-bottom: 15px; line-height: 1.4; }
+  .modal-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #00d4ff; background: rgba(0,0,0,0.5); color: #fff; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; }
+  .modal-btns { display: flex; gap: 10px; }
+  .modal-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+  .btn-save { background: #00d4ff; color: #000; }
+  .btn-cancel { background: transparent; border: 1px solid #ff4dd2; color: #ff4dd2; }
+
+  .card-loading { position: relative; background: linear-gradient(150deg, rgba(20,30,70,.85), rgba(40,20,80,.85)); border-radius: 18px; padding: 16px; margin-bottom: 16px; border: 1px dashed #4d7bff; box-shadow: 0 0 12px rgba(77,123,255,.35); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .card-loading .spinner { width: 28px; height: 28px; border: 3px solid rgba(123,77,255,.25); border-top-color: #6bd5ff; border-radius: 50%; animation: spin 0.9s linear infinite; }
+  .card-loading .txt { font-size: 13px; color: #9fd0ff; }
+  .card-loading .small { font-size: 11px; color: #5a6a8a; }
+  .card-loading .dots::after { content: ""; animation: dots 1.2s steps(4,end) infinite; }
 </style>
 </head>
 <body>
 
-  <!-- 1. МЕНЮ ЗАГРУЗКИ -->
-  <div id="bootMenu">
-    <div class="logo">
-      <span class="gray">smartronix</span><span class="red">.ru</span>
-    </div>
+<!-- Загрузка -->
+<div id="loader">
+  <div class="loader-icon">🛰️</div>
+  <div class="loader-title">⚠ ДОСТУП ОГРАНИЧЕН</div>
+  <div class="loader-msg">Сайт <b>охватил Роскомнадзор</b> и <b>замедляет</b> его работу.</div>
+  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+  <div class="loader-status" id="loaderStatus">Подключение...</div>
+  <div class="loader-percent" id="loaderPercent">0%</div>
+</div>
 
-    <div class="header">Дополнительные варианты загрузки</div>
-    <div class="subtitle">
-      Выберите дополнительные параметры для: Windows 7<br>
-      (Выберите нужный элемент с помощью клавиш со стрелками.)
-    </div>
-
-    <ul class="options" id="optionsList">
-      <li class="option selected" tabindex="0">Устранение неполадок компьютера</li>
-      <div class="group">
-        <li class="option" tabindex="0">Безопасный режим</li>
-        <li class="option" tabindex="0">Безопасный режим с загрузкой сетевых драйверов</li>
-        <li class="option" tabindex="0">Безопасный режим с поддержкой командной строки</li>
-      </div>
-      <div class="group">
-        <li class="option" tabindex="0">Ведение журнала загрузки</li>
-        <li class="option" tabindex="0">Включение видеорежима с низким разрешением (640x480)</li>
-      </div>
-      <div class="group">
-        <li class="option" tabindex="0">Обычная загрузка Windows</li>
-      </div>
-    </ul>
-
-    <div class="description" id="descText"></div>
+<!-- Вход -->
+<div id="login" class="hidden">
+  <div class="logo-rusik login-logo"><span class="ru">РУ</span><span class="sik">сик</span><span class="dot">.</span></div>
+  <div class="login-title">🔐 Вход по имени</div>
+  <div class="login-sub" id="loginSub">Введите ваше имя</div>
+  <div class="login-box">
+    <input type="text" id="loginName" placeholder="Имя..." autocomplete="off">
+    <button class="btn" onclick="doLogin()">Войти</button>
+    <div class="login-err" id="loginErr"></div>
   </div>
+  <div class="login-hint">Катя, Рената, Арслан, Дима, Алиса, Таисия, Роберт, Женя, Кирилл, Ростислав, Эльмар</div>
+</div>
 
-  <div class="footer">
-    <div><span>ВВОД</span>=Выбрать</div>
-    <div><span>ESC</span>=Отмена</div>
-  </div>
+<!-- Фон -->
+<div class="stars" id="stars"></div>
 
-  <!-- 2. КРУПНАЯ ЗАГРУЗКА -->
-  <div id="loadingScreen">
-    <div class="win-logo-big"><div></div><div></div><div></div><div></div></div>
-    <div class="loading-text-big">Запуск Windows...</div>
-    <div class="progress-bar-big"><div class="progress-fill-big" id="loadFill"></div></div>
-  </div>
-
-  <!-- 3. ОКНО АКТИВАЦИИ (Для Безопасного режима) -->
-  <div id="activationWindow">
-    <div class="act-win">
-      <div class="act-header">
-        <div class="act-header-title"><span style="font-size:16px;">🛡️</span> <span>Активация Windows</span></div>
-        <button class="act-close" onclick="resetAll()">✕</button>
-      </div>
-      <div class="act-body">
-        <div class="act-title">Активация Windows</div>
-        <div class="act-text">
-          Произошла ошибка при попытке активации Windows. Код ошибки: 0x80072F8F.<br>
-          Возможные способы устранения этой проблемы: <a>Дополнительная информация</a>.<br>
-          За помощью в разрешении этой проблемы можно обратиться в корпорацию Microsoft по <a>телефону</a>.
-          <br><br>
-          <div class="act-options"><span class="arrow">➜</span> Показать другие способы активации</div>
-        </div>
-      </div>
-      <div class="act-footer"><button class="act-btn" onclick="resetAll()">Закрыть</button></div>
+<!-- Главный экран -->
+<div class="wrap" id="mainSite" style="display:none;">
+  <div class="logo-rusik"><span class="ru">РУ</span><span class="sik">сик</span><span class="dot">.</span></div>
+  
+  <!-- ПАНЕЛЬ ГРУППЫ (КАРТИНКА + БАЛЛЫ) -->
+  <div class="group-header">
+    <!-- Ваша картинка с Pinterest -->
+    <img src="https://i.pinimg.com/736x/a8/5c/b1/a85cb1f2cb946c455ae09414ccb5c955.jpg" 
+         class="group-logo" alt="Зоопарк"
+         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%230d1b3a\' stroke=\'%2300d4ff\' stroke-width=\'4\'/%3E%3Ctext x=\'50\' y=\'55\' font-size=\'20\' fill=\'%2300d4ff\' text-anchor=\'middle\' font-family=\'sans-serif\'%3EЗОО%3C/text%3E%3C/svg%3E';">
+    
+    <div class="group-title">ЗООПАРК 4 "А"</div>
+    
+    <!-- Баллы группы -->
+    <div class="group-score-box">
+      <div class="group-score-label">Баллы группы</div>
+      <div class="group-score-val score-good" id="groupScoreDisplay">79</div>
     </div>
   </div>
 
-  <!-- 4. УСТАНОВКА WINDOWS 7 -->
-  <div id="win7InstallScreen">
-    <div class="install-window">
-      <div class="install-header">
-        <div class="install-header-title"><span>💿</span> Установка Windows</div>
-        <div class="install-controls"><span>—</span><span>□</span><span>✕</span></div>
-      </div>
-      
-      <div class="install-content">
-        <div class="install-bg-lines"></div>
-        
-        <!-- Логотип -->
-        <div class="install-logo">
-          <div style="display:flex; gap:2px; flex-direction:column;">
-            <div style="display:flex; gap:2px;">
-              <div style="width:20px;height:20px;background:#f65314;"></div>
-              <div style="width:20px;height:20px;background:#7cbb00;"></div>
-            </div>
-            <div style="display:flex; gap:2px;">
-              <div style="width:20px;height:20px;background:#00a1f1;"></div>
-              <div style="width:20px;height:20px;background:#ffbb00;"></div>
-            </div>
-          </div>
-          <div class="install-logo-text">Windows 7</div>
-        </div>
+  <h1>🌌 4А · Система</h1>
+  <p class="sub" id="subTitle">космическая версия</p>
 
-        <!-- Кнопка Установить -->
-        <div class="install-btn-row">
-          <span class="install-text-label">Установить</span>
-          <button class="install-btn" onclick="startFlicker()">➜</button>
-        </div>
-      </div>
+  <div class="menu">
+    <button class="active" onclick="switchTab('cards', this)">Карты</button>
+    <button onclick="switchTab('news', this)">Новости</button>
+    <button onclick="switchTab('settings', this)">Настройки</button>
+    <button class="exit" onclick="logout()">Выйти</button>
+  </div>
 
-      <div class="install-footer">
-        Что следует знать перед выполнением установки Windows<br>
-        <a>Восстановление системы</a>
-        <div style="margin-top: 15px; font-size: 11px; color: #aaa;">© Корпорация Майкрософт (Microsoft Corp.), 2009. Все права защищены.</div>
-      </div>
+  <div class="tab active" id="tab-cards">
+    <div id="cards"></div>
+  </div>
+
+  <div class="tab" id="tab-news">
+    <div class="news-card">
+      <div class="news-tag">⚠ ЭКСТРЕННО</div>
+      <div class="news-title">Компания «РУисик» борется с Роскомнадзором</div>
+      <div class="news-text">Из-за ограничений <b>Роскомнадзора</b> компания <b>«РУисик»</b> ведёт борьбу за восстановление доступа.</div>
+      <div class="news-date">Экстренное сообщение</div>
+    </div>
+    <div class="news-card blue">
+      <div class="news-tag">📌 ВАЖНО</div>
+      <div class="news-title">Добавить карту можно через админа Костю</div>
+      <div class="news-text">Если у вас <b>нет карты</b> или нужна новая — обратитесь к администратору <b>Косте</b>.</div>
+      <div class="news-date">Объявление</div>
     </div>
   </div>
 
-  <!-- 5. ЭКРАН БЕСКОНЕЧНОГО МОРГАНИЯ -->
-  <div id="flickerOverlay"></div>
+  <div class="tab" id="tab-settings">
+    <div class="settings">
+      <label>Название (класс)<input type="text" id="setTitle" value="4А · Система"></label>
+      <button class="btn" onclick="saveTitle()">Сохранить название</button>
+      <button class="btn danger" onclick="resetAll()">Сбросить все отметки</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка -->
+<div class="modal-overlay" id="inspectModal" onclick="closeInspect(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">🔍 Изменить баллы группы</div>
+    <div class="modal-desc">Введите новые баллы.<br><span style="color:#ff4dd2;">Сбросятся после выхода.</span></div>
+    <input type="number" class="modal-input" id="inspectInput">
+    <div class="modal-btns">
+      <button class="modal-btn btn-cancel" onclick="closeInspect()">Отмена</button>
+      <button class="modal-btn btn-save" onclick="saveInspect()">ОК</button>
+    </div>
+  </div>
+</div>
 
 <script>
-  let selectedIndex = 0;
-  const options = document.querySelectorAll('.option');
-  
-  const descriptions = {
-    0: "Описание: Вывод списка средств восстановления системы.",
-    1: "Описание: Загружает только основные драйверы и службы.",
-    2: "Описание: Загружает основные драйверы, службы и сетевые драйверы.",
-    3: "Описание: Загружает основные драйверы, службы и командную строку.",
-    4: "Описание: Создает файл ntbtlog.txt, в котором перечислены все драйверы.",
-    5: "Описание: Загружает Windows с низким разрешением экрана (640x480).",
-    6: "Описание: Загружает Windows в обычном режиме."
-  };
+/* ================= ДАННЫЕ ================= */
+const CARDS = [
+  { id: "katya",   name: "Катя",      num: "9666767",    vip: true,  loadMs: 3000, cool: true,  sixseven: false, region: false, score: 79, nocard: false },
+  { id: "renata",  name: "Рената",    num: "87999333",   vip: true,  loadMs: 3000, cool: false, sixseven: false, region: false, score: 55, nocard: false },
+  { id: "arslan",  name: "Арслан",    num: "7893676730", vip: false, loadMs: 3000, cool: false, sixseven: true,  region: false, score: 67, nocard: false },
+  { id: "dima",    name: "Дима",      num: "",           vip: false, loadMs: 1000, cool: false, sixseven: false, region: true,  score: 0,  nocard: false },
+  { id: "alisa",   name: "Алиса",     num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 95, nocard: true },
+  { id: "taisiya", name: "Таисия",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 90, nocard: true },
+  { id: "robert",  name: "Роберт",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 88, nocard: true },
+  { id: "zhenya",  name: "Женя",      num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 85, nocard: true },
+  { id: "kirill",  name: "Кирилл",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 80, nocard: true },
+  { id: "rostislav",name:"Ростислав", num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 75, nocard: true },
+  { id: "elmar",   name: "Эльмар",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 100,nocard: true }
+];
 
-  function updateSelection() {
-    options.forEach((opt, i) => {
-      opt.classList.remove('selected');
-      if (i === selectedIndex) {
-        opt.classList.add('selected');
-        opt.focus();
-      }
-    });
-    document.getElementById('descText').innerText = descriptions[selectedIndex] || "";
-  }
+let currentCard = null;
+let groupScore = 79; // Баллы группы по умолчанию
 
-  options.forEach((opt, i) => {
-    opt.addEventListener('click', () => { selectedIndex = i; updateSelection(); });
+/* ================= ХРАНИЛИЩЕ ================= */
+const STORE_KEY = "school_cards_v4";
+let state = load();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  const init = { title: "4А · Система", cards: {} };
+  CARDS.forEach(c => init.cards[c.id] = { in: "", out: "", note: "" });
+  return init;
+}
+function save() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+
+/* ================= ВХОД ================= */
+function doLogin() {
+  const input = document.getElementById("loginName");
+  const err = document.getElementById("loginErr");
+  const val = input.value.trim().toLowerCase();
+
+  if (!val) { err.textContent = "Введите имя"; return; }
+
+  const found = CARDS.find(c => c.name.toLowerCase() === val);
+  if (!found) { err.textContent = "Такого имени нет"; return; }
+
+  err.textContent = "";
+  input.value = "";
+  currentCard = found;
+
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("mainSite").style.display = "block";
+  showMyCard();
+}
+function logout() {
+  currentCard = null;
+  document.getElementById("mainSite").style.display = "none";
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("loginName").value = "";
+  document.getElementById("loginErr").textContent = "";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("loginName").addEventListener("keydown", e => {
+    if (e.key === "Enter") doLogin();
   });
+});
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      selectedIndex = (selectedIndex + 1) % options.length;
-      updateSelection();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      selectedIndex = (selectedIndex - 1 + options.length) % options.length;
-      updateSelection();
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      startBoot();
-    }
-  });
+/* ================= ПОКАЗ КАРТЫ ================= */
+function showMyCard() {
+  const box = document.getElementById("cards");
+  box.innerHTML = "";
+  if (!currentCard) return;
+  const c = currentCard;
 
-  /* ================= ЛОГИКА ЗАГРУЗКИ ================= */
-  function startBoot() {
-    document.getElementById('bootMenu').style.display = 'none';
-    document.querySelector('.footer').style.display = 'none';
+  const ph = document.createElement("div");
+  ph.className = "card-loading";
+  ph.innerHTML = `
+    <div class="spinner"></div>
+    <div class="txt">Загрузка карты: ${c.name}<span class="dots"></span></div>
+    <div class="small">ожидание ответа сервера</div>
+  `;
+  box.appendChild(ph);
+
+  setTimeout(() => {
+    const real = document.createElement("div");
+    real.className = cardClass(c);
+    real.innerHTML = cardHTML(c);
+    box.replaceChild(real, ph);
+  }, c.loadMs);
+}
+
+/* ================= РЕНДЕР КАРТЫ ================= */
+function cardHTML(c) {
+  const d = state.cards[c.id] || (state.cards[c.id] = { in: "", out: "", note: "" });
+  const statusIn = d.in !== "";
+
+  let scoreClass = "score-good";
+  let scoreText = c.score;
+  if (c.score === 0) { scoreClass = "score-zero"; scoreText = "ОТВРАТИТЕЛЬНО"; }
+  else if (c.score <= 10) scoreClass = "score-bad";
+  else if (c.score <= 39) scoreClass = "score-warn";
+
+  const coolBlock = c.cool ? `<div class="crown">👑</div><div class="cool-badge">★ КРУТОЙ ПОЛЬЗОВАТЕЛЬ</div>` : "";
+  const ssBlock = c.sixseven ? `
+    <div class="ss-floats">
+      <span class="ss-float" style="left:8%; animation-duration:4s;">6</span>
+      <span class="ss-float" style="left:22%; animation-duration:5.2s; animation-delay:1s;">7</span>
+      <span class="ss-float" style="left:40%; animation-duration:3.6s; animation-delay:2s;">6</span>
+      <span class="ss-float" style="left:58%; animation-duration:4.8s; animation-delay:.5s;">7</span>
+    </div>
+    <div class="ss-badge">67 ПОЛЬЗОВАТЕЛЬ</div>
+  ` : "";
+  const imageBlock = c.sixseven ? `<div class="ss-image"><img src="https://static.toiimg.com/thumb/msid-124918323,imgsize-102006,width-400,resizemode-4/67-named-word-of-the-year-why-a-number-was-chosen-instead-of-a-word-and-what-it-really-means.jpg" alt="67" onerror="this.style.display='none';"><div class="cap">67 · СЛОВО ГОДА</div></div>` : "";
+  const regionBlock = c.region ? `<div class="region-box"><div class="title"><span class="region-pin">📍</span> ОШИБКА АВТОРИЗАЦИИ</div><div class="line">Идёт авторизация<span class="dots"></span></div></div>` : "";
+  const nocardBlock = c.nocard ? `<div class="future-badge">★ VIP БУДУЩЕГО</div><div class="nocard-box"><div class="title">💳 КАРТА НЕ ВЫДАНА</div><div class="line">Крутой пользователь будущего, но карты пока нет<span class="dots"></span></div></div>` : "";
+  const copyBlock = c.sixseven ? `<div class="copy-block"><div class="copy-label">КОПИЯ КАРТЫ</div><div class="copy-card"><div class="cn">Номер карты: <b>${c.num || "—"}</b></div><div class="ci">${c.name} · дубликат</div></div></div>` : "";
+
+  return `
+    ${coolBlock} ${ssBlock} ${c.vip && !c.nocard ? '<span class="vip">VIP</span>' : ''}
+    <div class="num">Номер карты: <b>${c.num || "Нет карты"}</b></div>
+    <div class="name">${c.name}</div>
+    ${imageBlock} ${regionBlock} ${nocardBlock}
+    <div class="score-box">
+      <div class="score-label">Баллы группы</div>
+      <div class="score-val ${scoreClass}">${scoreText}</div>
+    </div>
+    <div class="status ${statusIn ? 'in' : 'out'}">${statusIn ? '● В школе' : '○ Не отмечен'}</div>
+    <div class="times">
+      <div class="tbox"><div class="lbl">ВХОД</div><div class="val ${d.in ? '' : 'empty'}">${d.in || '--:--'}</div></div>
+      <div class="tbox"><div class="lbl">ВЫХОД</div><div class="val ${d.out ? '' : 'empty'}">${d.out || '--:--'}</div></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="markIn('${c.id}')">Вход</button><button class="btn" onclick="markOut('${c.id}')">Выход</button></div>
+    <div class="actions" style="margin-top: 10px;"><button class="btn danger" onclick="openInspect()" style="flex:1; font-size:12px; background:#333; color:#fff; box-shadow:none;">🔍 Исследовать</button></div>
+    ${copyBlock}
+    <div class="note"><label>Примечание</label><input type="text" value="${escapeHtml(d.note)}" onchange="setNote('${c.id}', this.value)" placeholder=""></div>
+  `;
+}
+
+function cardClass(c) {
+  return "card" + (c.cool ? " cool" : "") + (c.sixseven ? " sixseven" : "") + (c.region ? " region" : "") + (c.nocard ? " nocard" : "");
+}
+
+/* ================= ИССЛЕДОВАТЬ ================= */
+function openInspect() {
+  if (!currentCard) return;
+  // Для исследования берем текущие баллы группы (79)
+  document.getElementById('inspectInput').value = groupScore;
+  document.getElementById('inspectModal').classList.add('show');
+}
+function closeInspect(e) {
+  if (e && e.target !== document.getElementById('inspectModal')) return;
+  document.getElementById('inspectModal').classList.remove('show');
+}
+function saveInspect() {
+  const newScore = parseInt(document.getElementById('inspectInput').value);
+  if (!isNaN(newScore)) {
+    groupScore = newScore;
+    updateGroupScoreDisplay();
     
-    // Если выбран "Безопасный режим" (index 1, 2, 3)
-    if (selectedIndex >= 1 && selectedIndex <= 3) {
-      runSafeMode();
-    } 
-    // Если выбрано "Ведение журнала загрузки" (index 4)
-    else if (selectedIndex === 4) {
-      // Мгновенно переходим на экран установки
-      document.getElementById('win7InstallScreen').classList.add('show');
-    } 
-    // Обычная загрузка
-    else {
-      alert("Обычная загрузка...");
-      resetAll();
+    // Обновляем отображение баллов на карточке (если открыта)
+    const scoreEl = document.querySelector('#cards .score-val');
+    if (scoreEl) {
+       // Просто перерисовываем карту, чтобы цвета обновились
+       if (currentCard) {
+         const el = document.querySelector("#cards .card");
+         if (el) {
+           el.className = cardClass(currentCard);
+           el.innerHTML = cardHTML(currentCard);
+         }
+       }
     }
   }
+  closeInspect();
+}
 
-  /* ================= БЕЗОПАСНЫЙ РЕЖИМ ================= */
-  function runSafeMode() {
-    document.getElementById('loadingScreen').style.display = 'flex';
-    const fill = document.getElementById('loadFill');
-    fill.style.animation = 'none';
-    void fill.offsetWidth;
-    fill.style.animation = 'fill 10s linear forwards';
+// Обновление панели группы
+function updateGroupScoreDisplay() {
+  const groupEl = document.getElementById('groupScoreDisplay');
+  if (!groupEl) return;
+  
+  groupEl.className = 'group-score-val';
+  
+  if (groupScore === 0) {
+    groupEl.innerText = 'ОТВРАТИТЕЛЬНО';
+    groupEl.classList.add('score-zero');
+  } else if (groupScore <= 10) {
+    groupEl.innerText = groupScore;
+    groupEl.classList.add('score-bad');
+  } else if (groupScore <= 39) {
+    groupEl.innerText = groupScore;
+    groupEl.classList.add('score-warn');
+  } else {
+    groupEl.innerText = groupScore;
+    groupEl.classList.add('score-good');
+  }
+}
 
+/* ================= ДЕЙСТВИЯ ================= */
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+function nowTime() { const n = new Date(); return String(n.getHours()).padStart(2,"0") + ":" + String(n.getMinutes()).padStart(2,"0"); }
+function markIn(id)  { state.cards[id].in  = nowTime(); save(); refreshCard(id); }
+function markOut(id) { state.cards[id].out = nowTime(); save(); refreshCard(id); }
+function setNote(id, v) { state.cards[id].note = v; save(); }
+
+function refreshCard(id) {
+  const c = CARDS.find(x => x.id === id);
+  if (!c) return;
+  const el = document.querySelector("#cards .card");
+  if (el) {
+    el.className = cardClass(c);
+    el.innerHTML = cardHTML(c);
+  }
+}
+
+/* ================= ВКЛАДКИ ================= */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+/* ================= НАСТРОЙКИ ================= */
+function saveTitle() {
+  const t = document.getElementById("setTitle").value.trim();
+  if (!t) return;
+  state.title = t;
+  save();
+  document.getElementById("subTitle").textContent = t;
+}
+function resetAll() {
+  if (!confirm("Сбросить все отметки входа/выхода?")) return;
+  CARDS.forEach(c => state.cards[c.id] = { in: "", out: "", note: "" });
+  save();
+  if (currentCard) showMyCard();
+}
+
+/* ================= ФОН ================= */
+function startBackground() {
+  const starsBox = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.top = Math.random() * 100 + 'vh';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    const sz = (Math.random() * 2 + 1) + 'px';
+    s.style.width = s.style.height = sz;
+    starsBox.appendChild(s);
+  }
+}
+
+/* ================= ЗАГРУЗКА ================= */
+const loadMessages = ["Подключение...", "Ожидание...", "Загрузка...", "Роскомнадзор проверяет...", "Пакеты теряются...", "Повторная попытка...", "Почти получилось...", "Финальная загрузка..."];
+let progress = 0;
+const barFill = document.getElementById('barFill');
+const loaderStatus = document.getElementById('loaderStatus');
+const loaderPercent = document.getElementById('loaderPercent');
+const loader = document.getElementById('loader');
+const loginScreen = document.getElementById('login');
+
+const TOTAL_MS = 15000;
+const TICK_MS = 250;
+const STEPS = TOTAL_MS / TICK_MS;
+let step = 0;
+
+const timer = setInterval(() => {
+  step++;
+  let inc = (step < 20) ? 0.5 : (step < 40) ? 1 : 2;
+  progress = Math.min(100, progress + inc);
+  barFill.style.width = progress + '%';
+  loaderPercent.textContent = Math.floor(progress) + '%';
+  const idx = Math.min(loadMessages.length - 1, Math.floor((progress / 100) * loadMessages.length));
+  loaderStatus.textContent = loadMessages[idx];
+
+  if (progress >= 100 || step >= STEPS) {
+    clearInterval(timer);
+    barFill.style.width = '100%';
+    loaderPercent.textContent = '100%';
     setTimeout(() => {
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('activationWindow').classList.add('show');
-    }, 10000);
+      loader.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      startBackground();
+      updateGroupScoreDisplay(); // Обновляем баллы при старте
+    }, 600);
   }
-
-  /* ================= БЕСКОНЕЧНОЕ МОРГАНИЕ ================= */
-  function startFlicker() {
-    document.getElementById('win7InstallScreen').classList.remove('show');
-    document.getElementById('flickerOverlay').classList.add('show');
-  }
-
-  /* ================= СБРОС ================= */
-  function resetAll() {
-    document.getElementById('activationWindow').classList.remove('show');
-    document.getElementById('loadingScreen').style.display = 'none';
-    document.getElementById('win7InstallScreen').classList.remove('show');
-    document.getElementById('flickerOverlay').classList.remove('show');
-    document.getElementById('bootMenu').style.display = 'block';
-    document.querySelector('.footer').style.display = 'flex';
-    selectedIndex = 0;
-    updateSelection();
-  }
-
-  // Инициализация
-  updateSelection();
+}, TICK_MS);
 </script>
 
 </body>
