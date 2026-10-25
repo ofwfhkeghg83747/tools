@@ -36,6 +36,54 @@
 
   .wrap { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; }
 
+  .logo-rusik {
+    display: flex; justify-content: center; margin-bottom: 10px;
+    font-size: 26px; font-weight: 900; letter-spacing: -1px;
+    filter: drop-shadow(0 0 10px rgba(0,180,255,.8));
+  }
+  .logo-rusik .ru { color: #00d4ff; text-shadow: 0 0 8px #00aaff; }
+  .logo-rusik .sik { color: #7b4dff; text-shadow: 0 0 10px #7b4dff; }
+  .logo-rusik .dot { color: #ff4dd2; margin-left: 2px; text-shadow: 0 0 10px #ff4dd2; }
+
+  #loader {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    background: radial-gradient(circle at 50% 40%, #1a1240 0%, #05060f 70%, #000 100%);
+    transition: opacity .8s ease, visibility .8s ease;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-icon {
+    font-size: 54px; margin-bottom: 18px;
+    animation: spin 2.5s linear infinite;
+    filter: drop-shadow(0 0 18px #4d7bff);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-title {
+    font-size: 18px; color: #ff8ba0; font-weight: bold;
+    letter-spacing: 1px; margin-bottom: 14px;
+    text-shadow: 0 0 12px rgba(255,77,107,.8);
+  }
+  .loader-msg { font-size: 14px; color: #d7e3ff; max-width: 340px; line-height: 1.5; margin-bottom: 6px; }
+  .loader-msg b { color: #ffb84d; text-shadow: 0 0 8px rgba(255,150,40,.7); }
+  .bar {
+    width: min(320px, 85vw); height: 12px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid #3a5ba8; border-radius: 20px;
+    overflow: hidden; margin: 22px 0 12px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,.6);
+  }
+  .bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #00d4ff, #7b4dff, #ff4dd2);
+    box-shadow: 0 0 14px #7b4dff;
+    border-radius: 20px;
+    transition: width .4s ease;
+  }
+  .loader-status { font-size: 13px; color: #8fa7d1; letter-spacing: 1px; min-height: 20px; }
+  .loader-percent { font-size: 12px; color: #6bd5ff; margin-top: 6px; text-shadow: 0 0 6px #00aaff; }
+
   #login {
     position: fixed; inset: 0; z-index: 9000;
     display: flex; flex-direction: column;
@@ -58,7 +106,6 @@
   .login-err { color: #ff8ba0; font-size: 13px; min-height: 18px; text-shadow: 0 0 8px rgba(255,77,107,.7); }
   .login-hint { margin-top: 18px; font-size: 11px; color: #5a6a8a; }
 
-  /* ПАНЕЛЬ ГРУППЫ */
   .group-header {
     background: rgba(10, 15, 35, 0.7);
     border: 1px solid #00d4ff;
@@ -102,10 +149,11 @@
     background: linear-gradient(150deg, rgba(20,30,70,.9), rgba(40,20,80,.9));
     border: 1px solid #4d7bff; border-radius: 14px; padding: 6px;
     box-shadow: 0 0 14px rgba(77,123,255,.5);
+    flex-wrap: wrap;
   }
   .menu button {
     flex: 1; padding: 10px 8px; border: 0; border-radius: 10px;
-    font-family: inherit; font-size: 14px; color: #9fd0ff;
+    font-family: inherit; font-size: 13px; color: #9fd0ff;
     background: transparent; cursor: pointer; letter-spacing: .5px;
     transition: .25s;
   }
@@ -116,6 +164,7 @@
   }
   .menu button:active { transform: scale(.97); }
   .menu button.exit { color: #ff8ba0; flex: 0 0 auto; padding: 10px 14px; }
+  .menu button.admin { background: #8b5cf6; color: #fff; }
 
   .tab { display: none; }
   .tab.active { display: block; }
@@ -179,6 +228,7 @@
     box-shadow: 0 0 12px rgba(77,123,255,.5), 0 0 30px rgba(120,60,255,.25),
                 inset 0 0 20px rgba(77,123,255,.1);
     animation: cardAppear .5s ease;
+    overflow: hidden;
   }
   @keyframes cardAppear {
     from { opacity: 0; transform: translateY(12px); }
@@ -189,6 +239,16 @@
     background: linear-gradient(90deg, #00d4ff, #7b4dff, #ff4dd2);
     box-shadow: 0 0 10px #7b4dff;
   }
+
+  .card-banner {
+    width: calc(100% + 32px);
+    margin: -16px -16px 16px -16px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 2px solid #4d7bff;
+  }
+  .card.has-banner::before { display: none; }
 
   .card.cool {
     border: 2px solid transparent;
@@ -252,7 +312,6 @@
     50%     { transform: translateX(-50%) translateY(-6px) rotate(4deg); }
   }
 
-  /* 67 + СИКСЕЙВЕН */
   .card.sixseven {
     border: 2px solid transparent;
     background:
@@ -320,7 +379,6 @@
     100% { transform: translateY(-30%) rotate(360deg) scale(1.2); opacity: 0; }
   }
 
-  /* Картинка «67» */
   .ss-image {
     margin: 12px 0;
     border-radius: 12px;
@@ -406,7 +464,6 @@
     50%     { transform: translateY(-4px); }
   }
 
-  /* СТИЛИ ДЛЯ НОВЫХ КАРТОЧЕК */
   .future-badge { 
     display: inline-block; font-size: 11px; letter-spacing: 1.5px; font-weight: bold; 
     padding: 6px 14px; border-radius: 20px; margin-bottom: 12px; color: #fff; 
@@ -474,46 +531,21 @@
     background: rgba(10,15,35,.8); color: #d7e3ff; font-family: inherit; font-size: 14px;
   }
 
-  #loader {
-    position: fixed; inset: 0; z-index: 9999;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 24px; text-align: center;
-    background: radial-gradient(circle at 50% 40%, #1a1240 0%, #05060f 70%, #000 100%);
-    transition: opacity .8s ease, visibility .8s ease;
+  .admin-card {
+    background: rgba(5,25,40,.92);
+    border: 1px solid #00ffb3; border-radius: 16px;
+    padding: 14px; margin-bottom: 12px;
+    box-shadow: 0 0 14px rgba(0,255,180,.45);
   }
-  #loader.hidden { opacity: 0; visibility: hidden; }
-  .loader-icon {
-    font-size: 54px; margin-bottom: 18px;
-    animation: spin 2.5s linear infinite;
-    filter: drop-shadow(0 0 18px #4d7bff);
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loader-title {
-    font-size: 18px; color: #ff8ba0; font-weight: bold;
-    letter-spacing: 1px; margin-bottom: 14px;
-    text-shadow: 0 0 12px rgba(255,77,107,.8);
-  }
-  .loader-msg { font-size: 14px; color: #d7e3ff; max-width: 340px; line-height: 1.5; margin-bottom: 6px; }
-  .loader-msg b { color: #ffb84d; text-shadow: 0 0 8px rgba(255,150,40,.7); }
-  .bar {
-    width: min(320px, 85vw); height: 12px;
-    background: rgba(255,255,255,.08);
-    border: 1px solid #3a5ba8; border-radius: 20px;
-    overflow: hidden; margin: 22px 0 12px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,.6);
-  }
-  .bar-fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, #00d4ff, #7b4dff, #ff4dd2);
-    box-shadow: 0 0 14px #7b4dff;
-    border-radius: 20px;
-    transition: width .4s ease;
-  }
-  .loader-status { font-size: 13px; color: #8fa7d1; letter-spacing: 1px; min-height: 20px; }
-  .loader-percent { font-size: 12px; color: #6bd5ff; margin-top: 6px; text-shadow: 0 0 6px #00aaff; }
-  .loader-note { margin-top: 20px; font-size: 11px; color: #5a6a8a; max-width: 300px; }
+  .admin-card .arow { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .admin-card .aname { font-size: 18px; color: #fff; text-shadow: 0 0 8px #00ffb3; }
+  .admin-card .anum { font-size: 12px; color: #8fa7d1; margin-top: 3px; }
+  .admin-card .atimes { display: flex; gap: 10px; margin-top: 8px; font-size: 12px; }
+  .admin-card .atimes span { color: #6bd5ff; }
+  .admin-card .abtns { display: flex; gap: 8px; margin-top: 10px; }
+  .admin-card .abtns .btn { flex: 1; padding: 7px 10px; font-size: 12px; }
 
+  /* Стили для правильной загрузки карты */
   .card-loading {
     position: relative;
     background: linear-gradient(150deg, rgba(20,30,70,.85), rgba(40,20,80,.85));
@@ -523,6 +555,7 @@
     min-height: 120px;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 10px;
+    text-align: center;
   }
   .card-loading .spinner {
     width: 28px; height: 28px;
@@ -536,17 +569,13 @@
   .card-loading .small { font-size: 11px; color: #5a6a8a; }
   .card-loading .dots::after { content: ""; animation: dots 1.2s steps(4,end) infinite; }
 
-  /* Стили для ленты кружочков */
-  .feed { display: flex; flex-direction: column; gap: 15px; }
-  .post { background: rgba(10, 15, 35, 0.6); border: 1px solid #4d7bff; border-radius: 16px; padding: 15px; animation: cardAppear .3s; }
-  .post-video { width: 100%; border-radius: 10px; background: #000; margin-top: 10px; max-height: 300px; }
-
   #cameraModal { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 20000; }
   #cameraModal.show { display: flex; }
   #videoPreview { width: 100%; max-width: 400px; border-radius: 50%; border: 4px solid #00d4ff; box-shadow: 0 0 20px #00d4ff; }
   #recordBtn { margin-top: 20px; padding: 15px 30px; border-radius: 30px; border: none; background: #ff2d55; color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; }
   #stopBtn { margin-top: 20px; padding: 15px 30px; border-radius: 30px; border: none; background: #333; color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; display: none; }
   #cancelBtn { margin-top: 10px; background: transparent; border: none; color: #aaa; cursor: pointer; text-decoration: underline; }
+  #bannerInput { display: none; }
 </style>
 </head>
 <body>
@@ -561,14 +590,16 @@
 </div>
 
 <div id="login" class="hidden">
+  <div class="logo-rusik login-logo"><span class="ru">РУ</span><span class="sik">сик</span><span class="dot">.</span></div>
   <div class="login-title">🔐 Вход по имени</div>
   <div class="login-sub">Введите своё имя</div>
   <div class="login-box">
     <input type="text" id="loginName" placeholder="Введите ваше имя" autocomplete="off">
+    <input type="password" id="adminPass" placeholder="Пароль" autocomplete="off" style="display:none;">
     <button class="btn" onclick="doLogin()">Войти</button>
     <div class="login-err" id="loginErr"></div>
   </div>
-  <div class="login-hint">Катя, Рената, Арслан, Дима, Алиса, Таисия, Роберт, Женя, Кирилл, Ростислав, Эльмар</div>
+  <div class="login-hint">Катя, Рената, Арслан, Дима, Алиса, Таисия, Роберт, Женя, Кирилл, Ростислав, Эльмар, Костя (админ)</div>
 </div>
 
 <div class="stars" id="stars"></div>
@@ -576,11 +607,12 @@
 
 <div class="wrap" id="mainSite" style="display:none;">
   
-  <!-- ПАНЕЛЬ ГРУППЫ С КАРТИНКОЙ -->
+  <div class="logo-rusik"><span class="ru">РУ</span><span class="sik">сик</span><span class="dot">.</span></div>
+  
   <div class="group-header">
     <img src="https://i.pinimg.com/736x/a8/5c/b1/a85cb1f2cb946c455ae09414ccb5c955.jpg" 
          class="group-logo" alt="Зоопарк" 
-         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%230d1b3a\' stroke=\'%2300d4ff\' stroke-width=\'4\'/%3E%3Ctext x=\'50\' y=\'55\' font-size=\'20\' fill=\'%2300d4ff\' text-anchor=\'middle\' font-family=\'sans-serif\'%3EЗОО%3C/text%3E%3C/svg%3E';">
+         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%230d1b3a\' stroke=\'%2300d4ff\' stroke-width=\'4\'/%3E%3Ctext x=\'50\' y=\'55\' font-size=\'20\' fill=\'%2300d4ff\' text-anchor=\'middle\' font-family=\'sans-serif\'%3EЗОО%3C/text%3E%3C/svg%3E\';">
     <div class="group-title">ЗООПАРК 4 "А"</div>
     <div class="group-score-box">
       <div class="group-score-label">Баллы группы</div>
@@ -596,6 +628,7 @@
     <button onclick="switchTab('news', this)">Новости</button>
     <button onclick="switchTab('circles', this)">Кружочки</button>
     <button onclick="switchTab('settings', this)">Настройки</button>
+    <button class="admin" id="adminTabBtn" style="display:none;" onclick="switchTab('admin', this)">Админ-панель</button>
     <button class="exit" onclick="logout()">Выйти</button>
   </div>
 
@@ -612,7 +645,6 @@
     </div>
   </div>
 
-  <!-- ВКЛАДКА: КРУЖОЧКИ -->
   <div class="tab" id="tab-circles">
     <div style="text-align: center; margin-bottom: 15px;">
       <button class="btn" style="background: #ff2d55;" onclick="openCamera()">📹 Записать кружок</button>
@@ -628,10 +660,23 @@
       <button class="btn" onclick="saveTitle()">Сохранить название</button>
       <button class="btn danger" onclick="resetAll()">Сбросить все отметки</button>
     </div>
+    <div class="settings" style="margin-top: 15px;">
+      <label>Баннер карточки (картинка)</label>
+      <button class="btn" style="background: #00d4ff; color: #000;" onclick="uploadBanner()">Загрузить баннер</button>
+      <input type="file" id="bannerInput" accept="image/*" onchange="handleBanner(event)">
+      <button class="btn danger" style="margin-top: 5px;" onclick="removeBanner()">Удалить баннер</button>
+    </div>
+  </div>
+
+  <div class="tab" id="tab-admin">
+    <div style="text-align: center; margin-bottom: 15px; color: #00ffb3; font-weight: bold; font-size: 18px;">
+      👑 Управление пользователями
+    </div>
+    <div id="adminList"></div>
+    <button class="btn danger" style="margin-top: 15px; width: 100%;" onclick="resetAll()">Сбросить все отметки</button>
   </div>
 </div>
 
-<!-- Модалка для съемки кружочка -->
 <div id="cameraModal">
   <video id="videoPreview" autoplay playsinline muted></video>
   <button id="recordBtn" onclick="startRecording()">🔴 Начать запись</button>
@@ -652,12 +697,14 @@ const CARDS = [
   { id: "zhenya",  name: "Женя",      num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 85, nocard: true },
   { id: "kirill",  name: "Кирилл",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 80, nocard: true },
   { id: "rostislav",name:"Ростислав", num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 75, nocard: true },
-  { id: "elmar",   name: "Эльмар",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 100,nocard: true }
+  { id: "elmar",   name: "Эльмар",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 100,nocard: true },
+  { id: "kostya",  name: "Костя",     num: "ADMIN",      vip: false, loadMs: 2000, cool: false, sixseven: false, region: false, score: 999, nocard: true, admin: true }
 ];
 
 let currentCard = null;
 let groupScore = 79;
-const STORE_KEY = "school_cards_v11";
+let cardBanner = null;
+const STORE_KEY = "school_cards_v15";
 let state = load();
 let mediaRecorder = null;
 let recordedChunks = [];
@@ -668,7 +715,7 @@ function load() {
     const raw = localStorage.getItem(STORE_KEY);
     if (raw) return JSON.parse(raw);
   } catch (e) {}
-  const init = { title: "4А · карты вход/выход", cards: {}, posts: [] };
+  const init = { title: "4А · карты вход/выход", cards: {}, posts: [], banner: null };
   CARDS.forEach(c => init.cards[c.id] = { in: "", out: "", note: "" });
   return init;
 }
@@ -684,25 +731,110 @@ function doLogin() {
   const found = CARDS.find(c => c.name.toLowerCase() === val);
   if (!found) { err.textContent = "Такого имени нет"; return; }
 
+  if (found.id === "kostya") {
+    const passInput = document.getElementById("adminPass");
+    if (passInput.value !== "520667") {
+      err.textContent = "Неверный пароль админа";
+      return;
+    }
+  }
+
   err.textContent = "";
   input.value = "";
   currentCard = found;
 
   document.getElementById("login").classList.add("hidden");
   document.getElementById("mainSite").style.display = "block";
+  
+  if (found.admin) {
+    document.getElementById("adminTabBtn").style.display = "block";
+    renderAdminList();
+  } else {
+    document.getElementById("adminTabBtn").style.display = "none";
+  }
+
   showMyCard();
   renderFeed(); 
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("loginName").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+  document.getElementById("adminPass").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+  
+  document.getElementById("loginName").addEventListener("input", function() {
+    const adminPass = document.getElementById("adminPass");
+    if (this.value.trim().toLowerCase() === "костя") {
+      adminPass.style.display = "block";
+    } else {
+      adminPass.style.display = "none";
+      adminPass.value = "";
+    }
+  });
+});
+
 function logout() {
   currentCard = null;
   document.getElementById("mainSite").style.display = "none";
   document.getElementById("login").classList.remove("hidden");
   document.getElementById("loginName").value = "";
+  document.getElementById("adminPass").value = "";
+  document.getElementById("adminPass").style.display = "none";
   document.getElementById("loginErr").textContent = "";
+  document.getElementById("adminTabBtn").style.display = "none";
 }
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("loginName").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
-});
+
+/* ================= АДМИН-ПАНЕЛЬ ================= */
+function renderAdminList() {
+  const list = document.getElementById('adminList');
+  if (!list) return;
+  list.innerHTML = '';
+
+  CARDS.forEach(c => {
+    if (c.id === "kostya") return;
+    const d = state.cards[c.id] || (state.cards[c.id] = { in: "", out: "", note: "" });
+    const statusIn = d.in !== "";
+    
+    const div = document.createElement('div');
+    div.className = 'admin-card';
+    div.innerHTML = `
+      <div class="arow">
+        <div>
+          <div class="aname">${c.name}${c.vip ? ' · VIP' : ''}${c.nocard ? ' · без карты' : ''}</div>
+          <div class="anum">Карта: ${c.num || "Нет карты"}</div>
+        </div>
+        <div class="status ${statusIn ? 'in' : 'out'}">${statusIn ? '● В школе' : '○ Нет'}</div>
+      </div>
+      <div class="atimes">
+        <span class="${d.in ? '' : 'empty'}">Вход: ${d.in || '--:--'}</span>
+        <span class="${d.out ? '' : 'empty'}">Выход: ${d.out || '--:--'}</span>
+      </div>
+      <div class="abtns">
+        <button class="btn" style="padding:7px 10px; font-size:12px;" onclick="markIn('${c.id}'); renderAdminList();">Вход</button>
+        <button class="btn" style="padding:7px 10px; font-size:12px;" onclick="markOut('${c.id}'); renderAdminList();">Выход</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+/* ================= БАННЕР ================= */
+function uploadBanner() { document.getElementById('bannerInput').click(); }
+
+function handleBanner(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    cardBanner = e.target.result;
+    if (currentCard) showMyCard();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeBanner() {
+  cardBanner = null;
+  if (currentCard) showMyCard();
+}
 
 /* ================= КРУЖОЧКИ ================= */
 async function openCamera() {
@@ -837,10 +969,10 @@ function cardHTML(c) {
   ` : "";
 
   const nocardBlock = c.nocard ? `
-    <div class="future-badge">★ VIP БУДУЩЕГО</div>
+    <div class="future-badge">★ ${c.admin ? 'АДМИНИСТРАТОР' : 'VIP БУДУЩЕГО'}</div>
     <div class="nocard-box">
-      <div class="title">💳 КАРТА НЕ ВЫДАНА</div>
-      <div class="line">Крутой пользователь будущего, но карты пока нет<span class="dots"></span></div>
+      <div class="title">${c.admin ? '🔐 ДОСТУП РАЗРЕШЁН' : '💳 КАРТА НЕ ВЫДАНА'}</div>
+      <div class="line">${c.admin ? 'Полные права администратора' : 'Крутой пользователь будущего, но карты пока нет'}<span class="dots"></span></div>
     </div>
   ` : "";
 
@@ -854,19 +986,22 @@ function cardHTML(c) {
     </div>
   ` : "";
 
+  const bannerBlock = cardBanner ? `<div class="card-banner" style="background-image: url('${cardBanner}');"></div>` : '';
+
   return `
+    ${bannerBlock}
     ${coolBlock}
     ${ssBlock}
     ${c.vip && !c.nocard ? '<span class="vip">VIP</span>' : ''}
-    <div class="num">Номер карты: <b>${c.num || "Нет карты"}</b></div>
+    <div class="num">${c.admin ? 'СИСТЕМА' : 'Номер карты'}: <b>${c.num || "Нет карты"}</b></div>
     <div class="name">${c.name}</div>
     ${imageBlock}
     ${regionBlock}
     ${nocardBlock}
 
     <div class="score-box">
-      <div class="score-label">Баллы группы</div>
-      <div class="score-val ${scoreClass}">${c.score === 0 ? 'ОТВРАТИТЕЛЬНО' : c.score}</div>
+      <div class="score-label">${c.admin ? 'Общий доступ' : 'Баллы группы'}</div>
+      <div class="score-val ${c.admin ? 'score-good' : scoreClass}">${c.admin ? 'ПОЛНЫЙ' : (c.score === 0 ? 'ОТВРАТИТЕЛЬНО' : c.score)}</div>
     </div>
 
     <div class="status ${statusIn ? 'in' : 'out'}">${statusIn ? '● В школе' : '○ Не отмечен'}</div>
@@ -886,7 +1021,8 @@ function cardClass(c) {
     + (c.cool ? " cool" : "")
     + (c.sixseven ? " sixseven" : "")
     + (c.region ? " region" : "")
-    + (c.nocard ? " nocard" : "");
+    + (c.nocard ? " nocard" : "")
+    + (cardBanner ? " has-banner" : "");
 }
 
 /* ================= ДЕЙСТВИЯ ================= */
@@ -956,6 +1092,7 @@ function resetAll() {
   CARDS.forEach(c => state.cards[c.id] = { in: "", out: "", note: "" });
   save();
   if (currentCard) showMyCard();
+  if (currentCard && currentCard.admin) renderAdminList();
 }
 
 /* ================= ФОН ================= */
