@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Вики Вики</title>
+<script async src="https://cse.google.com/cse.js?cx=35ae0e02edc50478b"></script>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height:100%; margin:0; }
@@ -13,7 +14,6 @@
     overflow:hidden;
   }
 
-  /* Верхняя панель */
   #bar {
     background: linear-gradient(90deg,#36c,#2a9d8f);
     padding:8px; display:flex; gap:6px; align-items:center;
@@ -32,10 +32,27 @@
   }
   .btn:active { background:#e6f7f4; }
 
+  #modes {
+    display:flex; gap:6px; padding:8px;
+    background:#fff; border-bottom:1px solid #ddd; flex-shrink:0;
+    overflow-x:auto;
+  }
+  .mode {
+    padding:8px 14px; border-radius:20px; border:1px solid #ccc;
+    background:#fff; font-size:14px; font-weight:bold; cursor:pointer;
+    white-space:nowrap; color:#555;
+  }
+  .mode.active { background:#2a9d8f; color:#fff; border-color:#2a9d8f; }
+
   #content { flex:1; position:relative; overflow:hidden; }
   #frame { width:100%; height:100%; border:none; background:#fff; display:none; }
 
-  /* Старт */
+  /* Google — контейнер с готовым виджетом */
+  #google {
+    display:none; position:absolute; inset:0; overflow-y:auto;
+    background:#fff; padding:10px;
+  }
+
   #start {
     position:absolute; inset:0; padding:20px;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -55,7 +72,7 @@
   }
   .quick a.danger { background:#b00020; color:#fff; }
 
-  /* Страница MAYDUM */
+  /* MAYDUM */
   #virus {
     display:none; position:absolute; inset:0; overflow-y:auto;
     background:#141414; color:#eee; padding:18px;
@@ -68,20 +85,10 @@
     animation: pulse 1.2s infinite; line-height:1.35;
   }
   @keyframes pulse { 50% { opacity:.7; } }
-
-  #virus .card {
-    background:#1f1f1f; border-radius:14px; padding:14px;
-    border-left:4px solid #b00020;
-  }
+  #virus .card { background:#1f1f1f; border-radius:14px; padding:14px; border-left:4px solid #b00020; }
   #virus .card.green { border-left-color:#2a9d8f; }
-  #virus .card.yellow { border-left-color:#ffcc00; }
-
-  #virus h2 {
-    margin:0 0 8px; font-size:16px; color:#ffcc00;
-    display:flex; align-items:center; gap:8px;
-  }
+  #virus h2 { margin:0 0 8px; font-size:16px; color:#ffcc00; }
   #virus .card.green h2 { color:#2a9d8f; }
-
   #virus p  { margin:0 0 8px; font-size:14px; line-height:1.55; color:#ddd; }
   #virus p:last-child { margin-bottom:0; }
   #virus ul { margin:6px 0 0 18px; padding:0; font-size:13.5px; color:#ccc; line-height:1.6; }
@@ -89,23 +96,22 @@
   #virus b  { color:#fff; }
   #virus .red { color:#ff5c5c; font-weight:bold; }
   #virus .em  { color:#ffcc00; font-weight:bold; }
-
   #virus .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:4px; }
   #virus .actions button, #virus .actions a {
     flex:1; min-width:140px; padding:13px; border:none; border-radius:12px;
     font-size:14.5px; font-weight:bold; cursor:pointer;
     text-align:center; text-decoration:none; display:block;
   }
-  #virus .call   { background:#b00020; color:#fff; }
-  #virus .safe   { background:#2a9d8f; color:#fff; }
+  #virus .call { background:#b00020; color:#fff; }
+  #virus .safe { background:#2a9d8f; color:#fff; }
   #virus .danger { background:#333; color:#ffcc00; }
+  #virus .footer { font-size:12px; color:#888; text-align:center; border-top:1px solid #333; padding-top:12px; margin-top:6px; }
 
-  #virus .footer {
-    font-size:12px; color:#888; text-align:center;
-    border-top:1px solid #333; padding-top:12px; margin-top:6px;
-  }
-
-  body.dark { background:#111; }
+  /* Google CSE под дизайн */
+  .gsc-control-cse { background:transparent !important; border:none !important; padding:0 !important; }
+  .gsc-input-box { border-radius:20px !important; border:1px solid #2a9d8f !important; }
+  .gsc-search-button-v2 { background:#2a9d8f !important; border:none !important; border-radius:20px !important; }
+  .gsc-results .gsc-cursor-current-page { background:#2a9d8f !important; color:#fff !important; }
 </style>
 </head>
 <body>
@@ -117,100 +123,74 @@
     <button class="btn" onclick="go()" aria-label="Найти">🔍</button>
   </div>
 
+  <div id="modes">
+    <button class="mode active" data-mode="google" onclick="setMode('google')">🔎 Google</button>
+    <button class="mode" data-mode="wiki" onclick="setMode('wiki')">📖 Википедия</button>
+    <button class="mode" data-mode="maydum" onclick="setMode('maydum')">☣️ MAYDUM</button>
+  </div>
+
   <div id="content">
 
-    <!-- Стартовая страница -->
     <div id="start">
       <h1>Вики Вики</h1>
-      <p>Мобильный браузер. Введи запрос сверху 👆</p>
+      <p>Введи запрос сверху 👆 и выбери поисковик</p>
       <div class="quick">
-        <a href="#" onclick="openWiki('Россия');return false">🇷🇺 Россия</a>
-        <a href="#" onclick="openWiki('Кошка');return false">🐱 Кошка</a>
-        <a href="#" onclick="openWiki('Космос');return false">🚀 Космос</a>
-        <a href="#" onclick="openWiki('Python');return false">🐍 Python</a>
+        <a href="#" onclick="quickSearch('Россия');return false">🇷🇺 Россия</a>
+        <a href="#" onclick="quickSearch('Кошка');return false">🐱 Кошка</a>
+        <a href="#" onclick="quickSearch('Космос');return false">🚀 Космос</a>
+        <a href="#" onclick="quickSearch('Python');return false">🐍 Python</a>
         <a href="#" class="danger" onclick="virusPage();return false">☣️ вирус MAYDUM</a>
       </div>
     </div>
 
-    <!-- Iframe -->
     <iframe id="frame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
 
-    <!-- ================= СТРАНИЦА MAYDUM ================= -->
-    <div id="virus">
+    <!-- Полный виджет Google: поле + результаты -->
+    <div id="google">
+      <div class="gcse-search"></div>
+    </div>
 
+    <div id="virus">
       <div class="warn">⚠️ ОПАСНО: ВИРУС MAYDUM ⚠️<br><span style="font-size:14px;font-weight:normal">Зафиксированы взлом аккаунтов, слежка за устройствами и угрозы убийством</span></div>
 
-      <!-- 1. Похищение СМС-кода -->
       <div class="card">
         <h2>📱 1. Похищение СМС-кода и взлом аккаунтов</h2>
-        <p>
-          В ходе разговора был <b>продиктован поступивший СМС-код</b>. После этого
-          злоумышленники <span class="red">начали взламывать учётные записи</span>:
-        </p>
-        <ul>
-          <li>на портале <b>«Госуслуги»</b>;</li>
-          <li>в сервисе <b>«Сбербанк»</b>.</li>
-        </ul>
-        <p style="margin-top:8px">
-          ⚠️ <span class="em">Никому не сообщайте СМС-коды</span> — ни «банку», ни «Госуслугам», ни «полиции».
-        </p>
+        <p>В ходе разговора был <b>продиктован поступивший СМС-код</b>. После этого злоумышленники <span class="red">начали взламывать учётные записи</span>:</p>
+        <ul><li>на портале <b>«Госуслуги»</b>;</li><li>в сервисе <b>«Сбербанк»</b>.</li></ul>
+        <p style="margin-top:8px">⚠️ <span class="em">Никому не сообщайте СМС-коды</span>.</p>
       </div>
 
-      <!-- 2. Что пытались узнать -->
       <div class="card">
         <h2>🎯 2. Цель злоумышленников</h2>
         <p>Мошенники пытались узнать:</p>
-        <ul>
-          <li>информацию о <b>получении выплат</b>;</li>
-          <li><b>статус военнослужащего</b>.</li>
-        </ul>
+        <ul><li>информацию о <b>получении выплат</b>;</li><li><b>статус военнослужащего</b>.</li></ul>
       </div>
 
-      <!-- 3. Вмешательство в устройства -->
       <div class="card">
         <h2>🕵️ 3. Угрозы и несанкционированный доступ к устройствам</h2>
         <p>На <b>телефоне и компьютере</b> зафиксированы признаки дистанционного вмешательства:</p>
-        <ul>
-          <li>отображение <b>предупреждений об опасности</b>;</li>
-          <li><b>запуск сторонних приложений</b> без ведома владельца.</li>
-        </ul>
-        <p style="margin-top:8px">
-          Это означает, что устройство могло быть <span class="red">скомпрометировано</span>:
-          возможен доступ к камере, микрофону, перепискам и банковским приложениям.
-        </p>
+        <ul><li>отображение <b>предупреждений об опасности</b>;</li><li><b>запуск сторонних приложений</b> без ведома владельца.</li></ul>
       </div>
 
-      <!-- 4. Угрозы убийством и выкуп -->
       <div class="card">
         <h2>🚨 4. Угрозы убийством и требование выкупа</h2>
-        <p>
-          Через <b>аудиоколонки выключенного компьютера</b> и <b>по телефону</b>
-          поступали угрозы:
-        </p>
+        <p>Через <b>аудиоколонки выключенного компьютера</b> и <b>по телефону</b> поступали угрозы:</p>
         <ul>
           <li>угрозы <span class="red">физической расправой (убийством)</span>;</li>
           <li>требования <span class="red">выкупа от 10 до 100 миллионов рублей</span>.</li>
         </ul>
-        <p style="margin-top:8px">
-          ⚠️ <span class="em">Не платите выкуп.</span> Угрозы убийством и вымогательство — это
-          <b>уголовные преступления</b> (ст. 119 и ст. 163 УК РФ). Передача денег не остановит
-          преступников.
-        </p>
+        <p style="margin-top:8px">⚠️ <span class="em">Не платите выкуп.</span> Это уголовные преступления (ст. 119 и 163 УК РФ).</p>
       </div>
 
-      <!-- 5. Что делать -->
       <div class="card green">
         <h2>✅ 5. Что необходимо сделать немедленно</h2>
-        <p>Собеседники обсудили необходимость <b>личного обращения в правоохранительные органы</b>
-        для подачи заявления. Порядок действий:</p>
         <ul>
           <li><b>Позвонить 102</b> и сообщить об угрозах убийством и вымогательстве;</li>
-          <li><b>лично подать заявление</b> в ближайший отдел полиции (ст. 119, 163 УК РФ);</li>
+          <li><b>лично подать заявление</b> в ближайший отдел полиции;</li>
           <li>сообщить в <b>банк</b> о взломе «Сбербанк» и заблокировать карты;</li>
-          <li>сменить пароли в <b>«Госуслугах»</b>, включить двухфакторную аутентификацию;</li>
-          <li>проверить телефон и компьютер антивирусом, удалить неизвестные приложения;</li>
-          <li><b>сохранить доказательства</b>: скриншоты, записи звонков, номера, аудио с колонок;</li>
-          <li>не переходить по ссылкам от звонящих и не ставить «программы удалённого доступа».</li>
+          <li>сменить пароли в <b>«Госуслугах»</b>, включить 2FA;</li>
+          <li>проверить устройства антивирусом, удалить неизвестные приложения;</li>
+          <li><b>сохранить доказательства</b>: скриншоты, записи звонков, номера.</li>
         </ul>
       </div>
 
@@ -220,13 +200,8 @@
         <button class="danger" onclick="goHome()">🏠 На главную</button>
       </div>
 
-      <div class="footer">
-        Угрозы убийством и вымогательство преследуются по УК РФ.<br>
-        При реальной опасности звоните <b>102</b> и в банк.
-      </div>
-
+      <div class="footer">При реальной опасности звоните <b>102</b> и в банк.</div>
     </div>
-    <!-- ================= /СТРАНИЦА MAYDUM ================= -->
 
   </div>
 
@@ -234,13 +209,23 @@
   const frame  = document.getElementById('frame');
   const start  = document.getElementById('start');
   const virus  = document.getElementById('virus');
+  const google = document.getElementById('google');
   const urlEl  = document.getElementById('url');
   const hist   = [];
   let pos = -1;
+  let mode = 'google';
+
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.mode').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === m);
+    });
+  }
 
   function hideAll() {
     start.style.display = 'none';
     virus.style.display = 'none';
+    google.style.display = 'none';
     frame.style.display = 'none';
   }
 
@@ -265,6 +250,32 @@
     pos = hist.length - 1;
   }
 
+  // ГЛАВНОЕ ИСПРАВЛЕНИЕ: вставляем запрос в поле виджета и жмём поиск
+  function showGoogle(q) {
+    hideAll();
+    google.style.display = 'block';
+    hist.push({ type:'google', q });
+    pos = hist.length - 1;
+
+    // Ждём, пока CSE отрисуется, и вставляем запрос
+    let tries = 0;
+    const iv = setInterval(() => {
+      tries++;
+      const input = google.querySelector('input.gsc-input');
+      const btn   = google.querySelector('button.gsc-search-button, .gsc-search-button-v2');
+      if (input && btn) {
+        clearInterval(iv);
+        input.value = q;
+        // триггерим события, чтобы CSE "увидел" ввод
+        input.dispatchEvent(new Event('input', { bubbles:true }));
+        input.dispatchEvent(new Event('change', { bubbles:true }));
+        btn.click();
+      } else if (tries > 30) {
+        clearInterval(iv); // 3 секунды не дождались — сдаёмся
+      }
+    }, 100);
+  }
+
   function openWiki(term) {
     urlEl.value = term;
     const src = 'https://ru.m.wikipedia.org/wiki/' + encodeURIComponent(term);
@@ -278,6 +289,8 @@
 
   function goHome() { showStart(); }
 
+  function quickSearch(q) { urlEl.value = q; go(); }
+
   function normalize(q) {
     return q.toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9 ]/g,'').trim();
   }
@@ -285,20 +298,21 @@
   function go() {
     const raw = urlEl.value.trim();
     if (!raw) return;
-
     const n = normalize(raw);
-    if (n.includes('maydum') || n.includes('майдум') || n.includes('майдун') || n.includes('вирус')) {
-      virusPage();
-      return;
+
+    if (n.includes('maydum') || n.includes('майдум') || n.includes('майдун')) {
+      virusPage(); return;
     }
 
     if (/^(https?:\/\/|www\.)/i.test(raw)) {
       let u = raw.startsWith('http') ? raw : 'https://' + raw;
       urlEl.value = u;
-      showFrame(u);
-    } else {
-      openWiki(raw);
+      showFrame(u); return;
     }
+
+    if (mode === 'maydum')      virusPage();
+    else if (mode === 'wiki')   openWiki(raw);
+    else                        showGoogle(raw);
   }
 
   function back() {
@@ -307,14 +321,13 @@
       pos--;
       const item = hist[pos];
       hideAll();
-      if (item.type === 'frame') { frame.style.display='block'; frame.src = item.src; }
-      else { virus.style.display = 'flex'; }
-    } else {
-      showStart();
-    }
+      if (item.type === 'frame')       { frame.style.display='block'; frame.src = item.src; }
+      else if (item.type === 'virus')  { virus.style.display = 'flex'; }
+      else if (item.type === 'google') { google.style.display = 'block'; showGoogle(item.q); }
+    } else showStart();
   }
 
   urlEl.addEventListener('keypress', e => { if (e.key === 'Enter') go(); });
 </script>
 </body>
-</html>
+ </html>
