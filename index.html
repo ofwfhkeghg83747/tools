@@ -8,82 +8,35 @@
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height:100%; margin:0; }
-  body {
-    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    background:#f4f4f4; display:flex; flex-direction:column;
-    overflow:hidden;
-  }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background:#f4f4f4; display:flex; flex-direction:column; overflow:hidden; }
 
-  #bar {
-    background: linear-gradient(90deg,#36c,#2a9d8f);
-    padding:8px; display:flex; gap:6px; align-items:center;
-    box-shadow:0 2px 6px rgba(0,0,0,.25); flex-shrink:0;
-  }
+  #bar { background: linear-gradient(90deg,#36c,#2a9d8f); padding:8px; display:flex; gap:6px; align-items:center; box-shadow:0 2px 6px rgba(0,0,0,.25); flex-shrink:0; }
   #logo { color:#fff; font-weight:bold; font-size:15px; white-space:nowrap; }
-  #url {
-    flex:1; min-width:0; padding:10px 12px; font-size:16px;
-    border:none; border-radius:20px; outline:none;
-  }
-  .btn {
-    min-width:42px; height:42px; padding:0 12px;
-    border:none; border-radius:21px; background:#fff;
-    color:#2a9d8f; font-weight:bold; font-size:16px;
-    cursor:pointer; display:flex; align-items:center; justify-content:center;
-  }
+  #url { flex:1; min-width:0; padding:10px 12px; font-size:16px; border:none; border-radius:20px; outline:none; }
+  .btn { min-width:42px; height:42px; padding:0 12px; border:none; border-radius:21px; background:#fff; color:#2a9d8f; font-weight:bold; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
   .btn:active { background:#e6f7f4; }
 
-  #modes {
-    display:flex; gap:6px; padding:8px;
-    background:#fff; border-bottom:1px solid #ddd; flex-shrink:0;
-    overflow-x:auto;
-  }
-  .mode {
-    padding:8px 14px; border-radius:20px; border:1px solid #ccc;
-    background:#fff; font-size:14px; font-weight:bold; cursor:pointer;
-    white-space:nowrap; color:#555;
-  }
+  #modes { display:flex; gap:6px; padding:8px; background:#fff; border-bottom:1px solid #ddd; flex-shrink:0; overflow-x:auto; }
+  .mode { padding:8px 14px; border-radius:20px; border:1px solid #ccc; background:#fff; font-size:14px; font-weight:bold; cursor:pointer; white-space:nowrap; color:#555; }
   .mode.active { background:#2a9d8f; color:#fff; border-color:#2a9d8f; }
 
   #content { flex:1; position:relative; overflow:hidden; }
   #frame { width:100%; height:100%; border:none; background:#fff; display:none; }
 
-  /* Google — контейнер с готовым виджетом */
-  #google {
-    display:none; position:absolute; inset:0; overflow-y:auto;
-    background:#fff; padding:10px;
-  }
+  /* Google CSE — встроенные результаты */
+  #google { display:none; position:absolute; inset:0; overflow-y:auto; background:#fff; padding:10px; -webkit-overflow-scrolling:touch; }
+  #google .gcse-searchresults-only { width:100%; }
 
-  #start {
-    position:absolute; inset:0; padding:20px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:16px; text-align:center; overflow-y:auto;
-  }
-  #start h1 {
-    font-size:42px; margin:0;
-    background:linear-gradient(90deg,#36c,#2a9d8f);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  }
+  #start { position:absolute; inset:0; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center; overflow-y:auto; }
+  #start h1 { font-size:42px; margin:0; background:linear-gradient(90deg,#36c,#2a9d8f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
   #start p { color:#666; margin:0; font-size:15px; }
   .quick { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-  .quick a {
-    padding:10px 16px; background:#fff; border-radius:20px;
-    text-decoration:none; color:#2a9d8f; font-weight:bold;
-    box-shadow:0 1px 4px rgba(0,0,0,.1); font-size:15px;
-  }
+  .quick a { padding:10px 16px; background:#fff; border-radius:20px; text-decoration:none; color:#2a9d8f; font-weight:bold; box-shadow:0 1px 4px rgba(0,0,0,.1); font-size:15px; }
   .quick a.danger { background:#b00020; color:#fff; }
 
   /* MAYDUM */
-  #virus {
-    display:none; position:absolute; inset:0; overflow-y:auto;
-    background:#141414; color:#eee; padding:18px;
-    flex-direction:column; gap:16px;
-    -webkit-overflow-scrolling:touch;
-  }
-  #virus .warn {
-    background:#b00020; color:#fff; padding:16px; border-radius:12px;
-    font-weight:bold; font-size:19px; text-align:center;
-    animation: pulse 1.2s infinite; line-height:1.35;
-  }
+  #virus { display:none; position:absolute; inset:0; overflow-y:auto; background:#141414; color:#eee; padding:18px; flex-direction:column; gap:16px; -webkit-overflow-scrolling:touch; }
+  #virus .warn { background:#b00020; color:#fff; padding:16px; border-radius:12px; font-weight:bold; font-size:19px; text-align:center; animation: pulse 1.2s infinite; line-height:1.35; }
   @keyframes pulse { 50% { opacity:.7; } }
   #virus .card { background:#1f1f1f; border-radius:14px; padding:14px; border-left:4px solid #b00020; }
   #virus .card.green { border-left-color:#2a9d8f; }
@@ -97,18 +50,14 @@
   #virus .red { color:#ff5c5c; font-weight:bold; }
   #virus .em  { color:#ffcc00; font-weight:bold; }
   #virus .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:4px; }
-  #virus .actions button, #virus .actions a {
-    flex:1; min-width:140px; padding:13px; border:none; border-radius:12px;
-    font-size:14.5px; font-weight:bold; cursor:pointer;
-    text-align:center; text-decoration:none; display:block;
-  }
+  #virus .actions button, #virus .actions a { flex:1; min-width:140px; padding:13px; border:none; border-radius:12px; font-size:14.5px; font-weight:bold; cursor:pointer; text-align:center; text-decoration:none; display:block; }
   #virus .call { background:#b00020; color:#fff; }
   #virus .safe { background:#2a9d8f; color:#fff; }
   #virus .danger { background:#333; color:#ffcc00; }
   #virus .footer { font-size:12px; color:#888; text-align:center; border-top:1px solid #333; padding-top:12px; margin-top:6px; }
 
-  /* Google CSE под дизайн */
-  .gsc-control-cse { background:transparent !important; border:none !important; padding:0 !important; }
+  /* Стили CSE под дизайн */
+  .gsc-control-cse, .gsc-control-wrapper-cse { background:transparent !important; border:none !important; padding:0 !important; }
   .gsc-input-box { border-radius:20px !important; border:1px solid #2a9d8f !important; }
   .gsc-search-button-v2 { background:#2a9d8f !important; border:none !important; border-radius:20px !important; }
   .gsc-results .gsc-cursor-current-page { background:#2a9d8f !important; color:#fff !important; }
@@ -118,9 +67,9 @@
 
   <div id="bar">
     <div id="logo">🐱 Вики Вики</div>
-    <button class="btn" onclick="back()" aria-label="Назад">←</button>
+    <button class="btn" onclick="back()">←</button>
     <input id="url" placeholder="Поиск или адрес…" autocomplete="off">
-    <button class="btn" onclick="go()" aria-label="Найти">🔍</button>
+    <button class="btn" onclick="go()">🔍</button>
   </div>
 
   <div id="modes">
@@ -145,9 +94,9 @@
 
     <iframe id="frame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
 
-    <!-- Полный виджет Google: поле + результаты -->
+    <!-- Google: только результаты, поле поиска — наша строка сверху -->
     <div id="google">
-      <div class="gcse-search"></div>
+      <div class="gcse-searchresults-only"></div>
     </div>
 
     <div id="virus">
@@ -217,9 +166,7 @@
 
   function setMode(m) {
     mode = m;
-    document.querySelectorAll('.mode').forEach(b => {
-      b.classList.toggle('active', b.dataset.mode === m);
-    });
+    document.querySelectorAll('.mode').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
   }
 
   function hideAll() {
@@ -250,45 +197,58 @@
     pos = hist.length - 1;
   }
 
-  // ГЛАВНОЕ ИСПРАВЛЕНИЕ: вставляем запрос в поле виджета и жмём поиск
+  // ===== ПОИСК GOOGLE =====
   function showGoogle(q) {
     hideAll();
     google.style.display = 'block';
     hist.push({ type:'google', q });
     pos = hist.length - 1;
 
-    // Ждём, пока CSE отрисуется, и вставляем запрос
-    let tries = 0;
-    const iv = setInterval(() => {
-      tries++;
+    // Пытаемся выполнить поиск через CSE API (надёжный путь)
+    const trySearch = (attempt) => {
+      const el = window.google?.search?.cse?.element?.getElement('searchresults-only0');
+      if (el && typeof el.execute === 'function') {
+        el.execute(q);
+        return true;
+      }
+      // Если API недоступен — ищем поле ввода в отрисованном виджете
       const input = google.querySelector('input.gsc-input');
       const btn   = google.querySelector('button.gsc-search-button, .gsc-search-button-v2');
       if (input && btn) {
-        clearInterval(iv);
         input.value = q;
-        // триггерим события, чтобы CSE "увидел" ввод
         input.dispatchEvent(new Event('input', { bubbles:true }));
         input.dispatchEvent(new Event('change', { bubbles:true }));
         btn.click();
-      } else if (tries > 30) {
-        clearInterval(iv); // 3 секунды не дождались — сдаёмся
+        return true;
+      }
+      return false;
+    };
+
+    let tries = 0;
+    const iv = setInterval(() => {
+      tries++;
+      if (trySearch(tries)) {
+        clearInterval(iv);
+      } else if (tries >= 50) { // 5 секунд
+        clearInterval(iv);
+        // Последняя попытка: открыть Google в новой вкладке
+        const fallback = confirm(
+          'Встроенный поиск Google не загрузился.\nОткрыть результаты в новой вкладке?'
+        );
+        if (fallback) {
+          window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank');
+        }
       }
     }, 100);
   }
 
   function openWiki(term) {
     urlEl.value = term;
-    const src = 'https://ru.m.wikipedia.org/wiki/' + encodeURIComponent(term);
-    showFrame(src);
+    showFrame('https://ru.m.wikipedia.org/wiki/' + encodeURIComponent(term));
   }
 
-  function virusPage() {
-    urlEl.value = 'вирус MAYDUM';
-    showVirus();
-  }
-
+  function virusPage() { urlEl.value = 'вирус MAYDUM'; showVirus(); }
   function goHome() { showStart(); }
-
   function quickSearch(q) { urlEl.value = q; go(); }
 
   function normalize(q) {
@@ -330,4 +290,4 @@
   urlEl.addEventListener('keypress', e => { if (e.key === 'Enter') go(); });
 </script>
 </body>
- </html>
+</html>
