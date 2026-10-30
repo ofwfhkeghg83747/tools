@@ -1,1160 +1,320 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4А — карты вход/выход (космос)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Вики Вики</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height:100%; margin:0; }
   body {
-    font-family: 'Trebuchet MS', Arial, sans-serif;
-    min-height: 100vh; padding: 20px 14px 80px;
-    color: #d7e3ff;
-    background:
-      radial-gradient(circle at 20% 10%, #2a1a6b 0%, transparent 55%),
-      radial-gradient(circle at 85% 90%, #6b1a5a 0%, transparent 55%),
-      radial-gradient(circle at 50% 50%, #0d1b3a 0%, #05060f 70%, #000 100%);
-    overflow-x: hidden; position: relative;
-  }
-  h1 { text-align: center; font-size: 21px; margin-bottom: 4px; color: #9fd0ff;
-       text-shadow: 0 0 10px #4d9bff, 0 0 20px #2a6bff; }
-  .sub { text-align: center; font-size: 13px; color: #8fa7d1; margin-bottom: 18px; letter-spacing: 1px; }
-
-  .stars { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
-  .star { position: absolute; width: 2px; height: 2px; border-radius: 50%;
-          background: #fff; opacity: .7; animation: twinkle 3s infinite alternate; }
-  @keyframes twinkle { 0% { opacity: .2; } 100% { opacity: 1; } }
-  .shoot { position: absolute; top: -40px; width: 3px; height: 80px;
-    background: linear-gradient(to bottom, transparent, #8fd0ff, #fff);
-    border-radius: 2px; filter: drop-shadow(0 0 6px #8fd0ff);
-    animation: shoot linear infinite; transform: rotate(20deg); }
-  @keyframes shoot {
-    0%   { transform: translateY(-40px) translateX(0) rotate(20deg); opacity: 0; }
-    10%  { opacity: 1; }
-    100% { transform: translateY(110vh) translateX(-30vw) rotate(20deg); opacity: 0; }
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background:#f4f4f4; display:flex; flex-direction:column;
+    overflow:hidden;
   }
 
-  .wrap { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; }
-
-  .logo-rusik {
-    display: flex; justify-content: center; margin-bottom: 10px;
-    font-size: 26px; font-weight: 900; letter-spacing: -1px;
-    filter: drop-shadow(0 0 10px rgba(0,180,255,.8));
+  /* Верхняя панель */
+  #bar {
+    background: linear-gradient(90deg,#36c,#2a9d8f);
+    padding:8px; display:flex; gap:6px; align-items:center;
+    box-shadow:0 2px 6px rgba(0,0,0,.25); flex-shrink:0;
   }
-  .logo-rusik .ru { color: #00d4ff; text-shadow: 0 0 8px #00aaff; }
-  .logo-rusik .sik { color: #7b4dff; text-shadow: 0 0 10px #7b4dff; }
-  .logo-rusik .dot { color: #ff4dd2; margin-left: 2px; text-shadow: 0 0 10px #ff4dd2; }
-
-  #loader {
-    position: fixed; inset: 0; z-index: 9999;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 24px; text-align: center;
-    background: radial-gradient(circle at 50% 40%, #1a1240 0%, #05060f 70%, #000 100%);
-    transition: opacity .8s ease, visibility .8s ease;
-  }
-  #loader.hidden { opacity: 0; visibility: hidden; }
-  .loader-icon {
-    font-size: 54px; margin-bottom: 18px;
-    animation: spin 2.5s linear infinite;
-    filter: drop-shadow(0 0 18px #4d7bff);
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loader-title {
-    font-size: 18px; color: #ff8ba0; font-weight: bold;
-    letter-spacing: 1px; margin-bottom: 14px;
-    text-shadow: 0 0 12px rgba(255,77,107,.8);
-  }
-  .loader-msg { font-size: 14px; color: #d7e3ff; max-width: 340px; line-height: 1.5; margin-bottom: 6px; }
-  .loader-msg b { color: #ffb84d; text-shadow: 0 0 8px rgba(255,150,40,.7); }
-  .bar {
-    width: min(320px, 85vw); height: 12px;
-    background: rgba(255,255,255,.08);
-    border: 1px solid #3a5ba8; border-radius: 20px;
-    overflow: hidden; margin: 22px 0 12px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,.6);
-  }
-  .bar-fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, #00d4ff, #7b4dff, #ff4dd2);
-    box-shadow: 0 0 14px #7b4dff;
-    border-radius: 20px;
-    transition: width .4s ease;
-  }
-  .loader-status { font-size: 13px; color: #8fa7d1; letter-spacing: 1px; min-height: 20px; }
-  .loader-percent { font-size: 12px; color: #6bd5ff; margin-top: 6px; text-shadow: 0 0 6px #00aaff; }
-
-  #login {
-    position: fixed; inset: 0; z-index: 9000;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 24px; text-align: center;
-    background: radial-gradient(circle at 50% 40%, #1a1240 0%, #05060f 70%, #000 100%);
-    transition: opacity .6s ease, visibility .6s ease;
-  }
-  #login.hidden { opacity: 0; visibility: hidden; }
-  .login-title { font-size: 22px; color: #9fd0ff; margin-bottom: 8px; text-shadow: 0 0 12px #4d9bff; }
-  .login-sub { font-size: 14px; color: #8fa7d1; margin-bottom: 22px; }
-  .login-box { display: flex; flex-direction: column; gap: 12px; width: min(320px, 85vw); }
-  .login-box input {
-    padding: 13px; border-radius: 12px; text-align: center;
-    border: 1px solid #4d7bff; background: rgba(10,15,35,.85);
-    color: #fff; font-size: 17px; font-family: inherit;
-    box-shadow: 0 0 12px rgba(77,123,255,.4);
-  }
-  .login-box input:focus { outline: none; border-color: #6bd5ff; box-shadow: 0 0 16px #00aaff; }
-  .login-err { color: #ff8ba0; font-size: 13px; min-height: 18px; text-shadow: 0 0 8px rgba(255,77,107,.7); }
-  .login-hint { margin-top: 18px; font-size: 11px; color: #5a6a8a; }
-
-  .group-header {
-    background: rgba(10, 15, 35, 0.7);
-    border: 1px solid #00d4ff;
-    border-radius: 18px;
-    padding: 15px;
-    margin-bottom: 20px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .group-logo {
-    width: 120px; height: 120px;
-    border-radius: 50%; object-fit: cover;
-    border: 2px solid #00d4ff;
-    box-shadow: 0 0 15px #00d4ff;
-    margin-bottom: 10px;
-    background: #000;
-  }
-  .group-title {
-    font-size: 24px; font-weight: 900; color: #fff;
-    text-transform: uppercase; letter-spacing: 2px;
-    text-shadow: 0 0 15px #4d7bff;
-    margin-bottom: 5px;
-  }
-  .group-score-box {
-    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px; padding: 10px 25px; margin-top: 10px;
-    display: flex; flex-direction: column; align-items: center;
-  }
-  .group-score-label {
-    font-size: 11px; color: #8fa7d1; text-transform: uppercase; margin-bottom: 4px;
-  }
-  .group-score-val {
-    font-size: 32px; font-weight: bold;
-  }
-
-  .menu {
-    display: flex; gap: 8px; margin-bottom: 18px;
-    background: linear-gradient(150deg, rgba(20,30,70,.9), rgba(40,20,80,.9));
-    border: 1px solid #4d7bff; border-radius: 14px; padding: 6px;
-    box-shadow: 0 0 14px rgba(77,123,255,.5);
-    flex-wrap: wrap;
-  }
-  .menu button {
-    flex: 1; padding: 10px 8px; border: 0; border-radius: 10px;
-    font-family: inherit; font-size: 13px; color: #9fd0ff;
-    background: transparent; cursor: pointer; letter-spacing: .5px;
-    transition: .25s;
-  }
-  .menu button.active {
-    color: #fff;
-    background: linear-gradient(135deg, #4d7bff, #7b4dff);
-    box-shadow: 0 0 12px rgba(123,77,255,.7);
-  }
-  .menu button:active { transform: scale(.97); }
-  .menu button.exit { color: #ff8ba0; flex: 0 0 auto; padding: 10px 14px; }
-  .menu button.admin { background: #8b5cf6; color: #fff; }
-
-  .tab { display: none; }
-  .tab.active { display: block; }
-
-  .news-card {
-    position: relative;
-    background: linear-gradient(150deg, rgba(60,5,15,.92), rgba(40,10,30,.92));
-    border: 2px solid #ff2d55; border-radius: 16px;
-    padding: 16px; margin-bottom: 14px;
-    box-shadow: 0 0 18px rgba(255,45,85,.6), 0 0 40px rgba(255,0,60,.25);
-    animation: newsPulse 1.8s ease-in-out infinite, cardAppear .5s ease;
-  }
-  @keyframes newsPulse {
-    0%,100% { box-shadow: 0 0 12px rgba(255,45,85,.45); }
-    50%     { box-shadow: 0 0 28px rgba(255,45,85,.95); }
-  }
-  .news-tag {
-    display: inline-block; font-size: 11px; letter-spacing: 2px; font-weight: bold;
-    padding: 5px 12px; border-radius: 20px; margin-bottom: 12px;
-    color: #fff; background: linear-gradient(135deg, #ff2d55, #b0002a);
-    box-shadow: 0 0 14px rgba(255,45,85,.9);
-    animation: tagBlink 1s steps(2,end) infinite;
-  }
-  @keyframes tagBlink { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
-  .news-title {
-    font-size: 17px; font-weight: bold; color: #ffb3c1;
-    margin-bottom: 10px; line-height: 1.35;
-    text-shadow: 0 0 10px rgba(255,45,85,.8);
-  }
-  .news-text { font-size: 14px; color: #ffd8e0; line-height: 1.55; }
-  .news-text b { color: #ff8ba0; }
-  .news-date { margin-top: 12px; font-size: 11px; color: #a07a88; letter-spacing: 1px; }
-
-  .settings {
-    background: linear-gradient(150deg, rgba(20,30,70,.9), rgba(40,20,80,.9));
-    border: 1px solid #4d7bff; border-radius: 16px;
-    padding: 14px; margin-bottom: 18px;
-    box-shadow: 0 0 14px rgba(77,123,255,.5);
-    display: flex; flex-direction: column; gap: 10px;
-  }
-  .settings label { font-size: 12px; color: #8fa7d1; letter-spacing: 1px; }
-  .settings input[type="text"] {
-    width: 100%; padding: 8px; margin-top: 4px;
-    border: 1px solid #3a5ba8; border-radius: 8px;
-    background: rgba(10,15,35,.8); color: #d7e3ff; font-family: inherit; font-size: 14px;
+  #logo { color:#fff; font-weight:bold; font-size:15px; white-space:nowrap; }
+  #url {
+    flex:1; min-width:0; padding:10px 12px; font-size:16px;
+    border:none; border-radius:20px; outline:none;
   }
   .btn {
-    padding: 10px; border: 0; border-radius: 10px; cursor: pointer;
-    font-family: inherit; font-size: 14px; color: #fff;
-    background: linear-gradient(135deg, #4d7bff, #7b4dff);
-    box-shadow: 0 0 10px rgba(123,77,255,.6);
+    min-width:42px; height:42px; padding:0 12px;
+    border:none; border-radius:21px; background:#fff;
+    color:#2a9d8f; font-weight:bold; font-size:16px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
   }
-  .btn:active { transform: scale(.98); }
-  .btn.danger { background: linear-gradient(135deg, #ff4d6b, #b0002a); box-shadow: 0 0 10px rgba(255,77,107,.6); }
+  .btn:active { background:#e6f7f4; }
 
-  .card {
-    position: relative;
-    background: linear-gradient(150deg, rgba(20,30,70,.85), rgba(40,20,80,.85));
-    border-radius: 18px; padding: 16px; margin-bottom: 16px;
-    border: 1px solid #4d7bff;
-    box-shadow: 0 0 12px rgba(77,123,255,.5), 0 0 30px rgba(120,60,255,.25),
-                inset 0 0 20px rgba(77,123,255,.1);
-    animation: cardAppear .5s ease;
-    overflow: hidden;
-  }
-  @keyframes cardAppear {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .card::before {
-    content: ""; display: block; height: 6px; border-radius: 4px; margin-bottom: 14px;
-    background: linear-gradient(90deg, #00d4ff, #7b4dff, #ff4dd2);
-    box-shadow: 0 0 10px #7b4dff;
-  }
+  #content { flex:1; position:relative; overflow:hidden; }
+  #frame { width:100%; height:100%; border:none; background:#fff; display:none; }
 
-  .card-banner {
-    width: calc(100% + 32px);
-    margin: -16px -16px 16px -16px;
-    height: 120px;
-    background-size: cover;
-    background-position: center;
-    border-bottom: 2px solid #4d7bff;
+  /* Старт */
+  #start {
+    position:absolute; inset:0; padding:20px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:16px; text-align:center; overflow-y:auto;
   }
-  .card.has-banner::before { display: none; }
+  #start h1 {
+    font-size:42px; margin:0;
+    background:linear-gradient(90deg,#36c,#2a9d8f);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  #start p { color:#666; margin:0; font-size:15px; }
+  .quick { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .quick a {
+    padding:10px 16px; background:#fff; border-radius:20px;
+    text-decoration:none; color:#2a9d8f; font-weight:bold;
+    box-shadow:0 1px 4px rgba(0,0,0,.1); font-size:15px;
+  }
+  .quick a.danger { background:#b00020; color:#fff; }
 
-  .card.cool {
-    border: 2px solid transparent;
-    background:
-      linear-gradient(150deg, rgba(40,20,10,.92), rgba(60,30,5,.92)) padding-box,
-      linear-gradient(120deg, #ffd700, #ff8c00, #ff4dd2, #7b4dff, #00e0ff, #ffd700) border-box;
-    background-size: 100% 100%, 300% 300%;
-    animation: rainbowBorder 4s linear infinite, cardAppear .5s ease;
-    box-shadow: 0 0 18px rgba(255,200,0,.65), 0 0 40px rgba(255,140,0,.35),
-                inset 0 0 25px rgba(255,200,0,.12);
+  /* Страница MAYDUM */
+  #virus {
+    display:none; position:absolute; inset:0; overflow-y:auto;
+    background:#141414; color:#eee; padding:18px;
+    flex-direction:column; gap:16px;
+    -webkit-overflow-scrolling:touch;
   }
-  @keyframes rainbowBorder {
-    0%   { background-position: 0 0, 0% 50%; }
-    100% { background-position: 0 0, 300% 50%; }
+  #virus .warn {
+    background:#b00020; color:#fff; padding:16px; border-radius:12px;
+    font-weight:bold; font-size:19px; text-align:center;
+    animation: pulse 1.2s infinite; line-height:1.35;
   }
-  .card.cool::before {
-    background: linear-gradient(90deg, #ffd700, #ff8c00, #ff4dd2, #7b4dff, #00e0ff);
-    background-size: 300% 100%;
-    animation: stripeMove 3s linear infinite;
-    box-shadow: 0 0 16px #ffd700;
+  @keyframes pulse { 50% { opacity:.7; } }
+
+  #virus .card {
+    background:#1f1f1f; border-radius:14px; padding:14px;
+    border-left:4px solid #b00020;
   }
-  @keyframes stripeMove {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 300% 50%; }
+  #virus .card.green { border-left-color:#2a9d8f; }
+  #virus .card.yellow { border-left-color:#ffcc00; }
+
+  #virus h2 {
+    margin:0 0 8px; font-size:16px; color:#ffcc00;
+    display:flex; align-items:center; gap:8px;
   }
-  .card.cool .name {
-    background: linear-gradient(90deg, #ffd700, #fff6a0, #ffd700);
-    background-size: 200% 100%;
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent; -webkit-text-fill-color: transparent;
-    text-shadow: none;
-    filter: drop-shadow(0 0 8px rgba(255,215,0,.8));
-    animation: nameShine 2.5s linear infinite;
-    font-size: 24px;
+  #virus .card.green h2 { color:#2a9d8f; }
+
+  #virus p  { margin:0 0 8px; font-size:14px; line-height:1.55; color:#ddd; }
+  #virus p:last-child { margin-bottom:0; }
+  #virus ul { margin:6px 0 0 18px; padding:0; font-size:13.5px; color:#ccc; line-height:1.6; }
+  #virus li { margin-bottom:6px; }
+  #virus b  { color:#fff; }
+  #virus .red { color:#ff5c5c; font-weight:bold; }
+  #virus .em  { color:#ffcc00; font-weight:bold; }
+
+  #virus .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:4px; }
+  #virus .actions button, #virus .actions a {
+    flex:1; min-width:140px; padding:13px; border:none; border-radius:12px;
+    font-size:14.5px; font-weight:bold; cursor:pointer;
+    text-align:center; text-decoration:none; display:block;
   }
-  @keyframes nameShine {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-  }
-  .card.cool .num b { color: #ffd700; text-shadow: 0 0 10px #ffb300; }
-  .cool-badge {
-    display: inline-block; font-size: 11px; letter-spacing: 1.5px; font-weight: bold;
-    padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; color: #2a1500;
-    background: linear-gradient(135deg, #ffe066, #ffb300, #ffd700);
-    background-size: 200% 200%;
-    box-shadow: 0 0 16px rgba(255,200,0,.9), 0 0 30px rgba(255,140,0,.5);
-    animation: badgePulse 1.6s ease-in-out infinite, badgeShift 3s linear infinite;
-  }
-  @keyframes badgePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-  @keyframes badgeShift {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-  }
-  .crown {
-    position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
-    font-size: 30px; filter: drop-shadow(0 0 10px #ffd700);
-    animation: crownFloat 2s ease-in-out infinite; z-index: 2;
-  }
-  @keyframes crownFloat {
-    0%,100% { transform: translateX(-50%) translateY(0) rotate(-4deg); }
-    50%     { transform: translateX(-50%) translateY(-6px) rotate(4deg); }
+  #virus .call   { background:#b00020; color:#fff; }
+  #virus .safe   { background:#2a9d8f; color:#fff; }
+  #virus .danger { background:#333; color:#ffcc00; }
+
+  #virus .footer {
+    font-size:12px; color:#888; text-align:center;
+    border-top:1px solid #333; padding-top:12px; margin-top:6px;
   }
 
-  .card.sixseven {
-    border: 2px solid transparent;
-    background:
-      linear-gradient(150deg, rgba(10,30,40,.92), rgba(5,20,60,.92)) padding-box,
-      linear-gradient(120deg, #00ffb3, #00d4ff, #7b4dff, #00ffb3) border-box;
-    background-size: 100% 100%, 300% 300%;
-    animation: ssBorder 3s linear infinite, cardAppear .5s ease;
-    box-shadow: 0 0 18px rgba(0,255,180,.6), 0 0 40px rgba(0,180,255,.35),
-                inset 0 0 25px rgba(0,255,180,.1);
-    overflow: hidden;
-  }
-  @keyframes ssBorder {
-    0%   { background-position: 0 0, 0% 50%; }
-    100% { background-position: 0 0, 300% 50%; }
-  }
-  .card.sixseven::before {
-    background: linear-gradient(90deg, #00ffb3, #00d4ff, #7b4dff, #00ffb3);
-    background-size: 300% 100%;
-    animation: stripeMove 2.5s linear infinite;
-    box-shadow: 0 0 16px #00ffb3;
-  }
-  .card.sixseven .name {
-    background: linear-gradient(90deg, #00ffb3, #a0fff0, #00d4ff, #00ffb3);
-    background-size: 300% 100%;
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 8px rgba(0,255,180,.9));
-    animation: nameShine67 2s linear infinite;
-    font-size: 24px;
-  }
-  @keyframes nameShine67 {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 300% 50%; }
-  }
-  .card.sixseven .num b { color: #00ffb3; text-shadow: 0 0 10px #00d4ff; }
-  .ss-badge {
-    display: inline-block; font-size: 12px; letter-spacing: 2px; font-weight: bold;
-    padding: 6px 16px; border-radius: 20px; margin-bottom: 12px; color: #001a14;
-    background: linear-gradient(135deg, #00ffb3, #00d4ff, #7b4dff);
-    background-size: 200% 200%;
-    box-shadow: 0 0 16px rgba(0,255,180,.9), 0 0 30px rgba(0,180,255,.5);
-    animation: ssBadge 1.2s ease-in-out infinite, ssShift 2s linear infinite;
-  }
-  @keyframes ssBadge {
-    0%,100% { transform: scale(1) rotate(0deg); }
-    50%     { transform: scale(1.08) rotate(-1deg); }
-  }
-  @keyframes ssShift {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-  }
-  .ss-floats {
-    position: absolute; inset: 0; pointer-events: none;
-    overflow: hidden; border-radius: 18px; z-index: 1;
-  }
-  .ss-float {
-    position: absolute; font-size: 26px; font-weight: bold; color: #00ffb3;
-    text-shadow: 0 0 10px #00ffb3, 0 0 20px #00d4ff; opacity: .8;
-    animation: ssFloat linear infinite;
-  }
-  @keyframes ssFloat {
-    0%   { transform: translateY(110%) rotate(0deg) scale(0.6); opacity: 0; }
-    20%  { opacity: .9; }
-    80%  { opacity: .9; }
-    100% { transform: translateY(-30%) rotate(360deg) scale(1.2); opacity: 0; }
-  }
-
-  .ss-image {
-    margin: 12px 0;
-    border-radius: 12px;
-    border: 2px solid #00ffb3;
-    box-shadow: 0 0 16px rgba(0,255,180,.8), 0 0 30px rgba(0,180,255,.4);
-    overflow: hidden;
-    position: relative;
-    z-index: 2;
-    animation: imgPulse 2s ease-in-out infinite;
-    background: #001a14;
-  }
-  @keyframes imgPulse {
-    0%,100% { box-shadow: 0 0 12px rgba(0,255,180,.6), 0 0 24px rgba(0,180,255,.3); }
-    50%     { box-shadow: 0 0 24px rgba(0,255,180,1), 0 0 44px rgba(0,180,255,.6); }
-  }
-  .ss-image img { display: block; width: 100%; height: auto; }
-  .ss-image .cap {
-    position: absolute; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(to top, rgba(0,10,20,.9), transparent);
-    color: #a0fff0; font-size: 11px; letter-spacing: 2px;
-    padding: 16px 10px 8px; text-align: center;
-  }
-
-  .copy-block { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #00ffb3; }
-  .copy-label {
-    font-size: 10px; letter-spacing: 2px; color: #00ffb3;
-    text-shadow: 0 0 8px #00ffb3; margin-bottom: 8px;
-  }
-  .copy-card {
-    background: linear-gradient(150deg, rgba(10,30,40,.7), rgba(5,20,60,.7));
-    border: 1px solid #00ffb3; border-radius: 12px;
-    padding: 10px; opacity: .9;
-    box-shadow: 0 0 12px rgba(0,255,180,.35);
-  }
-  .copy-card .cn { font-size: 15px; color: #a0fff0; }
-  .copy-card .cn b { color: #00ffb3; letter-spacing: 2px; }
-  .copy-card .ci { font-size: 11px; color: #6fa7b1; margin-top: 4px; }
-
-  .card.region {
-    border: 2px solid transparent;
-    background:
-      linear-gradient(150deg, rgba(5,25,50,.92), rgba(10,15,60,.92)) padding-box,
-      linear-gradient(120deg, #00d4ff, #4d9bff, #00aaff, #00d4ff) border-box;
-    background-size: 100% 100%, 300% 300%;
-    animation: regBorder 3.5s linear infinite, cardAppear .5s ease;
-    box-shadow: 0 0 16px rgba(0,180,255,.6), 0 0 36px rgba(0,120,255,.3);
-  }
-  @keyframes regBorder {
-    0%   { background-position: 0 0, 0% 50%; }
-    100% { background-position: 0 0, 300% 50%; }
-  }
-  .card.region::before {
-    background: linear-gradient(90deg, #00d4ff, #4d9bff, #00aaff, #00d4ff);
-    background-size: 300% 100%;
-    animation: stripeMove 3s linear infinite;
-    box-shadow: 0 0 14px #00aaff;
-  }
-  .card.region .num b { color: #6bd5ff; text-shadow: 0 0 10px #00aaff; }
-  .region-box {
-    background: linear-gradient(135deg, rgba(0,140,255,.18), rgba(0,80,200,.12));
-    border: 1px solid #00aaff; border-radius: 12px;
-    padding: 12px 14px; margin-bottom: 14px;
-    box-shadow: 0 0 12px rgba(0,170,255,.45);
-    animation: regPulse 2s ease-in-out infinite;
-  }
-  @keyframes regPulse {
-    0%,100% { box-shadow: 0 0 8px rgba(0,170,255,.35); }
-    50%     { box-shadow: 0 0 20px rgba(0,170,255,.85); }
-  }
-  .region-box .title {
-    font-size: 13px; font-weight: bold; color: #8fe0ff;
-    letter-spacing: 1.5px; margin-bottom: 6px;
-    text-shadow: 0 0 8px rgba(0,170,255,.8);
-  }
-  .region-box .line { font-size: 13px; color: #cfeaff; margin-top: 3px; }
-  .region-box .dots::after { content: ""; animation: dots 1.4s steps(4,end) infinite; }
-  @keyframes dots {
-    0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; }
-  }
-  .region-pin { display: inline-block; animation: pinBounce 1.5s ease-in-out infinite; }
-  @keyframes pinBounce {
-    0%,100% { transform: translateY(0); }
-    50%     { transform: translateY(-4px); }
-  }
-
-  .future-badge { 
-    display: inline-block; font-size: 11px; letter-spacing: 1.5px; font-weight: bold; 
-    padding: 6px 14px; border-radius: 20px; margin-bottom: 12px; color: #fff; 
-    background: linear-gradient(135deg, #b06bff, #ff4dd2); 
-    box-shadow: 0 0 15px rgba(255,77,210,0.5);
-    animation: futBadge 1.8s infinite;
-  }
-  @keyframes futBadge { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-  .nocard-box { 
-    background: rgba(176,107,255,0.15); 
-    border: 1px solid #b06bff; 
-    border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; 
-    box-shadow: 0 0 10px rgba(176,107,255,0.3);
-    text-align: left;
-  }
-  .nocard-box .title { font-size: 13px; font-weight: bold; color: #e0b3ff; margin-bottom: 6px; text-shadow: 0 0 5px rgba(176,107,255,0.8); }
-  .nocard-box .line { font-size: 13px; color: #f0d8ff; line-height: 1.4; }
-
-  .score-box { 
-    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); 
-    border-radius: 12px; padding: 10px; margin-bottom: 14px; text-align: center; 
-  }
-  .score-label { font-size: 11px; color: #8fa7d1; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
-  .score-val { font-size: 26px; font-weight: bold; }
-  .score-good { color: #4dffb0; text-shadow: 0 0 15px #00ff80; }
-  .score-warn { color: #ffd700; text-shadow: 0 0 15px #ffbb00; }
-  .score-bad { color: #ff2d55; text-shadow: 0 0 15px #ff2d55; }
-  .score-zero { font-size: 16px; color: #ff0000; text-transform: uppercase; text-shadow: 0 0 20px #ff0000; animation: pulseRed 1s infinite alternate; }
-  @keyframes pulseRed { from { opacity: 0.7; } to { opacity: 1; } }
-
-  .vip {
-    position: absolute; top: 26px; right: 14px;
-    font-size: 11px; letter-spacing: 2px; font-weight: bold;
-    padding: 4px 12px; border-radius: 20px; color: #0a0a1a;
-    background: linear-gradient(135deg, #00e0ff, #b06bff);
-    box-shadow: 0 0 12px #8f6bff;
-  }
-  .num { font-size: 13px; letter-spacing: 2px; color: #8fa7d1; margin-bottom: 10px; text-transform: uppercase; }
-  .num b { font-size: 18px; color: #6bd5ff; text-shadow: 0 0 8px #00aaff; letter-spacing: 3px; }
-  .name { font-size: 22px; margin-bottom: 14px; color: #fff; text-shadow: 0 0 10px #7b4dff; }
-
-  .status {
-    display: inline-block; font-size: 12px; padding: 4px 10px;
-    border-radius: 20px; margin-bottom: 12px; letter-spacing: 1px;
-  }
-  .status.out { background: rgba(120,130,160,.25); color: #aab6d0; border: 1px solid #3a4560; }
-  .status.in  { background: rgba(0,255,150,.15); color: #4dffb0; border: 1px solid #00b36b;
-                box-shadow: 0 0 10px rgba(0,255,150,.4); }
-
-  .times { display: flex; gap: 10px; margin-bottom: 12px; }
-  .tbox { flex: 1; background: rgba(10,15,35,.7); border-radius: 10px; padding: 8px;
-          border: 1px solid #2e3d6b; text-align: center; }
-  .tbox .lbl { font-size: 11px; color: #8fa7d1; letter-spacing: 1px; }
-  .tbox .val { font-size: 16px; color: #6bd5ff; text-shadow: 0 0 6px #00aaff; margin-top: 2px; }
-  .tbox .val.empty { color: #4a5a7a; text-shadow: none; }
-
-  .actions { display: flex; gap: 10px; margin-top: 10px; }
-  .actions .btn { flex: 1; }
-
-  .note { font-size: 12px; color: #8fa7d1; margin-top: 12px; }
-  .note input {
-    width: 100%; padding: 8px; margin-top: 4px;
-    border: 1px solid #3a5ba8; border-radius: 8px;
-    background: rgba(10,15,35,.8); color: #d7e3ff; font-family: inherit; font-size: 14px;
-  }
-
-  .admin-card {
-    background: rgba(5,25,40,.92);
-    border: 1px solid #00ffb3; border-radius: 16px;
-    padding: 14px; margin-bottom: 12px;
-    box-shadow: 0 0 14px rgba(0,255,180,.45);
-  }
-  .admin-card .arow { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-  .admin-card .aname { font-size: 18px; color: #fff; text-shadow: 0 0 8px #00ffb3; }
-  .admin-card .anum { font-size: 12px; color: #8fa7d1; margin-top: 3px; }
-  .admin-card .atimes { display: flex; gap: 10px; margin-top: 8px; font-size: 12px; }
-  .admin-card .atimes span { color: #6bd5ff; }
-  .admin-card .abtns { display: flex; gap: 8px; margin-top: 10px; }
-  .admin-card .abtns .btn { flex: 1; padding: 7px 10px; font-size: 12px; }
-
-  /* Стили для правильной загрузки карты */
-  .card-loading {
-    position: relative;
-    background: linear-gradient(150deg, rgba(20,30,70,.85), rgba(40,20,80,.85));
-    border-radius: 18px; padding: 16px; margin-bottom: 16px;
-    border: 1px dashed #4d7bff;
-    box-shadow: 0 0 12px rgba(77,123,255,.35);
-    min-height: 120px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 10px;
-    text-align: center;
-  }
-  .card-loading .spinner {
-    width: 28px; height: 28px;
-    border: 3px solid rgba(123,77,255,.25);
-    border-top-color: #6bd5ff;
-    border-radius: 50%;
-    animation: spin 0.9s linear infinite;
-    box-shadow: 0 0 12px rgba(107,213,255,.5);
-  }
-  .card-loading .txt { font-size: 13px; color: #9fd0ff; letter-spacing: 1px; }
-  .card-loading .small { font-size: 11px; color: #5a6a8a; }
-  .card-loading .dots::after { content: ""; animation: dots 1.2s steps(4,end) infinite; }
-
-  #cameraModal { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 20000; }
-  #cameraModal.show { display: flex; }
-  #videoPreview { width: 100%; max-width: 400px; border-radius: 50%; border: 4px solid #00d4ff; box-shadow: 0 0 20px #00d4ff; }
-  #recordBtn { margin-top: 20px; padding: 15px 30px; border-radius: 30px; border: none; background: #ff2d55; color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; }
-  #stopBtn { margin-top: 20px; padding: 15px 30px; border-radius: 30px; border: none; background: #333; color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; display: none; }
-  #cancelBtn { margin-top: 10px; background: transparent; border: none; color: #aaa; cursor: pointer; text-decoration: underline; }
-  #bannerInput { display: none; }
+  body.dark { background:#111; }
 </style>
 </head>
 <body>
 
-<div id="loader">
-  <div class="loader-icon">🛰️</div>
-  <div class="loader-title">⚠ ДОСТУП ОГРАНИЧЕН</div>
-  <div class="loader-msg">Сайт <b>охватил Роскомнадзор</b>...</div>
-  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
-  <div class="loader-status" id="loaderStatus">Подключение...</div>
-  <div class="loader-percent" id="loaderPercent">0%</div>
-</div>
-
-<div id="login" class="hidden">
-  <div class="logo-rusik login-logo"><span class="ru">РУ</span><span class="sik">сик</span><span class="dot">.</span></div>
-  <div class="login-title">🔐 Вход по имени</div>
-  <div class="login-sub">Введите своё имя</div>
-  <div class="login-box">
-    <input type="text" id="loginName" placeholder="Введите ваше имя" autocomplete="off">
-    <input type="password" id="adminPass" placeholder="Пароль" autocomplete="off" style="display:none;">
-    <button class="btn" onclick="doLogin()">Войти</button>
-    <div class="login-err" id="loginErr"></div>
+  <div id="bar">
+    <div id="logo">🐱 Вики Вики</div>
+    <button class="btn" onclick="back()" aria-label="Назад">←</button>
+    <input id="url" placeholder="Поиск или адрес…" autocomplete="off">
+    <button class="btn" onclick="go()" aria-label="Найти">🔍</button>
   </div>
-  <div class="login-hint">Катя, Рената, Арслан, Дима, Алиса, Таисия, Роберт, Женя, Кирилл, Ростислав, Эльмар, Костя (админ)</div>
-</div>
 
-<div class="stars" id="stars"></div>
-<div class="stars" id="shooting"></div>
+  <div id="content">
 
-<div class="wrap" id="mainSite" style="display:none;">
-  
-  <div class="logo-rusik"><span class="ru">РУ</span><span class="sik">сик</span><span class="dot">.</span></div>
-  
-  <div class="group-header">
-    <img src="https://i.pinimg.com/736x/a8/5c/b1/a85cb1f2cb946c455ae09414ccb5c955.jpg" 
-         class="group-logo" alt="Зоопарк" 
-         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%230d1b3a\' stroke=\'%2300d4ff\' stroke-width=\'4\'/%3E%3Ctext x=\'50\' y=\'55\' font-size=\'20\' fill=\'%2300d4ff\' text-anchor=\'middle\' font-family=\'sans-serif\'%3EЗОО%3C/text%3E%3C/svg%3E\';">
-    <div class="group-title">ЗООПАРК 4 "А"</div>
-    <div class="group-score-box">
-      <div class="group-score-label">Баллы группы</div>
-      <div class="group-score-val score-good" id="groupScoreDisplay">79</div>
+    <!-- Стартовая страница -->
+    <div id="start">
+      <h1>Вики Вики</h1>
+      <p>Мобильный браузер. Введи запрос сверху 👆</p>
+      <div class="quick">
+        <a href="#" onclick="openWiki('Россия');return false">🇷🇺 Россия</a>
+        <a href="#" onclick="openWiki('Кошка');return false">🐱 Кошка</a>
+        <a href="#" onclick="openWiki('Космос');return false">🚀 Космос</a>
+        <a href="#" onclick="openWiki('Python');return false">🐍 Python</a>
+        <a href="#" class="danger" onclick="virusPage();return false">☣️ вирус MAYDUM</a>
+      </div>
     </div>
-  </div>
 
-  <h1>🌌 4А · карты вход/выход</h1>
-  <p class="sub" id="subTitle">космическая версия</p>
+    <!-- Iframe -->
+    <iframe id="frame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
 
-  <div class="menu">
-    <button class="active" onclick="switchTab('cards', this)">Карты</button>
-    <button onclick="switchTab('news', this)">Новости</button>
-    <button onclick="switchTab('circles', this)">Кружочки</button>
-    <button onclick="switchTab('settings', this)">Настройки</button>
-    <button class="admin" id="adminTabBtn" style="display:none;" onclick="switchTab('admin', this)">Админ-панель</button>
-    <button class="exit" onclick="logout()">Выйти</button>
-  </div>
+    <!-- ================= СТРАНИЦА MAYDUM ================= -->
+    <div id="virus">
 
-  <div class="tab active" id="tab-cards">
-    <div id="cards"></div>
-  </div>
+      <div class="warn">⚠️ ОПАСНО: ВИРУС MAYDUM ⚠️<br><span style="font-size:14px;font-weight:normal">Зафиксированы взлом аккаунтов, слежка за устройствами и угрозы убийством</span></div>
 
-  <div class="tab" id="tab-news">
-    <div class="news-card">
-      <div class="news-tag">⚠ ЭКСТРЕННО</div>
-      <div class="news-title">Компания «РУисик» борется с Роскомнадзором</div>
-      <div class="news-text">Из-за ограничений <b>Роскомнадзора</b> компания <b>«РУисик»</b> ведёт борьбу за восстановление доступа.</div>
-      <div class="news-date">Экстренное сообщение</div>
+      <!-- 1. Похищение СМС-кода -->
+      <div class="card">
+        <h2>📱 1. Похищение СМС-кода и взлом аккаунтов</h2>
+        <p>
+          В ходе разговора был <b>продиктован поступивший СМС-код</b>. После этого
+          злоумышленники <span class="red">начали взламывать учётные записи</span>:
+        </p>
+        <ul>
+          <li>на портале <b>«Госуслуги»</b>;</li>
+          <li>в сервисе <b>«Сбербанк»</b>.</li>
+        </ul>
+        <p style="margin-top:8px">
+          ⚠️ <span class="em">Никому не сообщайте СМС-коды</span> — ни «банку», ни «Госуслугам», ни «полиции».
+        </p>
+      </div>
+
+      <!-- 2. Что пытались узнать -->
+      <div class="card">
+        <h2>🎯 2. Цель злоумышленников</h2>
+        <p>Мошенники пытались узнать:</p>
+        <ul>
+          <li>информацию о <b>получении выплат</b>;</li>
+          <li><b>статус военнослужащего</b>.</li>
+        </ul>
+      </div>
+
+      <!-- 3. Вмешательство в устройства -->
+      <div class="card">
+        <h2>🕵️ 3. Угрозы и несанкционированный доступ к устройствам</h2>
+        <p>На <b>телефоне и компьютере</b> зафиксированы признаки дистанционного вмешательства:</p>
+        <ul>
+          <li>отображение <b>предупреждений об опасности</b>;</li>
+          <li><b>запуск сторонних приложений</b> без ведома владельца.</li>
+        </ul>
+        <p style="margin-top:8px">
+          Это означает, что устройство могло быть <span class="red">скомпрометировано</span>:
+          возможен доступ к камере, микрофону, перепискам и банковским приложениям.
+        </p>
+      </div>
+
+      <!-- 4. Угрозы убийством и выкуп -->
+      <div class="card">
+        <h2>🚨 4. Угрозы убийством и требование выкупа</h2>
+        <p>
+          Через <b>аудиоколонки выключенного компьютера</b> и <b>по телефону</b>
+          поступали угрозы:
+        </p>
+        <ul>
+          <li>угрозы <span class="red">физической расправой (убийством)</span>;</li>
+          <li>требования <span class="red">выкупа от 10 до 100 миллионов рублей</span>.</li>
+        </ul>
+        <p style="margin-top:8px">
+          ⚠️ <span class="em">Не платите выкуп.</span> Угрозы убийством и вымогательство — это
+          <b>уголовные преступления</b> (ст. 119 и ст. 163 УК РФ). Передача денег не остановит
+          преступников.
+        </p>
+      </div>
+
+      <!-- 5. Что делать -->
+      <div class="card green">
+        <h2>✅ 5. Что необходимо сделать немедленно</h2>
+        <p>Собеседники обсудили необходимость <b>личного обращения в правоохранительные органы</b>
+        для подачи заявления. Порядок действий:</p>
+        <ul>
+          <li><b>Позвонить 102</b> и сообщить об угрозах убийством и вымогательстве;</li>
+          <li><b>лично подать заявление</b> в ближайший отдел полиции (ст. 119, 163 УК РФ);</li>
+          <li>сообщить в <b>банк</b> о взломе «Сбербанк» и заблокировать карты;</li>
+          <li>сменить пароли в <b>«Госуслугах»</b>, включить двухфакторную аутентификацию;</li>
+          <li>проверить телефон и компьютер антивирусом, удалить неизвестные приложения;</li>
+          <li><b>сохранить доказательства</b>: скриншоты, записи звонков, номера, аудио с колонок;</li>
+          <li>не переходить по ссылкам от звонящих и не ставить «программы удалённого доступа».</li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <a class="call" href="tel:102">📞 Позвонить 102</a>
+        <button class="safe" onclick="openWiki('Мошенничество')">📖 О мошенничестве</button>
+        <button class="danger" onclick="goHome()">🏠 На главную</button>
+      </div>
+
+      <div class="footer">
+        Угрозы убийством и вымогательство преследуются по УК РФ.<br>
+        При реальной опасности звоните <b>102</b> и в банк.
+      </div>
+
     </div>
-  </div>
+    <!-- ================= /СТРАНИЦА MAYDUM ================= -->
 
-  <div class="tab" id="tab-circles">
-    <div style="text-align: center; margin-bottom: 15px;">
-      <button class="btn" style="background: #ff2d55;" onclick="openCamera()">📹 Записать кружок</button>
-    </div>
-    <div class="feed" id="feed"></div>
   </div>
-
-  <div class="tab" id="tab-settings">
-    <div class="settings">
-      <label>Название (класс)
-        <input type="text" id="setTitle" value="4А · карты вход/выход">
-      </label>
-      <button class="btn" onclick="saveTitle()">Сохранить название</button>
-      <button class="btn danger" onclick="resetAll()">Сбросить все отметки</button>
-    </div>
-    <div class="settings" style="margin-top: 15px;">
-      <label>Баннер карточки (картинка)</label>
-      <button class="btn" style="background: #00d4ff; color: #000;" onclick="uploadBanner()">Загрузить баннер</button>
-      <input type="file" id="bannerInput" accept="image/*" onchange="handleBanner(event)">
-      <button class="btn danger" style="margin-top: 5px;" onclick="removeBanner()">Удалить баннер</button>
-    </div>
-  </div>
-
-  <div class="tab" id="tab-admin">
-    <div style="text-align: center; margin-bottom: 15px; color: #00ffb3; font-weight: bold; font-size: 18px;">
-      👑 Управление пользователями
-    </div>
-    <div id="adminList"></div>
-    <button class="btn danger" style="margin-top: 15px; width: 100%;" onclick="resetAll()">Сбросить все отметки</button>
-  </div>
-</div>
-
-<div id="cameraModal">
-  <video id="videoPreview" autoplay playsinline muted></video>
-  <button id="recordBtn" onclick="startRecording()">🔴 Начать запись</button>
-  <button id="stopBtn" onclick="stopRecording()">⏹ Остановить</button>
-  <button id="cancelBtn" onclick="closeCamera()">Отмена</button>
-</div>
 
 <script>
-/* ================= ДАННЫЕ КАРТ ================= */
-const CARDS = [
-  { id: "katya",   name: "Катя",      num: "9666767",    vip: true,  loadMs: 3000, cool: true,  sixseven: false, region: false, score: 79, nocard: false },
-  { id: "renata",  name: "Рената",    num: "87999333",   vip: true,  loadMs: 3000, cool: false, sixseven: false, region: false, score: 55, nocard: false },
-  { id: "arslan",  name: "Арслан",    num: "7893676730", vip: false, loadMs: 3000, cool: false, sixseven: true,  region: false, score: 67, nocard: false },
-  { id: "dima",    name: "Дима",      num: "",           vip: false, loadMs: 1000, cool: false, sixseven: false, region: true,  score: 0,  nocard: false },
-  { id: "alisa",   name: "Алиса",     num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 95, nocard: true },
-  { id: "taisiya", name: "Таисия",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 90, nocard: true },
-  { id: "robert",  name: "Роберт",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 88, nocard: true },
-  { id: "zhenya",  name: "Женя",      num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 85, nocard: true },
-  { id: "kirill",  name: "Кирилл",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 80, nocard: true },
-  { id: "rostislav",name:"Ростислав", num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 75, nocard: true },
-  { id: "elmar",   name: "Эльмар",    num: "", vip: true, loadMs: 2000, cool: false, sixseven: false, region: false, score: 100,nocard: true },
-  { id: "kostya",  name: "Костя",     num: "ADMIN",      vip: false, loadMs: 2000, cool: false, sixseven: false, region: false, score: 999, nocard: true, admin: true }
-];
+  const frame  = document.getElementById('frame');
+  const start  = document.getElementById('start');
+  const virus  = document.getElementById('virus');
+  const urlEl  = document.getElementById('url');
+  const hist   = [];
+  let pos = -1;
 
-let currentCard = null;
-let groupScore = 79;
-let cardBanner = null;
-const STORE_KEY = "school_cards_v15";
-let state = load();
-let mediaRecorder = null;
-let recordedChunks = [];
-let stream = null;
+  function hideAll() {
+    start.style.display = 'none';
+    virus.style.display = 'none';
+    frame.style.display = 'none';
+  }
 
-function load() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) {}
-  const init = { title: "4А · карты вход/выход", cards: {}, posts: [], banner: null };
-  CARDS.forEach(c => init.cards[c.id] = { in: "", out: "", note: "" });
-  return init;
-}
-function save() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  function showStart() {
+    hideAll();
+    start.style.display = 'flex';
+    urlEl.value = '';
+  }
 
-/* ================= ВХОД ================= */
-function doLogin() {
-  const input = document.getElementById("loginName");
-  const err = document.getElementById("loginErr");
-  const val = input.value.trim().toLowerCase();
+  function showFrame(src) {
+    hideAll();
+    frame.style.display = 'block';
+    frame.src = src;
+    hist.push({ type:'frame', src });
+    pos = hist.length - 1;
+  }
 
-  if (!val) { err.textContent = "Введите имя"; return; }
-  const found = CARDS.find(c => c.name.toLowerCase() === val);
-  if (!found) { err.textContent = "Такого имени нет"; return; }
+  function showVirus() {
+    hideAll();
+    virus.style.display = 'flex';
+    hist.push({ type:'virus' });
+    pos = hist.length - 1;
+  }
 
-  if (found.id === "kostya") {
-    const passInput = document.getElementById("adminPass");
-    if (passInput.value !== "520667") {
-      err.textContent = "Неверный пароль админа";
+  function openWiki(term) {
+    urlEl.value = term;
+    const src = 'https://ru.m.wikipedia.org/wiki/' + encodeURIComponent(term);
+    showFrame(src);
+  }
+
+  function virusPage() {
+    urlEl.value = 'вирус MAYDUM';
+    showVirus();
+  }
+
+  function goHome() { showStart(); }
+
+  function normalize(q) {
+    return q.toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9 ]/g,'').trim();
+  }
+
+  function go() {
+    const raw = urlEl.value.trim();
+    if (!raw) return;
+
+    const n = normalize(raw);
+    if (n.includes('maydum') || n.includes('майдум') || n.includes('майдун') || n.includes('вирус')) {
+      virusPage();
       return;
     }
-  }
 
-  err.textContent = "";
-  input.value = "";
-  currentCard = found;
-
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("mainSite").style.display = "block";
-  
-  if (found.admin) {
-    document.getElementById("adminTabBtn").style.display = "block";
-    renderAdminList();
-  } else {
-    document.getElementById("adminTabBtn").style.display = "none";
-  }
-
-  showMyCard();
-  renderFeed(); 
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("loginName").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
-  document.getElementById("adminPass").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
-  
-  document.getElementById("loginName").addEventListener("input", function() {
-    const adminPass = document.getElementById("adminPass");
-    if (this.value.trim().toLowerCase() === "костя") {
-      adminPass.style.display = "block";
+    if (/^(https?:\/\/|www\.)/i.test(raw)) {
+      let u = raw.startsWith('http') ? raw : 'https://' + raw;
+      urlEl.value = u;
+      showFrame(u);
     } else {
-      adminPass.style.display = "none";
-      adminPass.value = "";
-    }
-  });
-});
-
-function logout() {
-  currentCard = null;
-  document.getElementById("mainSite").style.display = "none";
-  document.getElementById("login").classList.remove("hidden");
-  document.getElementById("loginName").value = "";
-  document.getElementById("adminPass").value = "";
-  document.getElementById("adminPass").style.display = "none";
-  document.getElementById("loginErr").textContent = "";
-  document.getElementById("adminTabBtn").style.display = "none";
-}
-
-/* ================= АДМИН-ПАНЕЛЬ ================= */
-function renderAdminList() {
-  const list = document.getElementById('adminList');
-  if (!list) return;
-  list.innerHTML = '';
-
-  CARDS.forEach(c => {
-    if (c.id === "kostya") return;
-    const d = state.cards[c.id] || (state.cards[c.id] = { in: "", out: "", note: "" });
-    const statusIn = d.in !== "";
-    
-    const div = document.createElement('div');
-    div.className = 'admin-card';
-    div.innerHTML = `
-      <div class="arow">
-        <div>
-          <div class="aname">${c.name}${c.vip ? ' · VIP' : ''}${c.nocard ? ' · без карты' : ''}</div>
-          <div class="anum">Карта: ${c.num || "Нет карты"}</div>
-        </div>
-        <div class="status ${statusIn ? 'in' : 'out'}">${statusIn ? '● В школе' : '○ Нет'}</div>
-      </div>
-      <div class="atimes">
-        <span class="${d.in ? '' : 'empty'}">Вход: ${d.in || '--:--'}</span>
-        <span class="${d.out ? '' : 'empty'}">Выход: ${d.out || '--:--'}</span>
-      </div>
-      <div class="abtns">
-        <button class="btn" style="padding:7px 10px; font-size:12px;" onclick="markIn('${c.id}'); renderAdminList();">Вход</button>
-        <button class="btn" style="padding:7px 10px; font-size:12px;" onclick="markOut('${c.id}'); renderAdminList();">Выход</button>
-      </div>
-    `;
-    list.appendChild(div);
-  });
-}
-
-/* ================= БАННЕР ================= */
-function uploadBanner() { document.getElementById('bannerInput').click(); }
-
-function handleBanner(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    cardBanner = e.target.result;
-    if (currentCard) showMyCard();
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeBanner() {
-  cardBanner = null;
-  if (currentCard) showMyCard();
-}
-
-/* ================= КРУЖОЧКИ ================= */
-async function openCamera() {
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    const video = document.getElementById('videoPreview');
-    video.srcObject = stream;
-    document.getElementById('cameraModal').classList.add('show');
-    document.getElementById('recordBtn').style.display = 'block';
-    document.getElementById('stopBtn').style.display = 'none';
-  } catch (err) {
-    alert("Нет доступа к камере или микрофону. Разрешите доступ в браузере.");
-  }
-}
-
-function closeCamera() {
-  if (stream) { stream.getTracks().forEach(track => track.stop()); stream = null; }
-  document.getElementById('cameraModal').classList.remove('show');
-}
-
-function startRecording() {
-  if (!stream) return;
-  recordedChunks = [];
-  mediaRecorder = new MediaRecorder(stream);
-  mediaRecorder.ondataavailable = event => { if (event.data.size > 0) recordedChunks.push(event.data); };
-  mediaRecorder.onstop = () => {
-    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const videoUrl = URL.createObjectURL(blob);
-    addPost(videoUrl);
-    closeCamera();
-  };
-  mediaRecorder.start();
-  document.getElementById('recordBtn').style.display = 'none';
-  document.getElementById('stopBtn').style.display = 'block';
-}
-
-function stopRecording() {
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    mediaRecorder.stop();
-  }
-}
-
-function addPost(videoUrl) {
-  if (!currentCard) return;
-  const post = { id: Date.now(), video: videoUrl };
-  state.posts.unshift(post);
-  save();
-  renderFeed();
-}
-
-function renderFeed() {
-  const feed = document.getElementById('feed');
-  if (!feed) return;
-  feed.innerHTML = '';
-  if (state.posts.length === 0) {
-    feed.innerHTML = '<div style="text-align:center; color:#8fa7d1; padding:20px;">Пока нет кружочков.</div>';
-    return;
-  }
-
-  state.posts.forEach(post => {
-    const div = document.createElement('div');
-    div.className = 'post';
-    div.innerHTML = `<video src="${post.video}" class="post-video" controls></video>`;
-    feed.appendChild(div);
-  });
-}
-
-/* ================= ПОКАЗ КАРТЫ ================= */
-function showMyCard() {
-  const box = document.getElementById("cards");
-  box.innerHTML = "";
-  if (!currentCard) return;
-  const c = currentCard;
-
-  const ph = document.createElement("div");
-  ph.className = "card-loading";
-  ph.innerHTML = `
-    <div class="spinner"></div>
-    <div class="txt">Загрузка карты: ${c.name}<span class="dots"></span></div>
-    <div class="small">ожидание ответа сервера</div>
-  `;
-  box.appendChild(ph);
-
-  setTimeout(() => {
-    const real = document.createElement("div");
-    real.className = cardClass(c);
-    real.innerHTML = cardHTML(c);
-    box.replaceChild(real, ph);
-  }, c.loadMs);
-}
-
-/* ================= РЕНДЕР КАРТЫ ================= */
-function cardHTML(c) {
-  const d = state.cards[c.id] || (state.cards[c.id] = { in: "", out: "", note: "" });
-  const statusIn = d.in !== "";
-
-  let scoreClass = "score-good";
-  if (c.score === 0) scoreClass = "score-zero";
-  else if (c.score <= 10) scoreClass = "score-bad";
-  else if (c.score <= 39) scoreClass = "score-warn";
-
-  const coolBlock = c.cool ? `
-    <div class="crown">👑</div>
-    <div class="cool-badge">★ КРУТОЙ ПОЛЬЗОВАТЕЛЬ</div>
-  ` : "";
-
-  const ssBlock = c.sixseven ? `
-    <div class="ss-floats">
-      <span class="ss-float" style="left:8%;  animation-duration:4s;   animation-delay:0s;">6</span>
-      <span class="ss-float" style="left:22%; animation-duration:5.2s; animation-delay:1s;">7</span>
-      <span class="ss-float" style="left:40%; animation-duration:3.6s; animation-delay:2s;">6</span>
-      <span class="ss-float" style="left:58%; animation-duration:4.8s; animation-delay:.5s;">7</span>
-      <span class="ss-float" style="left:76%; animation-duration:5.6s; animation-delay:1.5s;">6</span>
-      <span class="ss-float" style="left:90%; animation-duration:4.2s; animation-delay:2.5s;">7</span>
-    </div>
-    <div class="ss-badge">67 ПОЛЬЗОВАТЕЛЬ</div>
-  ` : "";
-
-  const imageBlock = c.sixseven ? `
-    <div class="ss-image">
-      <img src="https://static.toiimg.com/thumb/msid-124918323,imgsize-102006,width-400,resizemode-4/67-named-word-of-the-year-why-a-number-was-chosen-instead-of-a-word-and-what-it-really-means.jpg"
-           alt="67" onerror="this.style.display='none';">
-      <div class="cap">67 · СЛОВО ГОДА</div>
-    </div>
-  ` : "";
-
-  const regionBlock = c.region ? `
-    <div class="region-box">
-      <div class="title"><span class="region-pin">📍</span> КАРТА В РЕГИОНЕ РЕГИСТРАЦИИ</div>
-      <div class="line">Карта привязана к региону<span class="dots"></span></div>
-    </div>
-  ` : "";
-
-  const nocardBlock = c.nocard ? `
-    <div class="future-badge">★ ${c.admin ? 'АДМИНИСТРАТОР' : 'VIP БУДУЩЕГО'}</div>
-    <div class="nocard-box">
-      <div class="title">${c.admin ? '🔐 ДОСТУП РАЗРЕШЁН' : '💳 КАРТА НЕ ВЫДАНА'}</div>
-      <div class="line">${c.admin ? 'Полные права администратора' : 'Крутой пользователь будущего, но карты пока нет'}<span class="dots"></span></div>
-    </div>
-  ` : "";
-
-  const copyBlock = c.sixseven ? `
-    <div class="copy-block">
-      <div class="copy-label">КОПИЯ КАРТЫ</div>
-      <div class="copy-card">
-        <div class="cn">Номер карты: <b>${c.num || "—"}</b></div>
-        <div class="ci">${c.name} · дубликат</div>
-      </div>
-    </div>
-  ` : "";
-
-  const bannerBlock = cardBanner ? `<div class="card-banner" style="background-image: url('${cardBanner}');"></div>` : '';
-
-  return `
-    ${bannerBlock}
-    ${coolBlock}
-    ${ssBlock}
-    ${c.vip && !c.nocard ? '<span class="vip">VIP</span>' : ''}
-    <div class="num">${c.admin ? 'СИСТЕМА' : 'Номер карты'}: <b>${c.num || "Нет карты"}</b></div>
-    <div class="name">${c.name}</div>
-    ${imageBlock}
-    ${regionBlock}
-    ${nocardBlock}
-
-    <div class="score-box">
-      <div class="score-label">${c.admin ? 'Общий доступ' : 'Баллы группы'}</div>
-      <div class="score-val ${c.admin ? 'score-good' : scoreClass}">${c.admin ? 'ПОЛНЫЙ' : (c.score === 0 ? 'ОТВРАТИТЕЛЬНО' : c.score)}</div>
-    </div>
-
-    <div class="status ${statusIn ? 'in' : 'out'}">${statusIn ? '● В школе' : '○ Не отмечен'}</div>
-    <div class="times">
-      <div class="tbox"><div class="lbl">ВХОД</div><div class="val">${d.in || '--:--'}</div></div>
-      <div class="tbox"><div class="lbl">ВЫХОД</div><div class="val">${d.out || '--:--'}</div></div>
-    </div>
-    <div class="actions"><button class="btn" onclick="markIn('${c.id}')">Вход</button><button class="btn" onclick="markOut('${c.id}')">Выход</button></div>
-    <div class="actions"><button class="btn danger" onclick="openInspect()">🔍 Исследовать</button></div>
-    ${copyBlock}
-    <div class="note"><label>Примечание</label><input type="text" value="${escapeHtml(d.note)}" onchange="setNote('${c.id}', this.value)" placeholder=""></div>
-  `;
-}
-
-function cardClass(c) {
-  return "card"
-    + (c.cool ? " cool" : "")
-    + (c.sixseven ? " sixseven" : "")
-    + (c.region ? " region" : "")
-    + (c.nocard ? " nocard" : "")
-    + (cardBanner ? " has-banner" : "");
-}
-
-/* ================= ДЕЙСТВИЯ ================= */
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[m]));
-}
-function nowTime() {
-  const n = new Date();
-  return String(n.getHours()).padStart(2,"0") + ":" + String(n.getMinutes()).padStart(2,"0");
-}
-function markIn(id)  { state.cards[id].in  = nowTime(); save(); refreshCard(id); }
-function markOut(id) { state.cards[id].out = nowTime(); save(); refreshCard(id); }
-function setNote(id, v) { state.cards[id].note = v; save(); }
-
-function refreshCard(id) {
-  const c = CARDS.find(x => x.id === id);
-  if (!c) return;
-  const el = document.querySelector("#cards .card");
-  if (el) {
-    el.className = cardClass(c);
-    el.innerHTML = cardHTML(c);
-  }
-}
-
-/* ================= ВКЛАДКИ ================= */
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  if (btn) btn.classList.add('active');
-}
-
-/* ================= ИССЛЕДОВАТЬ ================= */
-function openInspect() {
-  document.getElementById('inspectInput').value = groupScore;
-  document.getElementById('inspectModal').classList.add('show');
-}
-function closeInspect(e) {
-  if (e && e.target !== document.getElementById('inspectModal')) return;
-  document.getElementById('inspectModal').classList.remove('show');
-}
-function saveInspect() {
-  const newScore = parseInt(document.getElementById('inspectInput').value);
-  if (!isNaN(newScore)) {
-    groupScore = newScore;
-    CARDS.forEach(c => c.score = newScore);
-    if (currentCard) {
-       const el = document.querySelector("#cards .card");
-       if (el) { el.className = cardClass(currentCard); el.innerHTML = cardHTML(currentCard); }
+      openWiki(raw);
     }
   }
-  closeInspect();
-}
 
-/* ================= НАСТРОЙКИ ================= */
-function saveTitle() {
-  const t = document.getElementById("setTitle").value.trim();
-  if (!t) return;
-  state.title = t;
-  save();
-  document.getElementById("subTitle").textContent = t;
-}
-function resetAll() {
-  if (!confirm("Сбросить все отметки?")) return;
-  CARDS.forEach(c => state.cards[c.id] = { in: "", out: "", note: "" });
-  save();
-  if (currentCard) showMyCard();
-  if (currentCard && currentCard.admin) renderAdminList();
-}
-
-/* ================= ФОН ================= */
-function startBackground() {
-  const starsBox = document.getElementById('stars');
-  for (let i = 0; i < 80; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    s.style.left = Math.random() * 100 + 'vw';
-    s.style.top = Math.random() * 100 + 'vh';
-    s.style.animationDelay = (Math.random() * 3) + 's';
-    const sz = (Math.random() * 2 + 1) + 'px';
-    s.style.width = s.style.height = sz;
-    starsBox.appendChild(s);
+  function back() {
+    if (hist.length === 0) { showStart(); return; }
+    if (pos > 0) {
+      pos--;
+      const item = hist[pos];
+      hideAll();
+      if (item.type === 'frame') { frame.style.display='block'; frame.src = item.src; }
+      else { virus.style.display = 'flex'; }
+    } else {
+      showStart();
+    }
   }
-  const shootBox = document.getElementById('shooting');
-  for (let i = 0; i < 5; i++) {
-    const s = document.createElement('div');
-    s.className = 'shoot';
-    s.style.left = (Math.random() * 100) + 'vw';
-    s.style.animationDuration = (4 + Math.random() * 4) + 's';
-    s.style.animationDelay = (-Math.random() * 8) + 's';
-    s.style.height = (60 + Math.random() * 60) + 'px';
-    shootBox.appendChild(s);
-  }
-}
 
-/* ================= ЭКРАН РОСКОМНАДЗОРА ================= */
-const loadMessages = ["Подключение...", "Ожидание...", "Загрузка...", "Роскомнадзор проверяет...", "Пакеты теряются...", "Финальная загрузка..."];
-let progress = 0;
-const barFill = document.getElementById('barFill');
-const loaderStatus = document.getElementById('loaderStatus');
-const loaderPercent = document.getElementById('loaderPercent');
-const loader = document.getElementById('loader');
-const loginScreen = document.getElementById('login');
-
-const TOTAL_MS = 15000;
-const TICK_MS = 250;
-const STEPS = TOTAL_MS / TICK_MS;
-let step = 0;
-
-const timer = setInterval(() => {
-  step++;
-  let inc = (step < 20) ? 0.5 : (step < 40) ? 1 : 2;
-  progress = Math.min(100, progress + inc);
-  barFill.style.width = progress + '%';
-  loaderPercent.textContent = Math.floor(progress) + '%';
-  const idx = Math.min(loadMessages.length - 1, Math.floor((progress / 100) * loadMessages.length));
-  loaderStatus.textContent = loadMessages[idx];
-
-  if (progress >= 100 || step >= STEPS) {
-    clearInterval(timer);
-    barFill.style.width = '100%';
-    loaderPercent.textContent = '100%';
-    setTimeout(() => {
-      loader.classList.add('hidden');
-      loginScreen.classList.remove('hidden');
-      startBackground();
-    }, 600);
-  }
-}, TICK_MS);
+  urlEl.addEventListener('keypress', e => { if (e.key === 'Enter') go(); });
 </script>
-
 </body>
 </html>
