@@ -6,8 +6,8 @@
 <title>Алиса Пульт</title>
 <style>
 :root { --bg:#121212; --card:#1e1e1e; --accent:#ff9f0a; --sec:#b0b0b0; --border:#333; }
-* { box-sizing: border-box; }
-body { background:var(--bg); color:#fff; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; margin:0; padding:12px; padding-bottom:80px; }
+* { box-sizing:border-box; }
+body { background:var(--bg); color:#fff; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; margin:0; padding:12px; }
 header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 h1 { margin:0; font-size:1.15rem; }
 .sub { font-size:.72rem; color:var(--sec); }
@@ -19,18 +19,16 @@ button { background:#2a2a2a; border:1px solid var(--border); color:#fff; padding
 button:active { background:#3a3a3a; }
 .btn-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .btn-primary { background:var(--accent); color:#000; border:none; width:100%; padding:14px; margin-top:10px; }
-select, input { width:100%; background:#2a2a2a; border:1px solid var(--border); color:#fff; padding:12px; border-radius:12px; font-size:.9rem; outline:none; }
-input:focus, select:focus { border-color:var(--accent); }
-.media { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+select, input[type=text] { width:100%; background:#2a2a2a; border:1px solid var(--border); color:#fff; padding:12px; border-radius:12px; font-size:.9rem; outline:none; }
+.media { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
 .media button { font-size:1.1rem; padding:12px 0; }
 .vol-row { display:flex; align-items:center; gap:10px; }
-input[type=range] { -webkit-appearance:none; padding:0; border:none; background:transparent; }
+.vol-num { font-weight:700; min-width:70px; text-align:center; color:var(--accent); }
+input[type=range] { -webkit-appearance:none; width:100%; padding:0; border:none; background:transparent; }
 input[type=range]::-webkit-slider-runnable-track { height:4px; background:#444; border-radius:2px; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); margin-top:-9px; }
-.chips { display:flex; gap:8px; margin-bottom:10px; }
-.chip { flex:1; padding:9px 0; font-size:.72rem; }
-.chip.on { background:var(--accent); color:#000; border-color:var(--accent); }
-#log { font-size:.7rem; color:#555; padding:8px; min-height:20px; }
+#log { font-size:.75rem; color:#9a9a9a; padding:8px; white-space:pre-wrap; }
+.off { display:none; }
 </style>
 </head>
 <body>
@@ -40,155 +38,200 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; h
     <h1>Алиса Пульт</h1>
     <div class="sub" id="sub">Не подключено</div>
   </div>
-  <div class="badge" id="badge" onclick="logout()" style="display:none;">ВЫЙТИ</div>
+  <div class="badge off" id="badge" onclick="logout()">ВЫЙТИ</div>
 </header>
 
 <div class="card" id="loginCard">
   <div class="title">Вход</div>
-  <div class="hint">Войди в аккаунт, где подключена Станция.</div>
+  <div class="hint">Войди в аккаунт, к которому привязана Станция.</div>
   <button class="btn-primary" onclick="loginYandex()">ВОЙТИ ЧЕРЕЗ ЯНДЕКС</button>
 </div>
 
-<div id="pult" style="display:none;">
+<div id="pult" class="off">
 
   <div class="card">
-    <div class="title">Колонка для управления</div>
-    <select id="deviceSelect" onchange="pickDevice()"><option value="">— пусто, нажми ОБНОВИТЬ —</option></select>
+    <div class="title">Устройство</div>
+    <select id="deviceSelect" onchange="pickDevice()"><option value="">— выбери —</option></select>
+    <div class="hint" id="devInfo" style="margin-top:8px; margin-bottom:0;"></div>
+  </div>
+
+  <div class="card off" id="cardVol">
+    <div class="title">Громкость</div>
+    <div class="vol-row">
+      <input type="range" id="volume" onchange="setVol(this.value)">
+      <div class="vol-num" id="vol-val">—</div>
+    </div>
     <div class="btn-grid" style="margin-top:10px;">
-      <button onclick="loadDevices()">ОБНОВИТЬ</button>
-      <button onclick="cap('mute', true, 'devices.capabilities.toggle')">БЕЗ ЗВУКА</button>
+      <button onclick="cap('devices.capabilities.toggle','mute',true)">🔇 Без звука</button>
+      <button onclick="cap('devices.capabilities.toggle','mute',false)">🔊 Со звуком</button>
     </div>
   </div>
 
-  <div class="card">
-    <div class="title">Мультимедиа</div>
+  <div class="card off" id="cardMedia">
+    <div class="title">Музыка</div>
     <div class="media">
       <button onclick="media('prev')">⏮</button>
-      <button onclick="media('play')">▶</button>
+      <button id="mPlay" onclick="mediaPlay()">▶</button>
       <button onclick="media('next')">⏭</button>
       <button onclick="media('stop')">⏹</button>
-      <button onclick="media('like')">❤</button>
     </div>
   </div>
 
-  <div class="card">
-    <div class="title">Громкость <span id="vol-val" style="color:var(--accent)">—</span></div>
-    <div class="vol-row">
-      <input type="range" id="volume" min="0" max="10" value="0" oninput="setVol(this.value)">
-    </div>
-    <div class="btn-grid" style="grid-template-columns:repeat(5,1fr); margin-top:10px;">
-      <button onclick="setVol(0)">0</button>
-      <button onclick="setVol(3)">3</button>
-      <button onclick="setVol(5)">5</button>
-      <button onclick="setVol(7)">7</button>
-      <button onclick="setVol(10)">10</button>
-    </div>
+  <div class="card off" id="cardText">
+    <div class="title">Сказать на колонке</div>
+    <input type="text" id="text-in" placeholder="Напиши текст (до 100 символов)">
+    <button class="btn-primary" onclick="sayText()">ОЗВУЧИТЬ</button>
   </div>
 
-  <div class="card">
-    <div class="title">Озвучить текст</div>
-    <div class="chips">
-      <button class="chip" id="v_megaphone" onclick="setVoice('megaphone')">МЕГАФОН</button>
-      <button class="chip" id="v_robot" onclick="setVoice('robot')">РОБОТ</button>
-      <button class="chip on" id="v_chipmunk" onclick="setVoice('chipmunk')">БУРУНДУК</button>
+  <div class="card off" id="cardOnOff">
+    <div class="title">Питание</div>
+    <div class="btn-grid">
+      <button onclick="cap('devices.capabilities.on_off','on',true)">ВКЛ</button>
+      <button onclick="cap('devices.capabilities.on_off','on',false)">ВЫКЛ</button>
     </div>
-    <input type="text" id="text-in" placeholder="— пусто, напиши текст —">
-    <button class="btn-primary" onclick="sayText()">ОЗВУЧИТЬ НА КОЛОНКЕ</button>
   </div>
+</div>
 
-  <div id="log"></div>
+<div class="card">
+  <div class="title">Журнал</div>
+  <div id="log">—</div>
 </div>
 
 <script>
 const CLIENT_ID = 'f348d69eaf554cf4982643039e9c8cd4';
 const REDIRECT_URI = 'https://ofwfhkeghg83747.github.io/tools/';
-const API = "https://api.iot.yandex.net/v1.0";
+const API = 'https://api.iot.yandex.net/v1.0';
 
-let token = localStorage.getItem("ya_token") || "";
+let token = localStorage.getItem('ya_token') || '';
 let devices = [];
 let currentId = null;
-let voice = "chipmunk";
+let playing = false;
 
-(function catchToken(){
-  const h = new URLSearchParams(location.hash.slice(1));
-  if (h.get("access_token")) {
-    token = h.get("access_token");
-    localStorage.setItem("ya_token", token);
-    history.replaceState(null,"",location.pathname);
+// Ловим токен, который Яндекс вернул в адресе страницы (#access_token=...)
+if (location.hash.includes('access_token')) {
+  const p = new URLSearchParams(location.hash.slice(1));
+  if (p.get('access_token')) {
+    token = p.get('access_token');
+    localStorage.setItem('ya_token', token);
   }
-})();
+  history.replaceState(null, '', location.pathname);
+}
 
+function log(m){ const el = document.getElementById('log'); el.textContent = m; }
 function loginYandex(){
-  location.href = "https://oauth.yandex.ru/authorize?response_type=token&client_id=" + CLIENT_ID
-    + "&redirect_uri=" + encodeURIComponent(REDIRECT_URI) + "&force_confirm=yes";
+  location.href = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=' + CLIENT_ID
+    + '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) + '&force_confirm=yes';
 }
-function logout(){ localStorage.removeItem("ya_token"); location.reload(); }
-function log(m){ document.getElementById("log").textContent = "> " + m; }
+function logout(){ localStorage.removeItem('ya_token'); location.reload(); }
 
-function enter(){
+async function api(path, opts) {
+  const r = await fetch(API + path, Object.assign({
+    headers: { 'Authorization': 'Bearer ' + token }
+  }, opts || {}));
+  if (r.status === 401) { log('Токен просрочен или не имеет прав iot:view/iot:control. Нажми ВЫЙТИ и войди заново.'); throw new Error('401'); }
+  return r.json();
+}
+
+function enter() {
   if (!token) return;
-  document.getElementById("loginCard").style.display = "none";
-  document.getElementById("pult").style.display = "block";
-  document.getElementById("sub").textContent = "Подключено";
-  document.getElementById("badge").style.display = "block";
-  loadDevices();
+  document.getElementById('loginCard').classList.add('off');
+  document.getElementById('pult').classList.remove('off');
+  document.getElementById('badge').classList.remove('off');
+  document.getElementById('sub').textContent = 'Подключено';
+  loadHome();
 }
 
-async function loadDevices(){
-  log("Загрузка устройств...");
-  try {
-    const r = await fetch(API + "/user/devices", { headers: { "Authorization": "Bearer " + token } });
-    if (r.status === 401) { log("Токен неверен — нажми ВЫЙТИ и войди заново"); return; }
-    const d = await r.json();
-    devices = d.devices || [];
-    const sel = document.getElementById("deviceSelect");
-    sel.innerHTML = '<option value="">— пусто, выбери —</option>';
-    let speakers = 0;
-    devices.forEach(dev => {
-      const o = document.createElement("option");
-      o.value = dev.id;
-      o.textContent = dev.name;
-      sel.appendChild(o);
-      if (dev.type === "devices.types.speaker") speakers++;
-    });
-    log("Устройств: " + devices.length + ", колонок: " + speakers);
-  } catch(e) {
-    log("Ошибка: " + e.message);
+// Рекурсивно собираем все устройства из ответа API
+function collectDevices(node, out) {
+  if (Array.isArray(node)) { node.forEach(n => collectDevices(n, out)); return; }
+  if (node && typeof node === 'object') {
+    if (node.id && Array.isArray(node.capabilities)) out.push(node);
+    Object.values(node).forEach(v => { if (v && typeof v === 'object') collectDevices(v, out); });
   }
 }
 
-function pickDevice(){
-  currentId = document.getElementById("deviceSelect").value;
-  if (currentId) log("Выбрано: " + document.getElementById("deviceSelect").selectedOptions[0].textContent);
+async function loadHome() {
+  log('Загружаю устройства...');
+  try {
+    const d = await api('/user/info');
+    devices = [];
+    collectDevices(d.houses || [], devices);
+    const sel = document.getElementById('deviceSelect');
+    sel.innerHTML = '<option value="">— выбери —</option>';
+    devices.forEach(dev => {
+      const o = document.createElement('option');
+      o.value = dev.id;
+      o.textContent = (dev.room || dev.name) + ' · ' + dev.name;
+      sel.appendChild(o);
+    });
+    log('Найдено устройств: ' + devices.length + '. Выбери своё.');
+    if (!devices.length) log('Устройства не найдены. Проверь, что колонка привязана к «Дому с Алисой» в приложении Яндекса.');
+  } catch (e) {
+    if (e.message !== '401') log('Не удалось получить список: ' + e.message + '. Если сообщение повторяется при входе с GitHub-ссылки — браузер блокирует запрос (CORS), напиши мне.');
+  }
 }
 
-function cap(instance, value, type){
-  if (!currentId) { log("Сначала выбери колонку"); return; }
-  fetch(API + "/devices/" + currentId + "/actions", {
-    method:"POST",
-    headers:{ "Authorization":"Bearer " + token, "Content-Type":"application/json" },
-    body: JSON.stringify({ capabilities:[{ type:type, state:{ instance:instance, value:value } }] })
-  }).then(r => r.json()).then(d => {
-    log(d.status === "ok" ? "Готово" : "Ошибка: " + JSON.stringify(d).slice(0,120));
-  }).catch(e => log("Ошибка: " + e.message));
+async function pickDevice() {
+  currentId = document.getElementById('deviceSelect').value;
+  ['cardVol','cardMedia','cardText','cardOnOff'].forEach(i => document.getElementById(i).classList.add('off'));
+  if (!currentId) return;
+  const name = document.getElementById('deviceSelect').selectedOptions[0].textContent;
+  document.getElementById('devInfo').textContent = 'ID: ' + currentId;
+  try {
+    const d = await api('/devices/' + currentId);
+    const caps = d.capabilities || [];
+    const get = t => caps.find(c => c.type === t);
+
+    // Громкость
+    const vol = caps.find(c => c.type === 'devices.capabilities.range' && c.state && c.state.instance === 'volume');
+    if (vol) {
+      const rng = (vol.parameters && vol.parameters.range) || { min: 0, max: 100 };
+      const s = document.getElementById('volume');
+      s.min = rng.min; s.max = rng.max; s.value = vol.state.value;
+      document.getElementById('vol-val').textContent = vol.state.value + ' из ' + rng.max;
+      document.getElementById('cardVol').classList.remove('off');
+    }
+    // Медиа
+    const mp = get('devices.capabilities.media_player');
+    if (mp) {
+      playing = mp.state && mp.state.instance === 'playback' && mp.state.value === 'play';
+      document.getElementById('mPlay').textContent = playing ? '⏸' : '▶';
+      document.getElementById('cardMedia').classList.remove('off');
+    }
+    // Озвучка текста
+    if (get('devices.capabilities.quasar.server_action')) document.getElementById('cardText').classList.remove('off');
+    // Питание
+    if (get('devices.capabilities.on_off')) document.getElementById('cardOnOff').classList.remove('off');
+    if (!caps.length) log('У этого устройства нет управляемых функций.');
+  } catch (e) { if (e.message !== '401') log('Ошибка: ' + e.message); }
 }
 
-function setVol(v){
-  document.getElementById("vol-val").textContent = v + " / 10";
-  cap("volume", Number(v), "devices.capabilities.range");
+async function cap(type, instance, value) {
+  if (!currentId) { log('Сначала выбери устройство'); return; }
+  try {
+    const r = await fetch(API + '/devices/actions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ devices: [{ id: currentId, actions: [{ type: type, state: { instance: instance, value: value } }] }] })
+    });
+    const d = await r.json();
+    const res = d.devices && d.devices[0] && d.devices[0].capabilities && d.devices[0].capabilities[0];
+    const st = res && res.state && res.state.action_result && res.state.action_result.status;
+    log(st === 'DONE' ? 'Готово ✓' : 'Ответ: ' + JSON.stringify(d).slice(0, 150));
+  } catch (e) { log('Ошибка сети: ' + e.message); }
 }
-function media(a){ cap("media_" + a, true, "devices.capabilities.custom.button"); }
 
-function sayText(){
-  const t = document.getElementById("text-in").value.trim();
-  if (!t) { log("Поле пустое — напиши текст"); return; }
-  cap("text_action", t, "devices.capabilities.quasar_server_action");
+function setVol(v) {
+  document.getElementById('vol-val').textContent = v;
+  cap('devices.capabilities.range', 'volume', Number(v));
 }
+function media(a) { cap('devices.capabilities.media_player', 'playback', a); }
+function mediaPlay() { media(playing ? 'pause' : 'play'); playing = !playing; document.getElementById('mPlay').textContent = playing ? '⏸' : '▶'; }
 
-function setVoice(v){
-  voice = v;
-  ["megaphone","robot","chipmunk"].forEach(k => document.getElementById("v_" + k).classList.remove("on"));
-  document.getElementById("v_" + v).classList.add("on");
+async function sayText() {
+  const t = document.getElementById('text-in').value.trim();
+  if (!t) { log('Поле пустое'); return; }
+  cap('devices.capabilities.quasar.server_action', 'text_action', t);
 }
 
 enter();
