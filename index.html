@@ -1,307 +1,197 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Космический пульт</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
-    :root {
-      --primary: #00d2ff;
-      --panel: rgba(10, 10, 30, 0.85);
-      --metal: #2c3e50;
-      --accent: #ff4757;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(circle at center, #050510 0%, #000000 100%);
-      color: white;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-      min-height: 100vh;
-    }
-
-    /* Звёзды */
-    .star {
-      position: absolute;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle infinite alternate;
-    }
-    .star-small { width: 1px; height: 1px; }
-    .star-med { width: 2px; height: 2px; }
-    .star-large { width: 3px; height: 3px; }
-
-    @keyframes twinkle { 0% { opacity: 0.3; } 100% { opacity: 1; } }
-
-    /* Панель */
-    .panel {
-      position: relative;
-      width: 90%;
-      max-width: 500px;
-      margin: 40px auto;
-      background: var(--panel);
-      border: 1px solid var(--primary);
-      box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
-      padding: 20px;
-      backdrop-filter: blur(5px);
-    }
-
-    h1 {
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      color: var(--primary);
-      margin-bottom: 30px;
-      text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-    }
-
-    .input-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid #444;
-      color: var(--primary);
-      font-family: monospace;
-      box-sizing: border-box;
-      outline: none;
-    }
-    input:focus { border-color: var(--primary); }
-
-    /* Сетка кнопок */
-    .btn-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    button {
-      padding: 16px;
-      border: none;
-      cursor: pointer;
-      font-family: 'Orbitron';
-      font-weight: 700;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-main {
-      background: linear-gradient(135deg, #34495e, #2c3e50);
-      color: white;
-      border: 1px solid #555;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
-    }
-    .btn-main:hover {
-      background: linear-gradient(135deg, #4a6b82, #34495e);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    }
-    .btn-main:active { transform: translateY(0); }
-
-    .btn-primary {
-      grid-column: span 2;
-      background: linear-gradient(to bottom, #ff7675, #d63031);
-      color: white;
-      border: 1px solid #c0392b;
-      box-shadow: 0 5px 15px rgba(214, 48, 49, 0.4);
-      text-transform: uppercase;
-    }
-    .btn-primary:hover {
-      background: linear-gradient(to bottom, #e55039, #c0392b);
-      transform: scale(1.02);
-    }
-
-    #status {
-      margin-top: 20px;
-      text-align: center;
-      padding: 10px;
-      border-radius: 6px;
-      display: none;
-      font-size: 14px;
-      text-shadow: 0 0 5px black;
-    }
-    .status-error { background: rgba(214, 48, 49, 0.3); color: #ff7675; border: 1px solid #d63031; }
-    .status-success { background: rgba(46, 204, 113, 0.3); color: #2ecc71; border: 1px solid #2ecc71; }
-    .status-info { background: rgba(52, 152, 219, 0.3); color: #3498db; border: 1px solid #3498db; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Алиса Пульт</title>
+<style>
+:root { --bg:#121212; --card:#1e1e1e; --accent:#ff9f0a; --sec:#b0b0b0; --border:#333; }
+* { box-sizing: border-box; }
+body { background:var(--bg); color:#fff; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; margin:0; padding:12px; padding-bottom:80px; }
+header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+h1 { margin:0; font-size:1.15rem; }
+.sub { font-size:.72rem; color:var(--sec); }
+.badge { background:#2a2a2a; border:1px solid var(--accent); color:var(--accent); padding:6px 10px; border-radius:10px; font-size:.72rem; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:14px; }
+.title { font-size:.72rem; letter-spacing:1px; text-transform:uppercase; color:var(--sec); margin-bottom:10px; }
+.hint { font-size:.78rem; color:#777; margin-bottom:10px; }
+button { background:#2a2a2a; border:1px solid var(--border); color:#fff; padding:12px; border-radius:12px; font-weight:600; font-size:.85rem; cursor:pointer; }
+button:active { background:#3a3a3a; }
+.btn-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.btn-primary { background:var(--accent); color:#000; border:none; width:100%; padding:14px; margin-top:10px; }
+select, input { width:100%; background:#2a2a2a; border:1px solid var(--border); color:#fff; padding:12px; border-radius:12px; font-size:.9rem; outline:none; }
+input:focus, select:focus { border-color:var(--accent); }
+.media { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.media button { font-size:1.1rem; padding:12px 0; }
+.vol-row { display:flex; align-items:center; gap:10px; }
+input[type=range] { -webkit-appearance:none; padding:0; border:none; background:transparent; }
+input[type=range]::-webkit-slider-runnable-track { height:4px; background:#444; border-radius:2px; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); margin-top:-9px; }
+.chips { display:flex; gap:8px; margin-bottom:10px; }
+.chip { flex:1; padding:9px 0; font-size:.72rem; }
+.chip.on { background:var(--accent); color:#000; border-color:var(--accent); }
+#log { font-size:.7rem; color:#555; padding:8px; min-height:20px; }
+</style>
 </head>
 <body>
 
-  <!-- Рисуем звёзды -->
-  <script>
-    const count = 150;
-    for (let i = 0; i < count; i++) {
-      const star = document.createElement('div');
-      const size = Math.random() * 3 + 1;
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      star.className = 'star star-small';
-      if (size > 2) star.className += ' star-med';
-      if (size > 2.5) star.className += ' star-large';
-      star.style.left = x + '%';
-      star.style.top = y + '%';
-      star.style.animationDuration = (Math.random() * 4 + 2) + 's';
-      document.body.appendChild(star);
-    }
-  </script>
+<header>
+  <div>
+    <h1>Алиса Пульт</h1>
+    <div class="sub" id="sub">Не подключено</div>
+  </div>
+  <div class="badge" id="badge" onclick="logout()" style="display:none;">ВЫЙТИ</div>
+</header>
 
-  <div class="panel">
-    <h1>Space Control</h1>
+<div class="card" id="loginCard">
+  <div class="title">Вход</div>
+  <div class="hint">Войди в аккаунт, где подключена Станция.</div>
+  <button class="btn-primary" onclick="loginYandex()">ВОЙТИ ЧЕРЕЗ ЯНДЕКС</button>
+</div>
 
-    <div class="input-group">
-      <label for="tok">Авторизация (токен y0_...)</label>
-      <input type="password" id="tok" placeholder="Вставьте токен сюда">
+<div id="pult" style="display:none;">
+
+  <div class="card">
+    <div class="title">Колонка для управления</div>
+    <select id="deviceSelect" onchange="pickDevice()"><option value="">— пусто, нажми ОБНОВИТЬ —</option></select>
+    <div class="btn-grid" style="margin-top:10px;">
+      <button onclick="loadDevices()">ОБНОВИТЬ</button>
+      <button onclick="cap('mute', true, 'devices.capabilities.toggle')">БЕЗ ЗВУКА</button>
     </div>
-
-    <div class="btn-grid">
-      <button class="btn-main" onclick="loadDevices()">📡 Сканировать устройства</button>
-      <button class="btn-main" onclick="toggleMute()">🔇 Без звука</button>
-      <button class="btn-main" onclick="setVolume(50)">🔊 Громкость 50%</button>
-      <button class="btn-main" onclick="setVolume(100)">🔊 Громкость макс</button>
-    </div>
-
-    <button class="btn-primary" onclick="goPower()">⚡ ВКЛЮЧИТЬ / ВЫКЛЮЧИТЬ СВЕТ</button>
-
-    <div id="status"></div>
   </div>
 
-  <script>
-    let token = '';
-    let deviceId = null;
+  <div class="card">
+    <div class="title">Мультимедиа</div>
+    <div class="media">
+      <button onclick="media('prev')">⏮</button>
+      <button onclick="media('play')">▶</button>
+      <button onclick="media('next')">⏭</button>
+      <button onclick="media('stop')">⏹</button>
+      <button onclick="media('like')">❤</button>
+    </div>
+  </div>
 
-    function saveToken() {
-      token = document.getElementById('tok').value.trim().replace(/[^\x00-\x7F]/g, '');
-      if (!token.startsWith('y0_')) {
-        showStatus('❌ Токен должен начинаться с y0_', 'error');
-        return false;
-      }
-      showStatus('✅ Токен принят (не сохраняется!)', 'info');
-      return true;
-    }
+  <div class="card">
+    <div class="title">Громкость <span id="vol-val" style="color:var(--accent)">—</span></div>
+    <div class="vol-row">
+      <input type="range" id="volume" min="0" max="10" value="0" oninput="setVol(this.value)">
+    </div>
+    <div class="btn-grid" style="grid-template-columns:repeat(5,1fr); margin-top:10px;">
+      <button onclick="setVol(0)">0</button>
+      <button onclick="setVol(3)">3</button>
+      <button onclick="setVol(5)">5</button>
+      <button onclick="setVol(7)">7</button>
+      <button onclick="setVol(10)">10</button>
+    </div>
+  </div>
 
-    function showStatus(msg, type) {
-      const el = document.getElementById('status');
-      el.textContent = msg;
-      el.style.display = 'block';
-      el.className = 'status ' + (type === 'error' ? 'status-error' : type === 'success' ? 'status-success' : 'status-info');
-    }
+  <div class="card">
+    <div class="title">Озвучить текст</div>
+    <div class="chips">
+      <button class="chip" id="v_megaphone" onclick="setVoice('megaphone')">МЕГАФОН</button>
+      <button class="chip" id="v_robot" onclick="setVoice('robot')">РОБОТ</button>
+      <button class="chip on" id="v_chipmunk" onclick="setVoice('chipmunk')">БУРУНДУК</button>
+    </div>
+    <input type="text" id="text-in" placeholder="— пусто, напиши текст —">
+    <button class="btn-primary" onclick="sayText()">ОЗВУЧИТЬ НА КОЛОНКЕ</button>
+  </div>
 
-    async function loadDevices() {
-      if (!saveToken()) return;
-      showStatus('🛸 Сканирование сети...', 'info');
+  <div id="log"></div>
+</div>
 
-      try {
-        const r = await fetch('https://iot.yandex.net/api/v1.0/user/devices', {
-          headers: { 'Authorization': 'OAuth ' + token }
-        });
+<script>
+const CLIENT_ID = 'f348d69eaf554cf4982643039e9c8cd4';
+const REDIRECT_URI = 'https://ofwfhkeghg83747.github.io/tools/';
+const API = "https://api.iot.yandex.net/v1.0";
 
-        if (r.status === 401) {
-          showStatus('❌ Неверный токен. Обновите в кабинете разработчика.', 'error');
-          return;
-        }
-        if (r.status === 403) {
-          showStatus('⚠️ Яндекс блокирует запрос из браузера (CORS). Это не ошибка кода.', 'error');
-          return;
-        }
+let token = localStorage.getItem("ya_token") || "";
+let devices = [];
+let currentId = null;
+let voice = "chipmunk";
 
-        const d = await r.json();
-        if (!d.devices || d.devices.length === 0) {
-          showStatus('🌌 Устройств не найдено. Проверьте права приложения.', 'info');
-          return;
-        }
+(function catchToken(){
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.get("access_token")) {
+    token = h.get("access_token");
+    localStorage.setItem("ya_token", token);
+    history.replaceState(null,"",location.pathname);
+  }
+})();
 
-        // Для примера берём первое устройство с capability on_off
-        const onOffDevice = d.devices.find(dev =>
-          dev.capabilities && dev.capabilities.some(c => c.type === 'devices.capabilities.on_off')
-        );
-        if (onOffDevice) {
-          deviceId = onOffDevice.id;
-          showStatus(`✅ Выбрано устройство: ${onOffDevice.name}`, 'success');
-        } else {
-          showStatus('⚠️ Нет устройств с включением/выключением.', 'info');
-        }
-      } catch (e) {
-        console.error(e);
-        showStatus('💥 Ошибка сети. Скорее всего, браузер блокирует запрос к Яндексу.', 'error');
-      }
-    }
+function loginYandex(){
+  location.href = "https://oauth.yandex.ru/authorize?response_type=token&client_id=" + CLIENT_ID
+    + "&redirect_uri=" + encodeURIComponent(REDIRECT_URI) + "&force_confirm=yes";
+}
+function logout(){ localStorage.removeItem("ya_token"); location.reload(); }
+function log(m){ document.getElementById("log").textContent = "> " + m; }
 
-    async function sendAction(payload) {
-      if (!deviceId) {
-        showStatus('⚠️ Сначала нажмите «Сканировать устройства» и дождитесь успеха.', 'error');
-        return;
-      }
-      if (!saveToken()) return;
+function enter(){
+  if (!token) return;
+  document.getElementById("loginCard").style.display = "none";
+  document.getElementById("pult").style.display = "block";
+  document.getElementById("sub").textContent = "Подключено";
+  document.getElementById("badge").style.display = "block";
+  loadDevices();
+}
 
-      showStatus('🚀 Отправка команды...', 'info');
-      try {
-        const r = await fetch('https://iot.yandex.net/api/v1.0/devices/actions', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'OAuth ' + token,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
+async function loadDevices(){
+  log("Загрузка устройств...");
+  try {
+    const r = await fetch(API + "/user/devices", { headers: { "Authorization": "Bearer " + token } });
+    if (r.status === 401) { log("Токен неверен — нажми ВЫЙТИ и войди заново"); return; }
+    const d = await r.json();
+    devices = d.devices || [];
+    const sel = document.getElementById("deviceSelect");
+    sel.innerHTML = '<option value="">— пусто, выбери —</option>';
+    let speakers = 0;
+    devices.forEach(dev => {
+      const o = document.createElement("option");
+      o.value = dev.id;
+      o.textContent = dev.name;
+      sel.appendChild(o);
+      if (dev.type === "devices.types.speaker") speakers++;
+    });
+    log("Устройств: " + devices.length + ", колонок: " + speakers);
+  } catch(e) {
+    log("Ошибка: " + e.message);
+  }
+}
 
-        if (r.ok) {
-          showStatus('✅ Команда отправлена!', 'success');
-        } else if (r.status === 401) {
-          showStatus('❌ Истек токен. Нужен новый.', 'error');
-        } else {
-          const err = await r.json().catch(() => ({}));
-          showStatus('⚠️ Ошибка выполнения: ' + (err.message || r.status), 'error');
-        }
-      } catch (e) {
-        showStatus('💥 Ошибка соединения', 'error');
-      }
-    }
+function pickDevice(){
+  currentId = document.getElementById("deviceSelect").value;
+  if (currentId) log("Выбрано: " + document.getElementById("deviceSelect").selectedOptions[0].textContent);
+}
 
-    function goPower() {
-      // В реальном пульте нужно сначала узнать текущее состояние.
-      // Здесь для простоты — отправляем "включить".
-      const payload = {
-        devices: [{
-          id: deviceId,
-          capabilities: [{
-            type: 'devices.capabilities.on_off',
-            state: { instance: 'on', value: true }
-          }]
-        }]
-      };
-      sendAction(payload);
-    }
+function cap(instance, value, type){
+  if (!currentId) { log("Сначала выбери колонку"); return; }
+  fetch(API + "/devices/" + currentId + "/actions", {
+    method:"POST",
+    headers:{ "Authorization":"Bearer " + token, "Content-Type":"application/json" },
+    body: JSON.stringify({ capabilities:[{ type:type, state:{ instance:instance, value:value } }] })
+  }).then(r => r.json()).then(d => {
+    log(d.status === "ok" ? "Готово" : "Ошибка: " + JSON.stringify(d).slice(0,120));
+  }).catch(e => log("Ошибка: " + e.message));
+}
 
-    function toggleMute() {
-      const payload = {
-        devices: [{
-          id: deviceId,
-          capabilities: [{
-            type: 'devices.capabilities.toggle',
-            state: { instance: 'mute', value: true }
-          }]
-        }]
-      };
-      sendAction(payload);
-    }
+function setVol(v){
+  document.getElementById("vol-val").textContent = v + " / 10";
+  cap("volume", Number(v), "devices.capabilities.range");
+}
+function media(a){ cap("media_" + a, true, "devices.capabilities.custom.button"); }
 
-    function setVolume(val) {
-      const payload = {
-        devices: [{
-          id: deviceId,
-          capabilities: [{
-            type: 'devices.capabilities.range',
-            state: { instance: 'volume', value: val }
-          }]
-        }]
-      };
-      sendAction(payload);
-    }
-  </script>
+function sayText(){
+  const t = document.getElementById("text-in").value.trim();
+  if (!t) { log("Поле пустое — напиши текст"); return; }
+  cap("text_action", t, "devices.capabilities.quasar_server_action");
+}
+
+function setVoice(v){
+  voice = v;
+  ["megaphone","robot","chipmunk"].forEach(k => document.getElementById("v_" + k).classList.remove("on"));
+  document.getElementById("v_" + v).classList.add("on");
+}
+
+enter();
+</script>
 </body>
 </html>
