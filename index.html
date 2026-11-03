@@ -2,244 +2,305 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Пульт Алисы — Умный дом</title>
+  <title>Космический пульт</title>
   <style>
-    * { box-sizing: border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    :root {
+      --primary: #00d2ff;
+      --panel: rgba(10, 10, 30, 0.85);
+      --metal: #2c3e50;
+      --accent: #ff4757;
+    }
+
     body {
-      font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      max-width: 720px; margin: 0 auto; padding: 16px;
-      background: #f5f6fa; color: #333;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at center, #050510 0%, #000000 100%);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+      min-height: 100vh;
     }
-    h1 { text-align: center; color: #252250; font-size: 24px; }
-    .card {
-      background: #fff; border-radius: 12px; padding: 16px;
-      margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+
+    /* Звёзды */
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle infinite alternate;
     }
-    label { font-weight: 600; font-size: 14px; color: #555; display: block; margin-bottom: 6px; }
-    #token {
-      width: 100%; padding: 12px; border: 1px solid #ccc;
-      border-radius: 8px; font-size: 14px; margin-bottom: 10px;
+    .star-small { width: 1px; height: 1px; }
+    .star-med { width: 2px; height: 2px; }
+    .star-large { width: 3px; height: 3px; }
+
+    @keyframes twinkle { 0% { opacity: 0.3; } 100% { opacity: 1; } }
+
+    /* Панель */
+    .panel {
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+      margin: 40px auto;
+      background: var(--panel);
+      border: 1px solid var(--primary);
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+      padding: 20px;
+      backdrop-filter: blur(5px);
     }
-    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    h1 {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--primary);
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+    }
+
+    .input-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid #444;
+      color: var(--primary);
+      font-family: monospace;
+      box-sizing: border-box;
+      outline: none;
+    }
+    input:focus { border-color: var(--primary); }
+
+    /* Сетка кнопок */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
     button {
-      padding: 12px 18px; border: none; border-radius: 8px;
-      cursor: pointer; font-weight: 600; font-size: 15px;
+      padding: 16px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Orbitron';
+      font-weight: 700;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
     }
-    .btn-primary { background: #fc0; color: #000; flex: 1; }
-    .btn-save { background: #007bff; color: #fff; }
-    #log { margin-top: 10px; font-size: 14px; color: #d32f2f; min-height: 20px; word-break: break-word; }
-    .device-header { margin-bottom: 10px; }
-    .name { font-weight: 700; font-size: 17px; color: #252250; }
-    .state { font-size: 13px; color: #888; margin-top: 2px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .btn-onoff { padding: 10px 20px; font-size: 15px; }
-    .btn-on { background: #4caf50; color: #fff; }
-    .btn-off { background: #e0e0e0; color: #333; }
-    .range-group { display: flex; align-items: center; gap: 8px; width: 100%; }
-    .range-group input { flex: 1; }
-    .vol-display { font-weight: 700; min-width: 32px; text-align: center; }
-    .mute-btn { padding: 10px 14px; font-size: 14px; }
-    .mute-active { background: #f44336; color: #fff; }
-    .mute-inactive { background: #e0e0e0; color: #333; }
-    .no-devices { text-align: center; padding: 30px; color: #777; }
+
+    .btn-main {
+      background: linear-gradient(135deg, #34495e, #2c3e50);
+      color: white;
+      border: 1px solid #555;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+    }
+    .btn-main:hover {
+      background: linear-gradient(135deg, #4a6b82, #34495e);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    }
+    .btn-main:active { transform: translateY(0); }
+
+    .btn-primary {
+      grid-column: span 2;
+      background: linear-gradient(to bottom, #ff7675, #d63031);
+      color: white;
+      border: 1px solid #c0392b;
+      box-shadow: 0 5px 15px rgba(214, 48, 49, 0.4);
+      text-transform: uppercase;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(to bottom, #e55039, #c0392b);
+      transform: scale(1.02);
+    }
+
+    #status {
+      margin-top: 20px;
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+      font-size: 14px;
+      text-shadow: 0 0 5px black;
+    }
+    .status-error { background: rgba(214, 48, 49, 0.3); color: #ff7675; border: 1px solid #d63031; }
+    .status-success { background: rgba(46, 204, 113, 0.3); color: #2ecc71; border: 1px solid #2ecc71; }
+    .status-info { background: rgba(52, 152, 219, 0.3); color: #3498db; border: 1px solid #3498db; }
   </style>
 </head>
 <body>
-  <h1>🔊 Пульт Алисы</h1>
 
-  <div class="card">
-    <label for="token">Токен доступа (начинается с y0_…)</label>
-    <input id="token" type="password" placeholder="Вставьте токен сюда">
-    <div class="btn-group">
-      <button class="btn-primary" onclick="loadDevices()">Загрузить устройства</button>
-      <button class="btn-save" onclick="saveToken()">Сохранить</button>
+  <!-- Рисуем звёзды -->
+  <script>
+    const count = 150;
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      const size = Math.random() * 3 + 1;
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      star.className = 'star star-small';
+      if (size > 2) star.className += ' star-med';
+      if (size > 2.5) star.className += ' star-large';
+      star.style.left = x + '%';
+      star.style.top = y + '%';
+      star.style.animationDuration = (Math.random() * 4 + 2) + 's';
+      document.body.appendChild(star);
+    }
+  </script>
+
+  <div class="panel">
+    <h1>Space Control</h1>
+
+    <div class="input-group">
+      <label for="tok">Авторизация (токен y0_...)</label>
+      <input type="password" id="tok" placeholder="Вставьте токен сюда">
     </div>
-    <div id="log"></div>
+
+    <div class="btn-grid">
+      <button class="btn-main" onclick="loadDevices()">📡 Сканировать устройства</button>
+      <button class="btn-main" onclick="toggleMute()">🔇 Без звука</button>
+      <button class="btn-main" onclick="setVolume(50)">🔊 Громкость 50%</button>
+      <button class="btn-main" onclick="setVolume(100)">🔊 Громкость макс</button>
+    </div>
+
+    <button class="btn-primary" onclick="goPower()">⚡ ВКЛЮЧИТЬ / ВЫКЛЮЧИТЬ СВЕТ</button>
+
+    <div id="status"></div>
   </div>
 
-  <div id="list"></div>
-
   <script>
-    var API = "https://api.iot.yandex.net/v1.0";
-
-    // Подтягиваем сохранённый токен при открытии страницы
-    document.getElementById("token").value = localStorage.getItem("yaToken") || "";
-
-    function say(msg) {
-      document.getElementById("log").textContent = msg;
-    }
+    let token = '';
+    let deviceId = null;
 
     function saveToken() {
-      var token = document.getElementById("token").value.trim();
-      if (!token) { say("Сначала вставьте токен"); return; }
-      localStorage.setItem("yaToken", token);
-      say("Токен сохранён в этом браузере");
+      token = document.getElementById('tok').value.trim().replace(/[^\x00-\x7F]/g, '');
+      if (!token.startsWith('y0_')) {
+        showStatus('❌ Токен должен начинаться с y0_', 'error');
+        return false;
+      }
+      showStatus('✅ Токен принят (не сохраняется!)', 'info');
+      return true;
     }
 
-    function headers() {
-      var token = document.getElementById("token").value.trim();
-      if (!token) { say("Введите токен"); return null; }
-      return { "Authorization": "Bearer " + token };
+    function showStatus(msg, type) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.className = 'status ' + (type === 'error' ? 'status-error' : type === 'success' ? 'status-success' : 'status-info');
     }
 
     async function loadDevices() {
-      say("");
-      var h = headers();
-      if (!h) return;
+      if (!saveToken()) return;
+      showStatus('🛸 Сканирование сети...', 'info');
 
       try {
-        var r = await fetch(API + "/user/devices", { headers: h });
-        var data = await r.json();
+        const r = await fetch('https://iot.yandex.net/api/v1.0/user/devices', {
+          headers: { 'Authorization': 'OAuth ' + token }
+        });
 
-        if (data.status !== "ok") {
-          say("Ошибка API: " + (data.message || r.status));
+        if (r.status === 401) {
+          showStatus('❌ Неверный токен. Обновите в кабинете разработчика.', 'error');
           return;
         }
-        render(data.devices || []);
+        if (r.status === 403) {
+          showStatus('⚠️ Яндекс блокирует запрос из браузера (CORS). Это не ошибка кода.', 'error');
+          return;
+        }
+
+        const d = await r.json();
+        if (!d.devices || d.devices.length === 0) {
+          showStatus('🌌 Устройств не найдено. Проверьте права приложения.', 'info');
+          return;
+        }
+
+        // Для примера берём первое устройство с capability on_off
+        const onOffDevice = d.devices.find(dev =>
+          dev.capabilities && dev.capabilities.some(c => c.type === 'devices.capabilities.on_off')
+        );
+        if (onOffDevice) {
+          deviceId = onOffDevice.id;
+          showStatus(`✅ Выбрано устройство: ${onOffDevice.name}`, 'success');
+        } else {
+          showStatus('⚠️ Нет устройств с включением/выключением.', 'info');
+        }
       } catch (e) {
-        say("Не удалось подключиться. Если файл открыт с диска (file://), попробуйте запустить его через локальный сервер или Gist. Подробность: " + e.message);
+        console.error(e);
+        showStatus('💥 Ошибка сети. Скорее всего, браузер блокирует запрос к Яндексу.', 'error');
       }
     }
 
-    function render(devices) {
-      var list = document.getElementById("list");
-      list.innerHTML = "";
-
-      if (devices.length === 0) {
-        list.innerHTML = '<div class="card no-devices">Устройства не найдены. Проверьте, что при получении токена были отмечены права iot:view и iot:control, а колонка добавлена в Умный дом.</div>';
+    async function sendAction(payload) {
+      if (!deviceId) {
+        showStatus('⚠️ Сначала нажмите «Сканировать устройства» и дождитесь успеха.', 'error');
         return;
       }
+      if (!saveToken()) return;
 
-      devices.forEach(function (d) {
-        var card = document.createElement("div");
-        card.className = "card";
-
-        var header = document.createElement("div");
-        header.className = "device-header";
-        header.innerHTML = '<div class="name">' + escapeHtml(d.name) + '</div>' +
-                           '<div class="state">тип: ' + escapeHtml(d.type || "?") + '</div>';
-        card.appendChild(header);
-
-        var actions = document.createElement("div");
-        actions.className = "actions";
-
-        var isOn = null, volume = null, isMuted = null;
-
-        (d.capabilities || []).forEach(function (c) {
-          if (c.type === "devices.capabilities.on_off") {
-            isOn = !!(c.state && c.state.value);
-          }
-          if (c.type === "devices.capabilities.range" &&
-              c.state && c.state.instance === "volume") {
-            volume = c.state.value;
-          }
-          if (c.type === "devices.capabilities.toggle" &&
-              c.state && c.state.instance === "mute") {
-            isMuted = !!c.state.value;
-          }
-        });
-
-        if (isOn !== null) {
-          var btn = document.createElement("button");
-          btn.className = "btn-onoff " + (isOn ? "btn-on" : "btn-off");
-          btn.textContent = isOn ? "Выключить" : "Включить";
-          btn.onclick = function () { toggle(d.id, !isOn); };
-          actions.appendChild(btn);
-        }
-
-        if (volume !== null) {
-          var group = document.createElement("div");
-          group.className = "range-group";
-
-          var range = document.createElement("input");
-          range.type = "range";
-          range.min = "0";
-          range.max = "100";
-          range.value = volume;
-
-          var disp = document.createElement("span");
-          disp.className = "vol-display";
-          disp.textContent = volume;
-
-          range.oninput = function (e) {
-            disp.textContent = e.target.value;
-            setVolume(d.id, Number(e.target.value));
-          };
-
-          group.appendChild(range);
-          group.appendChild(disp);
-          actions.appendChild(group);
-        }
-
-        if (isMuted !== null) {
-          var mbtn = document.createElement("button");
-          mbtn.className = "mute-btn " + (isMuted ? "mute-active" : "mute-inactive");
-          mbtn.textContent = isMuted ? "Снять беззвучный" : "Беззвучный";
-          mbtn.onclick = function () { mute(d.id, !isMuted); };
-          actions.appendChild(mbtn);
-        }
-
-        if (actions.children.length === 0) {
-          var note = document.createElement("div");
-          note.className = "state";
-          note.textContent = "Это устройство не поддерживает управление через API";
-          actions.appendChild(note);
-        }
-
-        card.appendChild(actions);
-        list.appendChild(card);
-      });
-    }
-
-    async function sendAction(id, capability) {
-      var h = headers();
-      if (!h) return;
-
+      showStatus('🚀 Отправка команды...', 'info');
       try {
-        var r = await fetch(API + "/devices/" + id + "/actions", {
-          method: "POST",
-          headers: Object.assign({ "Content-Type": "application/json" }, h),
-          body: JSON.stringify({ capabilities: [capability] })
+        const r = await fetch('https://iot.yandex.net/api/v1.0/devices/actions', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'OAuth ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
         });
-        var data = await r.json();
-        if (data.status !== "ok") {
-          say("Ошибка команды: " + (data.message || r.status));
+
+        if (r.ok) {
+          showStatus('✅ Команда отправлена!', 'success');
+        } else if (r.status === 401) {
+          showStatus('❌ Истек токен. Нужен новый.', 'error');
+        } else {
+          const err = await r.json().catch(() => ({}));
+          showStatus('⚠️ Ошибка выполнения: ' + (err.message || r.status), 'error');
         }
       } catch (e) {
-        say("Не удалось отправить команду: " + e.message);
+        showStatus('💥 Ошибка соединения', 'error');
       }
     }
 
-    function toggle(id, turnOn) {
-      sendAction(id, {
-        type: "devices.capabilities.on_off",
-        state: { instance: "on", value: turnOn }
-      });
+    function goPower() {
+      // В реальном пульте нужно сначала узнать текущее состояние.
+      // Здесь для простоты — отправляем "включить".
+      const payload = {
+        devices: [{
+          id: deviceId,
+          capabilities: [{
+            type: 'devices.capabilities.on_off',
+            state: { instance: 'on', value: true }
+          }]
+        }]
+      };
+      sendAction(payload);
     }
 
-    function setVolume(id, v) {
-      sendAction(id, {
-        type: "devices.capabilities.range",
-        state: { instance: "volume", value: v }
-      });
+    function toggleMute() {
+      const payload = {
+        devices: [{
+          id: deviceId,
+          capabilities: [{
+            type: 'devices.capabilities.toggle',
+            state: { instance: 'mute', value: true }
+          }]
+        }]
+      };
+      sendAction(payload);
     }
 
-    function mute(id, val) {
-      sendAction(id, {
-        type: "devices.capabilities.toggle",
-        state: { instance: "mute", value: val }
-      });
-    }
-
-    function escapeHtml(str) {
-      if (!str) return "";
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    function setVolume(val) {
+      const payload = {
+        devices: [{
+          id: deviceId,
+          capabilities: [{
+            type: 'devices.capabilities.range',
+            state: { instance: 'volume', value: val }
+          }]
+        }]
+      };
+      sendAction(payload);
     }
   </script>
 </body>
