@@ -6,30 +6,39 @@
     <title>Салют NFC + Bluetooth</title>
     <style>
         body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; text-align: center; }
-        #panel { display: none; background: #222; padding: 20px; border-radius: 16px; margin-top: 20px; border: 1px solid #444; }
+        .card { background: #222; padding: 20px; border-radius: 16px; margin-top: 20px; border: 1px solid #444; }
         button, input { padding: 12px; font-size: 16px; margin: 8px 0; width: 100%; border-radius: 8px; border: none; box-sizing: border-box; }
         button { background: #007aff; color: white; font-weight: bold; cursor: pointer; }
         button:active { background: #005bb5; }
         button:disabled { background: #555; }
+        .bt-btn { background: #34c759; } /* Зеленая кнопка для Bluetooth */
+        .bt-btn:active { background: #248a3d; }
         label { display: block; text-align: left; margin-top: 16px; font-size: 14px; color: #aaa; }
+        #status { color: #ffcc00; font-weight: bold; }
         #btStatus { font-size: 14px; color: #4cd964; margin-top: 10px; word-break: break-all; }
     </style>
 </head>
 <body>
 
-    <h2>Приложи телефон к Салюту</h2>
-    <p id="status">Ожидание NFC...</p>
-    <button id="startBtn">Включить NFC и вибрацию</button>
+    <h2>Управление Салютом</h2>
+    
+    <!-- Блок NFC -->
+    <div class="card">
+        <p id="status">Ожидание NFC...</p>
+        <button id="startBtn">📡 Включить NFC</button>
+    </div>
 
-    <div id="panel">
-        <h3>🎛 Панель управления</h3>
-
-        <!-- Блок Bluetooth -->
-        <label>Bluetooth-устройство (BLE)</label>
-        <button id="btBtn">🔵 Подключить Bluetooth</button>
+    <!-- Блок Bluetooth (теперь виден сразу) -->
+    <div class="card">
+        <h3>🔵 Bluetooth-устройство</h3>
+        <button id="btBtn" class="bt-btn">Подключить Bluetooth</button>
         <div id="btStatus">Статус: не подключено</div>
+    </div>
 
-        <!-- Блок голоса -->
+    <!-- Блок голоса (тоже виден сразу) -->
+    <div class="card" id="panel">
+        <h3>🎛 Панель голоса</h3>
+
         <label>Тон (Pitch)</label>
         <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
 
@@ -43,18 +52,10 @@
     <script>
         const startBtn = document.getElementById('startBtn');
         const status = document.getElementById('status');
-        const panel = document.getElementById('panel');
         const btBtn = document.getElementById('btBtn');
         const btStatus = document.getElementById('btStatus');
 
-        // 1. Вибрация и показ панели
-        function activatePanel() {
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            panel.style.display = 'block';
-            status.textContent = '✅ NFC считан! Панель открыта.';
-        }
-
-        // 2. NFC
+        // 1. NFC
         async function startNFC() {
             if (!('NDEFReader' in window)) {
                 status.textContent = '❌ Web NFC не поддерживается. Нужен Android Chrome и HTTPS.';
@@ -64,7 +65,10 @@
                 const ndef = new NDEFReader();
                 await ndef.scan();
                 status.textContent = '📡 Сканирование NFC... Приложите метку.';
-                ndef.addEventListener("reading", () => activatePanel());
+                ndef.addEventListener("reading", () => {
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                    status.textContent = '✅ NFC считан!';
+                });
             } catch (error) {
                 status.textContent = 'Ошибка NFC: ' + error.message;
             }
@@ -76,7 +80,7 @@
             startBtn.style.display = 'none';
         });
 
-        // 3. Bluetooth (Web Bluetooth API)
+        // 2. Bluetooth
         btBtn.addEventListener('click', async () => {
             if (!navigator.bluetooth) {
                 btStatus.textContent = '❌ Web Bluetooth не поддерживается этим браузером.';
@@ -84,24 +88,21 @@
             }
             try {
                 btStatus.textContent = 'Поиск устройств... Выберите в списке.';
-                // Запрашиваем любое устройство (можно уточнить фильтр)
                 const device = await navigator.bluetooth.requestDevice({
                     acceptAllDevices: true
                 });
                 
                 btStatus.textContent = 'Подключение к: ' + (device.name || 'Без имени') + '...';
-                
                 const server = await device.gatt.connect();
                 btStatus.textContent = '✅ Подключено: ' + (device.name || device.id);
                 
                 if (navigator.vibrate) navigator.vibrate(100);
-
             } catch (error) {
                 btStatus.textContent = 'Ошибка Bluetooth: ' + error.message;
             }
         });
 
-        // 4. Голос
+        // 3. Голос
         const speakBtn = document.getElementById('speakBtn');
         const pitchSlider = document.getElementById('pitch');
         const rateSlider = document.getElementById('rate');
