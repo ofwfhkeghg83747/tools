@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Алиса Пульт</title>
 <style>
 :root { --bg:#121212; --card:#1e1e1e; --accent:#ff9f0a; --sec:#b0b0b0; --border:#333; }
 * { box-sizing:border-box; }
-body { background:var(--bg); color:#fff; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; margin:0; padding:12px; padding-bottom:40px; }
+body { background:var(--bg); color:#fff; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; margin:0; padding:12px; }
 header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 h1 { margin:0; font-size:1.15rem; }
 .sub { font-size:.72rem; color:var(--sec); }
@@ -15,7 +15,7 @@ h1 { margin:0; font-size:1.15rem; }
 .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:14px; }
 .title { font-size:.72rem; letter-spacing:1px; text-transform:uppercase; color:var(--sec); margin-bottom:10px; }
 .hint { font-size:.78rem; color:#777; margin-bottom:10px; }
-button { background:#2a2a2a; border:1px solid var(--border); color:#fff; padding:12px; border-radius:12px; font-weight:600; font-size:.85rem; cursor:pointer; }
+button { background:#2a2a2a; border:1px solid var(--border); color:#fff; padding:12px; border-radius:12px; font-weight:600; font-size:.85rem; cursor:pointer; width:100%; }
 button:active { background:#3a3a3a; }
 .btn-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .btn-primary { background:var(--accent); color:#000; border:none; width:100%; padding:14px; margin-top:10px; font-weight:700; }
@@ -93,59 +93,90 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; h
 
 <div class="card">
   <div class="title">Журнал</div>
-  <div id="log">—</div>
+  <div id="log">Ожидание...</div>
 </div>
 
 <script>
-const CLIENT_ID = 'f348d69eaf554cf4982643039e9c8cd4';
-const REDIRECT_URI = 'https://ofwfhkeghg83747.github.io/tools/';
-const API = 'https://api.iot.yandex.net/v1.0';
+// ================= НАСТРОЙКИ =================
+// ВСТАВЬ СЮДА СВОЙ CLIENT_ID С oauth.yandex.ru
+const CLIENT_ID = 'YOUR_CLIENT_ID'; 
+
+// Адрес должен ТОЧНО совпадать с Redirect URI в настройках приложения на Яндексе
+const REDIRECT_URI = 'https://eghg83747.github.io/'; 
+
+// ВСТАВЬ СЮДА ССЫЛКУ НА ТВОЙ WORKER (Cloudflare)
+// Пример: https://my-proxy.eghg83747.workers.dev
+const API = 'YOUR_WORKER_URL'; 
 
 let token = localStorage.getItem('ya_token') || '';
-let devices = [];
+let devices = ;
 let currentId = null;
 let playing = false;
 
-function log(m) {
-  const el = document.getElementById('log');
-  el.textContent = '> ' + m + '\n' + el.textContent;
+function log(msg) {
+    const el = document.getElementById('log');
+    const time = new Date().toLocaleTimeString();
+    el.textContent = `[${time}] ${msg}\n` + el.textContent;
+    console.log(`[LOG] \${msg}`);
 }
 
-// Ловим токен, который Яндекс возвращает в адресе страницы
-(function handleHash() {
-  const p = new URLSearchParams(location.hash.slice(1));
-  if (p.get('access_token')) {
-    token = p.get('access_token');
-    localStorage.setItem('ya_token', token);
-    history.replaceState(null, '', location.pathname + location.search);
-  } else if (p.get('error')) {
-    sessionStorage.setItem('ya_error', p.get('error'));
-    history.replaceState(null, '', location.pathname + location.search);
+// Обработка токена из адресной строки
+if (location.hash.includes('access_token')) {
+  log('Обнаружен токен в адресной строке. Обработка...');
+  try {
+    const p = new URLSearchParams(location.hash.slice(1));
+    if (p.get('access_token')) {
+      token = p.get('access_token');
+      localStorage.setItem('ya_token', token);
+      history.replaceState(null, '', location.pathname); 
+      log('Токен сохранен. Перезагрузка страницы...');
+      location.reload();
+    } else if (p.get('error')) {
+      log('Ошибка авторизации: ' + (p.get('error_description') || p.get('error')));
+    }
+  } catch (e) {
+    log('Ошибка парсинга токена: ' + e.message);
   }
-})();
+}
 
-// Вход: обычный переход — Яндекс открывается отдельной страницей,
-// без всплывающих окон, поэтому ничего не блокируется
 function loginYandex() {
-  const authUrl = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=' + CLIENT_ID
-    + '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) + '&force_confirm=yes';
+  const scope = 'login:info%20iot:view%20iot:control';
+  const authUrl = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=\${scope}&force_confirm=yes`;
+  log('Переход на страницу входа...');
   location.href = authUrl;
 }
 
-function logout() {
-  localStorage.removeItem('ya_token');
-  location.reload();
+function logout() { 
+    localStorage.removeItem('ya_token'); 
+    token = '';
+    log('Выход выполнен. Токен удален.');
+    location.reload(); 
 }
 
 async function api(path, opts) {
-  const r = await fetch(API + path, Object.assign({
-    headers: { 'Authorization': 'Bearer ' + token }
-  }, opts || {}));
-  if (r.status === 401) {
-    log('Токен просрочен или без прав. Нажми ВЫЙТИ и войди заново.');
-    throw new Error('401');
+  if (!token) throw new Error('Нет токена авторизации');
+  
+  try {
+    // Формируем полный URL. Воркер сам добавит путь к API Яндекса
+    const fullUrl = API + path;
+    
+    const r = await fetch(fullUrl, Object.assign({
+      headers: { 'Authorization': 'Bearer ' + token }
+    }, opts || {}));
+    
+    if (r.status === 401) { 
+        log('Ошибка 401: Токен невалиден. Требуется повторный вход.');
+        throw new Error('401'); 
+    }
+    if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(`HTTP ${r.status}: ${err.message || 'Ошибка сети'}`);
+    }
+    return await r.json();
+  } catch (e) {
+    log('Сетевая ошибка: ' + e.message);
+    throw e;
   }
-  return r.json();
 }
 
 function enter() {
@@ -157,51 +188,53 @@ function enter() {
   loadHome();
 }
 
-// Собираем все устройства из вложенного ответа API
 function collectDevices(node, out) {
   if (Array.isArray(node)) { node.forEach(n => collectDevices(n, out)); return; }
   if (node && typeof node === 'object') {
     if (node.id && Array.isArray(node.capabilities)) out.push(node);
-    Object.values(node).forEach(v => {
-      if (v && typeof v === 'object') collectDevices(v, out);
-    });
+    Object.values(node).forEach(v => { if (v && typeof v === 'object') collectDevices(v, out); });
   }
 }
 
 async function loadHome() {
-  log('Загружаю устройства...');
+  log('Загрузка списка устройств...');
   try {
     const d = await api('/user/info');
-    devices = [];
-    collectDevices(d.houses || [], devices);
+    devices = ;
+    collectDevices(d.houses || , devices);
+    
     const sel = document.getElementById('deviceSelect');
     sel.innerHTML = '<option value="">— выбери —</option>';
+    
+    if (devices.length === 0) {
+        log('Устройства не найдены. Проверь, что колонка добавлена в "Дом с Алисой".');
+        return;
+    }
+
     devices.forEach(dev => {
       const o = document.createElement('option');
       o.value = dev.id;
-      o.textContent = (dev.room || dev.name) + ' · ' + dev.name;
+      o.textContent = (dev.room || 'Без комнаты') + ' · ' + dev.name;
       sel.appendChild(o);
     });
-    if (devices.length) {
-      log('Найдено устройств: ' + devices.length + '. Выбери своё.');
-    } else {
-      log('Устройства не найдены. Проверь, что колонка добавлена в «Дом с Алисой» под этим же аккаунтом.');
-    }
+    log(`Найдено устройств: \${devices.length}. Выбери своё в списке.`);
   } catch (e) {
-    if (String(e.message) === '401') return;
-    log('Не удалось получить список: ' + e.message + ' — если это Failed to fetch, браузер блокирует запрос к API (CORS), напиши мне.');
+    log('Ошибка загрузки устройств: ' + e.message);
   }
 }
 
 async function pickDevice() {
   currentId = document.getElementById('deviceSelect').value;
   ['cardVol','cardMedia','cardText','cardOnOff'].forEach(i => document.getElementById(i).classList.add('off'));
+  
   if (!currentId) return;
-  const opt = document.getElementById('deviceSelect').selectedOptions[0];
-  document.getElementById('devInfo').textContent = opt ? opt.textContent : currentId;
+  
+  const name = document.getElementById('deviceSelect').selectedOptions.textContent;
+  document.getElementById('devInfo').textContent = 'Выбрано: ' + name;
+  
   try {
     const d = await api('/devices/' + currentId);
-    const caps = d.capabilities || [];
+    const caps = d.capabilities || ;
     const get = t => caps.find(c => c.type === t);
 
     const vol = caps.find(c => c.type === 'devices.capabilities.range' && c.state && c.state.instance === 'volume');
@@ -212,45 +245,41 @@ async function pickDevice() {
       document.getElementById('vol-val').textContent = vol.state.value + ' из ' + rng.max;
       document.getElementById('cardVol').classList.remove('off');
     }
+    
     const mp = get('devices.capabilities.media_player');
     if (mp) {
-      playing = !!(mp.state && mp.state.instance === 'playback' && mp.state.value === 'play');
+      playing = mp.state && mp.state.instance === 'playback' && mp.state.value === 'play';
       document.getElementById('mPlay').textContent = playing ? '⏸' : '▶';
       document.getElementById('cardMedia').classList.remove('off');
     }
+    
     if (get('devices.capabilities.quasar.server_action')) document.getElementById('cardText').classList.remove('off');
     if (get('devices.capabilities.on_off')) document.getElementById('cardOnOff').classList.remove('off');
-  } catch (e) {
-    if (String(e.message) !== '401') log('Ошибка устройства: ' + e.message);
+  } catch (e) { 
+    log('Ошибка получения данных устройства: ' + e.message); 
   }
 }
 
 async function cap(type, instance, value) {
-  if (!currentId) { log('Сначала выбери устройство'); return; }
+  if (!currentId) { log('Сначала выбери устройство в списке!'); return; }
+  log(`Отправка команды: ${type} -> ${instance} = \${value}`);
   try {
     const r = await fetch(API + '/devices/actions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        devices: [{
-          id: currentId,
-          actions: [{ type: type, state: { instance: instance, value: value } }]
-        }]
-      })
+      body: JSON.stringify({ devices: [{ id: currentId, actions: [{ type: type, state: { instance: instance, value: value } }] }] })
     });
     const d = await r.json();
-    let st = null;
-    if (d.devices && d.devices[0] && d.devices[0].capabilities && d.devices[0].capabilities[0]) {
-      const c = d.devices[0].capabilities[0];
-      if (c.state && c.state.action_result) st = c.state.action_result.status;
-    }
+    const res = d.devices && d.devices && d.devices.capabilities;
+    const st = res && res && res.state && res.state.action_result && res.state.action_result.status;
+    
     if (st === 'DONE') {
-      log('Готово ✓');
+        log('Команда выполнена успешно!');
     } else {
-      log('Ответ: ' + JSON.stringify(d).slice(0, 150));
+        log('Ответ сервера: ' + JSON.stringify(d).slice(0, 150));
     }
-  } catch (e) {
-    log('Ошибка сети: ' + e.message);
+  } catch (e) { 
+    log('Ошибка отправки команды: ' + e.message); 
   }
 }
 
@@ -258,20 +287,17 @@ function setVol(v) {
   document.getElementById('vol-val').textContent = v;
   cap('devices.capabilities.range', 'volume', Number(v));
 }
-
-function media(a) {
-  cap('devices.capabilities.media_player', 'playback', a);
-}
-
-function mediaPlay() {
-  media(playing ? 'pause' : 'play');
-  playing = !playing;
-  document.getElementById('mPlay').textContent = playing ? '⏸' : '▶';
+function media(a) { cap('devices.capabilities.media_player', 'playback', a); }
+function mediaPlay() { 
+    media(playing ? 'pause' : 'play'); 
+    playing = !playing; 
+    document.getElementById('mPlay').textContent = playing ? '⏸' : '▶'; 
 }
 
 async function sayText() {
   const t = document.getElementById('text-in').value.trim();
-  if (!t) { log('Поле пустое'); return; }
+  if (!t) { log('Поле текста пустое'); return; }
+  if (t.length > 100) { log('Текст слишком длинный (макс 100 символов)'); return; }
   cap('devices.capabilities.quasar.server_action', 'text_action', t);
 }
 
