@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Салют NFC</title>
+    <title>Салют NFC + Bluetooth</title>
     <style>
         body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; text-align: center; }
         #panel { display: none; background: #222; padding: 20px; border-radius: 16px; margin-top: 20px; border: 1px solid #444; }
         button, input { padding: 12px; font-size: 16px; margin: 8px 0; width: 100%; border-radius: 8px; border: none; box-sizing: border-box; }
-        button { background: #007aff; color: white; font-weight: bold; }
+        button { background: #007aff; color: white; font-weight: bold; cursor: pointer; }
         button:active { background: #005bb5; }
+        button:disabled { background: #555; }
         label { display: block; text-align: left; margin-top: 16px; font-size: 14px; color: #aaa; }
+        #btStatus { font-size: 14px; color: #4cd964; margin-top: 10px; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -19,88 +21,98 @@
     <p id="status">Ожидание NFC...</p>
     <button id="startBtn">Включить NFC и вибрацию</button>
 
-    <!-- Скрытая панель -->
     <div id="panel">
-        <h3>🎛 Панель управления голосом</h3>
+        <h3>🎛 Панель управления</h3>
 
+        <!-- Блок Bluetooth -->
+        <label>Bluetooth-устройство (BLE)</label>
+        <button id="btBtn">🔵 Подключить Bluetooth</button>
+        <div id="btStatus">Статус: не подключено</div>
+
+        <!-- Блок голоса -->
         <label>Тон (Pitch)</label>
         <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
 
         <label>Скорость (Rate)</label>
         <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
 
-        <button id="speakBtn">Проверить голос</button>
-        <p style="font-size:12px; color:#666;">Изменения применяются к синтезу речи</p>
+        <button id="speakBtn">🔊 Проверить голос</button>
+        <p style="font-size:12px; color:#666;">Чтобы звук пошёл в колонку, подключите её через настройки Bluetooth телефона.</p>
     </div>
 
     <script>
         const startBtn = document.getElementById('startBtn');
         const status = document.getElementById('status');
         const panel = document.getElementById('panel');
+        const btBtn = document.getElementById('btBtn');
+        const btStatus = document.getElementById('btStatus');
 
-        // 1. Вибрация и показ панели (вызывается после успешного NFC или по кнопке)
+        // 1. Вибрация и показ панели
         function activatePanel() {
-            // Вибрация: паттерн [вибро, пауза, вибро]
-            if (navigator.vibrate) {
-                navigator.vibrate([200, 100, 200]);
-            }
-            // Показываем панель
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
             panel.style.display = 'block';
             status.textContent = '✅ NFC считан! Панель открыта.';
         }
 
-        // 2. Инициализация NFC (только Android Chrome)
+        // 2. NFC
         async function startNFC() {
             if (!('NDEFReader' in window)) {
-                status.textContent = '❌ Web NFC не поддерживается. Нужен Android Chrome.';
+                status.textContent = '❌ Web NFC не поддерживается. Нужен Android Chrome и HTTPS.';
                 return;
             }
-
             try {
                 const ndef = new NDEFReader();
                 await ndef.scan();
-                status.textContent = '📡 Сканирование... Приложите метку.';
-
-                ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                    console.log(`Считана метка: ${serialNumber}`);
-                    // Как только метка коснулась — вибрируем и открываем панель
-                    activatePanel();
-                });
+                status.textContent = '📡 Сканирование NFC... Приложите метку.';
+                ndef.addEventListener("reading", () => activatePanel());
             } catch (error) {
                 status.textContent = 'Ошибка NFC: ' + error.message;
             }
         }
 
-        // Запуск по кнопке (требование безопасности браузера)
         startBtn.addEventListener('click', async () => {
-            // Сначала вибрация для отклика
             if (navigator.vibrate) navigator.vibrate(50);
-            
-            // Запускаем NFC
             await startNFC();
-            
-            // Кнопку скрываем, чтобы не мешала
             startBtn.style.display = 'none';
         });
 
-        // 3. Логика изменения голоса (Web Speech API)
+        // 3. Bluetooth (Web Bluetooth API)
+        btBtn.addEventListener('click', async () => {
+            if (!navigator.bluetooth) {
+                btStatus.textContent = '❌ Web Bluetooth не поддерживается этим браузером.';
+                return;
+            }
+            try {
+                btStatus.textContent = 'Поиск устройств... Выберите в списке.';
+                // Запрашиваем любое устройство (можно уточнить фильтр)
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true
+                });
+                
+                btStatus.textContent = 'Подключение к: ' + (device.name || 'Без имени') + '...';
+                
+                const server = await device.gatt.connect();
+                btStatus.textContent = '✅ Подключено: ' + (device.name || device.id);
+                
+                if (navigator.vibrate) navigator.vibrate(100);
+
+            } catch (error) {
+                btStatus.textContent = 'Ошибка Bluetooth: ' + error.message;
+            }
+        });
+
+        // 4. Голос
         const speakBtn = document.getElementById('speakBtn');
         const pitchSlider = document.getElementById('pitch');
         const rateSlider = document.getElementById('rate');
 
         speakBtn.addEventListener('click', () => {
-            // Вибрация при нажатии
             if (navigator.vibrate) navigator.vibrate(30);
-
-            const text = "Привет! Это тест изменения голоса.";
-            const utterance = new SpeechSynthesisUtterance(text);
-            
-            // Применяем настройки со слайдеров
+            const utterance = new SpeechSynthesisUtterance("Привет! Это тест изменения голоса.");
             utterance.pitch = parseFloat(pitchSlider.value);
             utterance.rate = parseFloat(rateSlider.value);
             utterance.lang = 'ru-RU';
-
-            // Выбираем русский голос, если доступен
+            
             const voices = speechSynthesis.getVoices();
             const ruVoice = voices.find(v => v.lang.includes('ru'));
             if (ruVoice) utterance.voice = ruVoice;
