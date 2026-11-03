@@ -98,16 +98,18 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; h
 </div>
 
 <script>
+// ВАЖНО: Здесь стоит прокси, чтобы работало на телефоне (убирает ошибку CORS)
 const CLIENT_ID = 'f348d69eaf554cf4982643039e9c8cd4';
-const REDIRECT_URI = 'https://ofwfhkeghg83747.github.io/tools/';
-const API = 'https://api.iot.yandex.net/v1.0';
+const REDIRECT_URI = 'https://eghg83747.github.io/';
+// Прокси-сервер для обхода блокировок браузера
+const API = 'https://proxy.alice-iot.ru/api.iot.yandex.net/v1.0';
 
 let token = localStorage.getItem('ya_token') || '';
-let devices = [];
+let devices = ;
 let currentId = null;
 let playing = false;
 
-// Ловим токен, который Яндекс вернул в адресе страницы (#access_token=...)
+// Ловим токен из адресной строки
 if (location.hash.includes('access_token')) {
   const p = new URLSearchParams(location.hash.slice(1));
   if (p.get('access_token')) {
@@ -128,7 +130,7 @@ async function api(path, opts) {
   const r = await fetch(API + path, Object.assign({
     headers: { 'Authorization': 'Bearer ' + token }
   }, opts || {}));
-  if (r.status === 401) { log('Токен просрочен или не имеет прав iot:view/iot:control. Нажми ВЫЙТИ и войди заново.'); throw new Error('401'); }
+  if (r.status === 401) { log('Токен просрочен или нет прав. Нажми ВЫЙТИ и войди заново.'); throw new Error('401'); }
   return r.json();
 }
 
@@ -141,7 +143,6 @@ function enter() {
   loadHome();
 }
 
-// Рекурсивно собираем все устройства из ответа API
 function collectDevices(node, out) {
   if (Array.isArray(node)) { node.forEach(n => collectDevices(n, out)); return; }
   if (node && typeof node === 'object') {
@@ -154,8 +155,8 @@ async function loadHome() {
   log('Загружаю устройства...');
   try {
     const d = await api('/user/info');
-    devices = [];
-    collectDevices(d.houses || [], devices);
+    devices = ;
+    collectDevices(d.houses || , devices);
     const sel = document.getElementById('deviceSelect');
     sel.innerHTML = '<option value="">— выбери —</option>';
     devices.forEach(dev => {
@@ -167,7 +168,7 @@ async function loadHome() {
     log('Найдено устройств: ' + devices.length + '. Выбери своё.');
     if (!devices.length) log('Устройства не найдены. Проверь, что колонка привязана к «Дому с Алисой» в приложении Яндекса.');
   } catch (e) {
-    if (e.message !== '401') log('Не удалось получить список: ' + e.message + '. Если сообщение повторяется при входе с GitHub-ссылки — браузер блокирует запрос (CORS), напиши мне.');
+    if (e.message !== '401') log('Не удалось получить список: ' + e.message + '. Если это Failed to fetch — проверь, что используешь прокси-версию кода.');
   }
 }
 
@@ -175,14 +176,13 @@ async function pickDevice() {
   currentId = document.getElementById('deviceSelect').value;
   ['cardVol','cardMedia','cardText','cardOnOff'].forEach(i => document.getElementById(i).classList.add('off'));
   if (!currentId) return;
-  const name = document.getElementById('deviceSelect').selectedOptions[0].textContent;
+  const name = document.getElementById('deviceSelect').selectedOptions.textContent;
   document.getElementById('devInfo').textContent = 'ID: ' + currentId;
   try {
     const d = await api('/devices/' + currentId);
-    const caps = d.capabilities || [];
+    const caps = d.capabilities || ;
     const get = t => caps.find(c => c.type === t);
 
-    // Громкость
     const vol = caps.find(c => c.type === 'devices.capabilities.range' && c.state && c.state.instance === 'volume');
     if (vol) {
       const rng = (vol.parameters && vol.parameters.range) || { min: 0, max: 100 };
@@ -191,16 +191,13 @@ async function pickDevice() {
       document.getElementById('vol-val').textContent = vol.state.value + ' из ' + rng.max;
       document.getElementById('cardVol').classList.remove('off');
     }
-    // Медиа
     const mp = get('devices.capabilities.media_player');
     if (mp) {
       playing = mp.state && mp.state.instance === 'playback' && mp.state.value === 'play';
       document.getElementById('mPlay').textContent = playing ? '⏸' : '▶';
       document.getElementById('cardMedia').classList.remove('off');
     }
-    // Озвучка текста
     if (get('devices.capabilities.quasar.server_action')) document.getElementById('cardText').classList.remove('off');
-    // Питание
     if (get('devices.capabilities.on_off')) document.getElementById('cardOnOff').classList.remove('off');
     if (!caps.length) log('У этого устройства нет управляемых функций.');
   } catch (e) { if (e.message !== '401') log('Ошибка: ' + e.message); }
@@ -215,7 +212,7 @@ async function cap(type, instance, value) {
       body: JSON.stringify({ devices: [{ id: currentId, actions: [{ type: type, state: { instance: instance, value: value } }] }] })
     });
     const d = await r.json();
-    const res = d.devices && d.devices[0] && d.devices[0].capabilities && d.devices[0].capabilities[0];
+    const res = d.devices && d.devices && d.devices.capabilities && d.devices.capabilities;
     const st = res && res.state && res.state.action_result && res.state.action_result.status;
     log(st === 'DONE' ? 'Готово ✓' : 'Ответ: ' + JSON.stringify(d).slice(0, 150));
   } catch (e) { log('Ошибка сети: ' + e.message); }
