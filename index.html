@@ -1,293 +1,112 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Вики Вики</title>
-<script async src="https://cse.google.com/cse.js?cx=35ae0e02edc50478b"></script>
-<style>
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height:100%; margin:0; }
-  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background:#f4f4f4; display:flex; flex-direction:column; overflow:hidden; }
-
-  #bar { background: linear-gradient(90deg,#36c,#2a9d8f); padding:8px; display:flex; gap:6px; align-items:center; box-shadow:0 2px 6px rgba(0,0,0,.25); flex-shrink:0; }
-  #logo { color:#fff; font-weight:bold; font-size:15px; white-space:nowrap; }
-  #url { flex:1; min-width:0; padding:10px 12px; font-size:16px; border:none; border-radius:20px; outline:none; }
-  .btn { min-width:42px; height:42px; padding:0 12px; border:none; border-radius:21px; background:#fff; color:#2a9d8f; font-weight:bold; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-  .btn:active { background:#e6f7f4; }
-
-  #modes { display:flex; gap:6px; padding:8px; background:#fff; border-bottom:1px solid #ddd; flex-shrink:0; overflow-x:auto; }
-  .mode { padding:8px 14px; border-radius:20px; border:1px solid #ccc; background:#fff; font-size:14px; font-weight:bold; cursor:pointer; white-space:nowrap; color:#555; }
-  .mode.active { background:#2a9d8f; color:#fff; border-color:#2a9d8f; }
-
-  #content { flex:1; position:relative; overflow:hidden; }
-  #frame { width:100%; height:100%; border:none; background:#fff; display:none; }
-
-  /* Google CSE — встроенные результаты */
-  #google { display:none; position:absolute; inset:0; overflow-y:auto; background:#fff; padding:10px; -webkit-overflow-scrolling:touch; }
-  #google .gcse-searchresults-only { width:100%; }
-
-  #start { position:absolute; inset:0; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center; overflow-y:auto; }
-  #start h1 { font-size:42px; margin:0; background:linear-gradient(90deg,#36c,#2a9d8f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  #start p { color:#666; margin:0; font-size:15px; }
-  .quick { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-  .quick a { padding:10px 16px; background:#fff; border-radius:20px; text-decoration:none; color:#2a9d8f; font-weight:bold; box-shadow:0 1px 4px rgba(0,0,0,.1); font-size:15px; }
-  .quick a.danger { background:#b00020; color:#fff; }
-
-  /* MAYDUM */
-  #virus { display:none; position:absolute; inset:0; overflow-y:auto; background:#141414; color:#eee; padding:18px; flex-direction:column; gap:16px; -webkit-overflow-scrolling:touch; }
-  #virus .warn { background:#b00020; color:#fff; padding:16px; border-radius:12px; font-weight:bold; font-size:19px; text-align:center; animation: pulse 1.2s infinite; line-height:1.35; }
-  @keyframes pulse { 50% { opacity:.7; } }
-  #virus .card { background:#1f1f1f; border-radius:14px; padding:14px; border-left:4px solid #b00020; }
-  #virus .card.green { border-left-color:#2a9d8f; }
-  #virus h2 { margin:0 0 8px; font-size:16px; color:#ffcc00; }
-  #virus .card.green h2 { color:#2a9d8f; }
-  #virus p  { margin:0 0 8px; font-size:14px; line-height:1.55; color:#ddd; }
-  #virus p:last-child { margin-bottom:0; }
-  #virus ul { margin:6px 0 0 18px; padding:0; font-size:13.5px; color:#ccc; line-height:1.6; }
-  #virus li { margin-bottom:6px; }
-  #virus b  { color:#fff; }
-  #virus .red { color:#ff5c5c; font-weight:bold; }
-  #virus .em  { color:#ffcc00; font-weight:bold; }
-  #virus .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:4px; }
-  #virus .actions button, #virus .actions a { flex:1; min-width:140px; padding:13px; border:none; border-radius:12px; font-size:14.5px; font-weight:bold; cursor:pointer; text-align:center; text-decoration:none; display:block; }
-  #virus .call { background:#b00020; color:#fff; }
-  #virus .safe { background:#2a9d8f; color:#fff; }
-  #virus .danger { background:#333; color:#ffcc00; }
-  #virus .footer { font-size:12px; color:#888; text-align:center; border-top:1px solid #333; padding-top:12px; margin-top:6px; }
-
-  /* Стили CSE под дизайн */
-  .gsc-control-cse, .gsc-control-wrapper-cse { background:transparent !important; border:none !important; padding:0 !important; }
-  .gsc-input-box { border-radius:20px !important; border:1px solid #2a9d8f !important; }
-  .gsc-search-button-v2 { background:#2a9d8f !important; border:none !important; border-radius:20px !important; }
-  .gsc-results .gsc-cursor-current-page { background:#2a9d8f !important; color:#fff !important; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Салют NFC</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; text-align: center; }
+        #panel { display: none; background: #222; padding: 20px; border-radius: 16px; margin-top: 20px; border: 1px solid #444; }
+        button, input { padding: 12px; font-size: 16px; margin: 8px 0; width: 100%; border-radius: 8px; border: none; box-sizing: border-box; }
+        button { background: #007aff; color: white; font-weight: bold; }
+        button:active { background: #005bb5; }
+        label { display: block; text-align: left; margin-top: 16px; font-size: 14px; color: #aaa; }
+    </style>
 </head>
 <body>
 
-  <div id="bar">
-    <div id="logo">🐱 Вики Вики</div>
-    <button class="btn" onclick="back()">←</button>
-    <input id="url" placeholder="Поиск или адрес…" autocomplete="off">
-    <button class="btn" onclick="go()">🔍</button>
-  </div>
+    <h2>Приложи телефон к Салюту</h2>
+    <p id="status">Ожидание NFC...</p>
+    <button id="startBtn">Включить NFC и вибрацию</button>
 
-  <div id="modes">
-    <button class="mode active" data-mode="google" onclick="setMode('google')">🔎 Google</button>
-    <button class="mode" data-mode="wiki" onclick="setMode('wiki')">📖 Википедия</button>
-    <button class="mode" data-mode="maydum" onclick="setMode('maydum')">☣️ MAYDUM</button>
-  </div>
+    <!-- Скрытая панель -->
+    <div id="panel">
+        <h3>🎛 Панель управления голосом</h3>
 
-  <div id="content">
+        <label>Тон (Pitch)</label>
+        <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
 
-    <div id="start">
-      <h1>Вики Вики</h1>
-      <p>Введи запрос сверху 👆 и выбери поисковик</p>
-      <div class="quick">
-        <a href="#" onclick="quickSearch('Россия');return false">🇷🇺 Россия</a>
-        <a href="#" onclick="quickSearch('Кошка');return false">🐱 Кошка</a>
-        <a href="#" onclick="quickSearch('Космос');return false">🚀 Космос</a>
-        <a href="#" onclick="quickSearch('Python');return false">🐍 Python</a>
-        <a href="#" class="danger" onclick="virusPage();return false">☣️ вирус MAYDUM</a>
-      </div>
+        <label>Скорость (Rate)</label>
+        <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
+
+        <button id="speakBtn">Проверить голос</button>
+        <p style="font-size:12px; color:#666;">Изменения применяются к синтезу речи</p>
     </div>
 
-    <iframe id="frame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const status = document.getElementById('status');
+        const panel = document.getElementById('panel');
 
-    <!-- Google: только результаты, поле поиска — наша строка сверху -->
-    <div id="google">
-      <div class="gcse-searchresults-only"></div>
-    </div>
-
-    <div id="virus">
-      <div class="warn">⚠️ ОПАСНО: ВИРУС MAYDUM ⚠️<br><span style="font-size:14px;font-weight:normal">Зафиксированы взлом аккаунтов, слежка за устройствами и угрозы убийством</span></div>
-
-      <div class="card">
-        <h2>📱 1. Похищение СМС-кода и взлом аккаунтов</h2>
-        <p>В ходе разговора был <b>продиктован поступивший СМС-код</b>. После этого злоумышленники <span class="red">начали взламывать учётные записи</span>:</p>
-        <ul><li>на портале <b>«Госуслуги»</b>;</li><li>в сервисе <b>«Сбербанк»</b>.</li></ul>
-        <p style="margin-top:8px">⚠️ <span class="em">Никому не сообщайте СМС-коды</span>.</p>
-      </div>
-
-      <div class="card">
-        <h2>🎯 2. Цель злоумышленников</h2>
-        <p>Мошенники пытались узнать:</p>
-        <ul><li>информацию о <b>получении выплат</b>;</li><li><b>статус военнослужащего</b>.</li></ul>
-      </div>
-
-      <div class="card">
-        <h2>🕵️ 3. Угрозы и несанкционированный доступ к устройствам</h2>
-        <p>На <b>телефоне и компьютере</b> зафиксированы признаки дистанционного вмешательства:</p>
-        <ul><li>отображение <b>предупреждений об опасности</b>;</li><li><b>запуск сторонних приложений</b> без ведома владельца.</li></ul>
-      </div>
-
-      <div class="card">
-        <h2>🚨 4. Угрозы убийством и требование выкупа</h2>
-        <p>Через <b>аудиоколонки выключенного компьютера</b> и <b>по телефону</b> поступали угрозы:</p>
-        <ul>
-          <li>угрозы <span class="red">физической расправой (убийством)</span>;</li>
-          <li>требования <span class="red">выкупа от 10 до 100 миллионов рублей</span>.</li>
-        </ul>
-        <p style="margin-top:8px">⚠️ <span class="em">Не платите выкуп.</span> Это уголовные преступления (ст. 119 и 163 УК РФ).</p>
-      </div>
-
-      <div class="card green">
-        <h2>✅ 5. Что необходимо сделать немедленно</h2>
-        <ul>
-          <li><b>Позвонить 102</b> и сообщить об угрозах убийством и вымогательстве;</li>
-          <li><b>лично подать заявление</b> в ближайший отдел полиции;</li>
-          <li>сообщить в <b>банк</b> о взломе «Сбербанк» и заблокировать карты;</li>
-          <li>сменить пароли в <b>«Госуслугах»</b>, включить 2FA;</li>
-          <li>проверить устройства антивирусом, удалить неизвестные приложения;</li>
-          <li><b>сохранить доказательства</b>: скриншоты, записи звонков, номера.</li>
-        </ul>
-      </div>
-
-      <div class="actions">
-        <a class="call" href="tel:102">📞 Позвонить 102</a>
-        <button class="safe" onclick="openWiki('Мошенничество')">📖 О мошенничестве</button>
-        <button class="danger" onclick="goHome()">🏠 На главную</button>
-      </div>
-
-      <div class="footer">При реальной опасности звоните <b>102</b> и в банк.</div>
-    </div>
-
-  </div>
-
-<script>
-  const frame  = document.getElementById('frame');
-  const start  = document.getElementById('start');
-  const virus  = document.getElementById('virus');
-  const google = document.getElementById('google');
-  const urlEl  = document.getElementById('url');
-  const hist   = [];
-  let pos = -1;
-  let mode = 'google';
-
-  function setMode(m) {
-    mode = m;
-    document.querySelectorAll('.mode').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
-  }
-
-  function hideAll() {
-    start.style.display = 'none';
-    virus.style.display = 'none';
-    google.style.display = 'none';
-    frame.style.display = 'none';
-  }
-
-  function showStart() {
-    hideAll();
-    start.style.display = 'flex';
-    urlEl.value = '';
-  }
-
-  function showFrame(src) {
-    hideAll();
-    frame.style.display = 'block';
-    frame.src = src;
-    hist.push({ type:'frame', src });
-    pos = hist.length - 1;
-  }
-
-  function showVirus() {
-    hideAll();
-    virus.style.display = 'flex';
-    hist.push({ type:'virus' });
-    pos = hist.length - 1;
-  }
-
-  // ===== ПОИСК GOOGLE =====
-  function showGoogle(q) {
-    hideAll();
-    google.style.display = 'block';
-    hist.push({ type:'google', q });
-    pos = hist.length - 1;
-
-    // Пытаемся выполнить поиск через CSE API (надёжный путь)
-    const trySearch = (attempt) => {
-      const el = window.google?.search?.cse?.element?.getElement('searchresults-only0');
-      if (el && typeof el.execute === 'function') {
-        el.execute(q);
-        return true;
-      }
-      // Если API недоступен — ищем поле ввода в отрисованном виджете
-      const input = google.querySelector('input.gsc-input');
-      const btn   = google.querySelector('button.gsc-search-button, .gsc-search-button-v2');
-      if (input && btn) {
-        input.value = q;
-        input.dispatchEvent(new Event('input', { bubbles:true }));
-        input.dispatchEvent(new Event('change', { bubbles:true }));
-        btn.click();
-        return true;
-      }
-      return false;
-    };
-
-    let tries = 0;
-    const iv = setInterval(() => {
-      tries++;
-      if (trySearch(tries)) {
-        clearInterval(iv);
-      } else if (tries >= 50) { // 5 секунд
-        clearInterval(iv);
-        // Последняя попытка: открыть Google в новой вкладке
-        const fallback = confirm(
-          'Встроенный поиск Google не загрузился.\nОткрыть результаты в новой вкладке?'
-        );
-        if (fallback) {
-          window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank');
+        // 1. Вибрация и показ панели (вызывается после успешного NFC или по кнопке)
+        function activatePanel() {
+            // Вибрация: паттерн [вибро, пауза, вибро]
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);
+            }
+            // Показываем панель
+            panel.style.display = 'block';
+            status.textContent = '✅ NFC считан! Панель открыта.';
         }
-      }
-    }, 100);
-  }
 
-  function openWiki(term) {
-    urlEl.value = term;
-    showFrame('https://ru.m.wikipedia.org/wiki/' + encodeURIComponent(term));
-  }
+        // 2. Инициализация NFC (только Android Chrome)
+        async function startNFC() {
+            if (!('NDEFReader' in window)) {
+                status.textContent = '❌ Web NFC не поддерживается. Нужен Android Chrome.';
+                return;
+            }
 
-  function virusPage() { urlEl.value = 'вирус MAYDUM'; showVirus(); }
-  function goHome() { showStart(); }
-  function quickSearch(q) { urlEl.value = q; go(); }
+            try {
+                const ndef = new NDEFReader();
+                await ndef.scan();
+                status.textContent = '📡 Сканирование... Приложите метку.';
 
-  function normalize(q) {
-    return q.toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9 ]/g,'').trim();
-  }
+                ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                    console.log(`Считана метка: ${serialNumber}`);
+                    // Как только метка коснулась — вибрируем и открываем панель
+                    activatePanel();
+                });
+            } catch (error) {
+                status.textContent = 'Ошибка NFC: ' + error.message;
+            }
+        }
 
-  function go() {
-    const raw = urlEl.value.trim();
-    if (!raw) return;
-    const n = normalize(raw);
+        // Запуск по кнопке (требование безопасности браузера)
+        startBtn.addEventListener('click', async () => {
+            // Сначала вибрация для отклика
+            if (navigator.vibrate) navigator.vibrate(50);
+            
+            // Запускаем NFC
+            await startNFC();
+            
+            // Кнопку скрываем, чтобы не мешала
+            startBtn.style.display = 'none';
+        });
 
-    if (n.includes('maydum') || n.includes('майдум') || n.includes('майдун')) {
-      virusPage(); return;
-    }
+        // 3. Логика изменения голоса (Web Speech API)
+        const speakBtn = document.getElementById('speakBtn');
+        const pitchSlider = document.getElementById('pitch');
+        const rateSlider = document.getElementById('rate');
 
-    if (/^(https?:\/\/|www\.)/i.test(raw)) {
-      let u = raw.startsWith('http') ? raw : 'https://' + raw;
-      urlEl.value = u;
-      showFrame(u); return;
-    }
+        speakBtn.addEventListener('click', () => {
+            // Вибрация при нажатии
+            if (navigator.vibrate) navigator.vibrate(30);
 
-    if (mode === 'maydum')      virusPage();
-    else if (mode === 'wiki')   openWiki(raw);
-    else                        showGoogle(raw);
-  }
+            const text = "Привет! Это тест изменения голоса.";
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            // Применяем настройки со слайдеров
+            utterance.pitch = parseFloat(pitchSlider.value);
+            utterance.rate = parseFloat(rateSlider.value);
+            utterance.lang = 'ru-RU';
 
-  function back() {
-    if (hist.length === 0) { showStart(); return; }
-    if (pos > 0) {
-      pos--;
-      const item = hist[pos];
-      hideAll();
-      if (item.type === 'frame')       { frame.style.display='block'; frame.src = item.src; }
-      else if (item.type === 'virus')  { virus.style.display = 'flex'; }
-      else if (item.type === 'google') { google.style.display = 'block'; showGoogle(item.q); }
-    } else showStart();
-  }
+            // Выбираем русский голос, если доступен
+            const voices = speechSynthesis.getVoices();
+            const ruVoice = voices.find(v => v.lang.includes('ru'));
+            if (ruVoice) utterance.voice = ruVoice;
 
-  urlEl.addEventListener('keypress', e => { if (e.key === 'Enter') go(); });
-</script>
+            speechSynthesis.speak(utterance);
+        });
+    </script>
 </body>
 </html>
