@@ -19,7 +19,6 @@
             overflow: hidden;
         }
 
-        /* Контейнеры экранов */
         .screen { display: none; width: 100%; max-width: 400px; text-align: center; flex-direction: column; align-items: center; }
         .screen.active { display: flex; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -27,7 +26,6 @@
         h2 { font-size: 22px; margin-bottom: 15px; font-weight: 600; }
         p { font-size: 14px; color: #aaa; line-height: 1.5; margin-bottom: 25px; }
 
-        /* Кнопки */
         button {
             width: 100%;
             padding: 16px;
@@ -73,7 +71,6 @@
             cursor: default;
         }
 
-        /* Результаты */
         .result-icon { font-size: 60px; margin-bottom: 20px; }
         .error-text { color: #ff3b30; }
         .success-text { color: #34c759; }
@@ -89,14 +86,14 @@
         <div class="result-icon">🛡️</div>
         <h2>Проверка безопасности</h2>
         <p>Для продолжения необходимо подтвердить ваше местоположение.</p>
-        <button onclick="startCamera()">Проверить, что вы в коридоре</button>
+        <button onclick="startCamera('corridor')">Проверить, что вы в коридоре</button>
     </div>
 
-    <!-- ЭКРАН 2: Камера -->
+    <!-- ЭКРАН 2: Камера (Коридор) -->
     <div id="screen-camera" class="screen">
-        <h2>Наведите камеру на коридор</h2>
+        <h2 id="camera-title">Наведите камеру на коридор</h2>
         <video id="camera-feed" autoplay playsinline></video>
-        <button onclick="takePhoto()">Сфотографировать</button>
+        <button id="camera-btn" onclick="takePhoto()">Сфотографировать</button>
     </div>
 
     <!-- ЭКРАН 3: Загрузка 5 сек -->
@@ -113,21 +110,14 @@
         <p>Пожалуйста, ожидайте. Проверка данных...</p>
     </div>
 
-    <!-- ЭКРАН 5: Проверка обстановки 20 сек -->
-    <div id="screen-verify" class="screen">
-        <div class="spinner"></div>
-        <h2>Покажите постель</h2>
-        <p>Проверка обстановки. Не отключайте телефон...</p>
-    </div>
-
-    <!-- ЭКРАН 6: Успех (если не нажали скрытую кнопку) -->
+    <!-- ЭКРАН 5: Успех -->
     <div id="screen-success" class="screen">
         <div class="result-icon">✅</div>
         <h2 class="success-text">Готово</h2>
         <p>Вы одобрены. Проверка пройдена успешно.</p>
     </div>
 
-    <!-- ЭКРАН 7: Ошибка (если нажали скрытую кнопку) -->
+    <!-- ЭКРАН 6: Ошибка -->
     <div id="screen-fail" class="screen">
         <div class="result-icon">⚠️</div>
         <h2 class="error-text">Внимание</h2>
@@ -136,70 +126,86 @@
 
     <script>
         const video = document.getElementById('camera-feed');
+        const cameraTitle = document.getElementById('camera-title');
+        const cameraBtn = document.getElementById('camera-btn');
+        
         let stream = null;
-        let isFailed = false; // Флаг: нажали ли скрытую кнопку
+        let isFailed = false;
+        let currentStage = ""; // 'corridor' или 'bed'
 
-        // Переключение экранов
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
         }
 
-        // 1. Включение камеры
-        async function startCamera() {
+        // 1. Включение камеры (универсальная функция)
+        async function startCamera(stage) {
             if (navigator.vibrate) navigator.vibrate(50);
+            currentStage = stage;
+            
+            // Меняем текст в зависимости от этапа
+            if (stage === 'corridor') {
+                cameraTitle.textContent = "Наведите камеру на коридор";
+                cameraBtn.textContent = "Сфотографировать";
+            } else if (stage === 'bed') {
+                cameraTitle.textContent = "Покажите постель";
+                cameraBtn.textContent = "Показать постель";
+            }
+
             showScreen('screen-camera');
             
             try {
-                // Запрашиваем заднюю камеру
+                // Включаем заднюю камеру
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { facingMode: 'environment' } 
                 });
                 video.srcObject = stream;
             } catch (err) {
-                // Если камеру не дали, просто идем дальше (имитация)
                 console.log("Камера недоступна", err);
             }
         }
 
-        // 2. Фотография и запуск таймеров
+        // 2. Нажатие на кнопку фото
         function takePhoto() {
             if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
             
-            // Выключаем камеру, чтобы не тратить батарею
+            // Выключаем камеру
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
 
-            // Шаг 1: Загрузка 5 сек
-            showScreen('screen-loading-1');
-            
-            setTimeout(() => {
-                // Шаг 2: Связь с администрацией 10 сек
-                showScreen('screen-admin');
+            if (currentStage === 'corridor') {
+                // --- ЭТАП 1: КОРИДОР ---
+                showScreen('screen-loading-1'); // Загрузка 5 сек
                 
                 setTimeout(() => {
-                    // Шаг 3: Проверка обстановки 20 сек
-                    showScreen('screen-verify');
+                    showScreen('screen-admin'); // Связь 10 сек
                     
                     setTimeout(() => {
-                        // Шаг 4: Финал
-                        if (isFailed) {
-                            showScreen('screen-fail');
-                        } else {
-                            showScreen('screen-success');
-                            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 300]);
-                        }
-                    }, 20000); // 20 секунд
+                        // Переходим на этап ПРОВЕРКИ ПОСТЕЛИ (включаем камеру снова)
+                        startCamera('bed');
+                    }, 10000); 
 
-                }, 10000); // 10 секунд
-
-            }, 5000); // 5 секунд
+                }, 5000);
+                
+            } else if (currentStage === 'bed') {
+                // --- ЭТАП 2: ПОСТЕЛЬ ---
+                // Запускаем финальную 20-секундную проверку
+                showScreen('screen-verify-bed-loading'); // Показываем спиннер
+                
+                setTimeout(() => {
+                    if (isFailed) {
+                        showScreen('screen-fail');
+                    } else {
+                        showScreen('screen-success');
+                        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 300]);
+                    }
+                }, 20000);
+            }
         }
 
         // 3. Нажатие на невидимую кнопку
         function triggerFail() {
-            // Если уже на экране успеха или ошибки — ничего не делаем
             if (document.getElementById('screen-success').classList.contains('active') || 
                 document.getElementById('screen-fail').classList.contains('active')) {
                 return;
@@ -207,8 +213,6 @@
             
             isFailed = true;
             if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            
-            // Сразу прерываем проверку и показываем ошибку
             if (stream) stream.getTracks().forEach(track => track.stop());
             showScreen('screen-fail');
         }
