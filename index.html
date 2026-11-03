@@ -1,125 +1,246 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Салют NFC + Bluetooth</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; text-align: center; }
-        .card { background: #222; padding: 20px; border-radius: 16px; margin-top: 20px; border: 1px solid #444; }
-        button, input { padding: 12px; font-size: 16px; margin: 8px 0; width: 100%; border-radius: 8px; border: none; box-sizing: border-box; }
-        button { background: #007aff; color: white; font-weight: bold; cursor: pointer; }
-        button:active { background: #005bb5; }
-        button:disabled { background: #555; }
-        .bt-btn { background: #34c759; } /* Зеленая кнопка для Bluetooth */
-        .bt-btn:active { background: #248a3d; }
-        label { display: block; text-align: left; margin-top: 16px; font-size: 14px; color: #aaa; }
-        #status { color: #ffcc00; font-weight: bold; }
-        #btStatus { font-size: 14px; color: #4cd964; margin-top: 10px; word-break: break-all; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пульт Алисы — Умный дом</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      max-width: 720px; margin: 0 auto; padding: 16px;
+      background: #f5f6fa; color: #333;
+    }
+    h1 { text-align: center; color: #252250; font-size: 24px; }
+    .card {
+      background: #fff; border-radius: 12px; padding: 16px;
+      margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    label { font-weight: 600; font-size: 14px; color: #555; display: block; margin-bottom: 6px; }
+    #token {
+      width: 100%; padding: 12px; border: 1px solid #ccc;
+      border-radius: 8px; font-size: 14px; margin-bottom: 10px;
+    }
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    button {
+      padding: 12px 18px; border: none; border-radius: 8px;
+      cursor: pointer; font-weight: 600; font-size: 15px;
+    }
+    .btn-primary { background: #fc0; color: #000; flex: 1; }
+    .btn-save { background: #007bff; color: #fff; }
+    #log { margin-top: 10px; font-size: 14px; color: #d32f2f; min-height: 20px; word-break: break-word; }
+    .device-header { margin-bottom: 10px; }
+    .name { font-weight: 700; font-size: 17px; color: #252250; }
+    .state { font-size: 13px; color: #888; margin-top: 2px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .btn-onoff { padding: 10px 20px; font-size: 15px; }
+    .btn-on { background: #4caf50; color: #fff; }
+    .btn-off { background: #e0e0e0; color: #333; }
+    .range-group { display: flex; align-items: center; gap: 8px; width: 100%; }
+    .range-group input { flex: 1; }
+    .vol-display { font-weight: 700; min-width: 32px; text-align: center; }
+    .mute-btn { padding: 10px 14px; font-size: 14px; }
+    .mute-active { background: #f44336; color: #fff; }
+    .mute-inactive { background: #e0e0e0; color: #333; }
+    .no-devices { text-align: center; padding: 30px; color: #777; }
+  </style>
 </head>
 <body>
+  <h1>🔊 Пульт Алисы</h1>
 
-    <h2>Управление Салютом</h2>
-    
-    <!-- Блок NFC -->
-    <div class="card">
-        <p id="status">Ожидание NFC...</p>
-        <button id="startBtn">📡 Включить NFC</button>
+  <div class="card">
+    <label for="token">Токен доступа (начинается с y0_…)</label>
+    <input id="token" type="password" placeholder="Вставьте токен сюда">
+    <div class="btn-group">
+      <button class="btn-primary" onclick="loadDevices()">Загрузить устройства</button>
+      <button class="btn-save" onclick="saveToken()">Сохранить</button>
     </div>
+    <div id="log"></div>
+  </div>
 
-    <!-- Блок Bluetooth (теперь виден сразу) -->
-    <div class="card">
-        <h3>🔵 Bluetooth-устройство</h3>
-        <button id="btBtn" class="bt-btn">Подключить Bluetooth</button>
-        <div id="btStatus">Статус: не подключено</div>
-    </div>
+  <div id="list"></div>
 
-    <!-- Блок голоса (тоже виден сразу) -->
-    <div class="card" id="panel">
-        <h3>🎛 Панель голоса</h3>
+  <script>
+    var API = "https://api.iot.yandex.net/v1.0";
 
-        <label>Тон (Pitch)</label>
-        <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
+    // Подтягиваем сохранённый токен при открытии страницы
+    document.getElementById("token").value = localStorage.getItem("yaToken") || "";
 
-        <label>Скорость (Rate)</label>
-        <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
+    function say(msg) {
+      document.getElementById("log").textContent = msg;
+    }
 
-        <button id="speakBtn">🔊 Проверить голос</button>
-        <p style="font-size:12px; color:#666;">Чтобы звук пошёл в колонку, подключите её через настройки Bluetooth телефона.</p>
-    </div>
+    function saveToken() {
+      var token = document.getElementById("token").value.trim();
+      if (!token) { say("Сначала вставьте токен"); return; }
+      localStorage.setItem("yaToken", token);
+      say("Токен сохранён в этом браузере");
+    }
 
-    <script>
-        const startBtn = document.getElementById('startBtn');
-        const status = document.getElementById('status');
-        const btBtn = document.getElementById('btBtn');
-        const btStatus = document.getElementById('btStatus');
+    function headers() {
+      var token = document.getElementById("token").value.trim();
+      if (!token) { say("Введите токен"); return null; }
+      return { "Authorization": "Bearer " + token };
+    }
 
-        // 1. NFC
-        async function startNFC() {
-            if (!('NDEFReader' in window)) {
-                status.textContent = '❌ Web NFC не поддерживается. Нужен Android Chrome и HTTPS.';
-                return;
-            }
-            try {
-                const ndef = new NDEFReader();
-                await ndef.scan();
-                status.textContent = '📡 Сканирование NFC... Приложите метку.';
-                ndef.addEventListener("reading", () => {
-                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-                    status.textContent = '✅ NFC считан!';
-                });
-            } catch (error) {
-                status.textContent = 'Ошибка NFC: ' + error.message;
-            }
+    async function loadDevices() {
+      say("");
+      var h = headers();
+      if (!h) return;
+
+      try {
+        var r = await fetch(API + "/user/devices", { headers: h });
+        var data = await r.json();
+
+        if (data.status !== "ok") {
+          say("Ошибка API: " + (data.message || r.status));
+          return;
+        }
+        render(data.devices || []);
+      } catch (e) {
+        say("Не удалось подключиться. Если файл открыт с диска (file://), попробуйте запустить его через локальный сервер или Gist. Подробность: " + e.message);
+      }
+    }
+
+    function render(devices) {
+      var list = document.getElementById("list");
+      list.innerHTML = "";
+
+      if (devices.length === 0) {
+        list.innerHTML = '<div class="card no-devices">Устройства не найдены. Проверьте, что при получении токена были отмечены права iot:view и iot:control, а колонка добавлена в Умный дом.</div>';
+        return;
+      }
+
+      devices.forEach(function (d) {
+        var card = document.createElement("div");
+        card.className = "card";
+
+        var header = document.createElement("div");
+        header.className = "device-header";
+        header.innerHTML = '<div class="name">' + escapeHtml(d.name) + '</div>' +
+                           '<div class="state">тип: ' + escapeHtml(d.type || "?") + '</div>';
+        card.appendChild(header);
+
+        var actions = document.createElement("div");
+        actions.className = "actions";
+
+        var isOn = null, volume = null, isMuted = null;
+
+        (d.capabilities || []).forEach(function (c) {
+          if (c.type === "devices.capabilities.on_off") {
+            isOn = !!(c.state && c.state.value);
+          }
+          if (c.type === "devices.capabilities.range" &&
+              c.state && c.state.instance === "volume") {
+            volume = c.state.value;
+          }
+          if (c.type === "devices.capabilities.toggle" &&
+              c.state && c.state.instance === "mute") {
+            isMuted = !!c.state.value;
+          }
+        });
+
+        if (isOn !== null) {
+          var btn = document.createElement("button");
+          btn.className = "btn-onoff " + (isOn ? "btn-on" : "btn-off");
+          btn.textContent = isOn ? "Выключить" : "Включить";
+          btn.onclick = function () { toggle(d.id, !isOn); };
+          actions.appendChild(btn);
         }
 
-        startBtn.addEventListener('click', async () => {
-            if (navigator.vibrate) navigator.vibrate(50);
-            await startNFC();
-            startBtn.style.display = 'none';
+        if (volume !== null) {
+          var group = document.createElement("div");
+          group.className = "range-group";
+
+          var range = document.createElement("input");
+          range.type = "range";
+          range.min = "0";
+          range.max = "100";
+          range.value = volume;
+
+          var disp = document.createElement("span");
+          disp.className = "vol-display";
+          disp.textContent = volume;
+
+          range.oninput = function (e) {
+            disp.textContent = e.target.value;
+            setVolume(d.id, Number(e.target.value));
+          };
+
+          group.appendChild(range);
+          group.appendChild(disp);
+          actions.appendChild(group);
+        }
+
+        if (isMuted !== null) {
+          var mbtn = document.createElement("button");
+          mbtn.className = "mute-btn " + (isMuted ? "mute-active" : "mute-inactive");
+          mbtn.textContent = isMuted ? "Снять беззвучный" : "Беззвучный";
+          mbtn.onclick = function () { mute(d.id, !isMuted); };
+          actions.appendChild(mbtn);
+        }
+
+        if (actions.children.length === 0) {
+          var note = document.createElement("div");
+          note.className = "state";
+          note.textContent = "Это устройство не поддерживает управление через API";
+          actions.appendChild(note);
+        }
+
+        card.appendChild(actions);
+        list.appendChild(card);
+      });
+    }
+
+    async function sendAction(id, capability) {
+      var h = headers();
+      if (!h) return;
+
+      try {
+        var r = await fetch(API + "/devices/" + id + "/actions", {
+          method: "POST",
+          headers: Object.assign({ "Content-Type": "application/json" }, h),
+          body: JSON.stringify({ capabilities: [capability] })
         });
+        var data = await r.json();
+        if (data.status !== "ok") {
+          say("Ошибка команды: " + (data.message || r.status));
+        }
+      } catch (e) {
+        say("Не удалось отправить команду: " + e.message);
+      }
+    }
 
-        // 2. Bluetooth
-        btBtn.addEventListener('click', async () => {
-            if (!navigator.bluetooth) {
-                btStatus.textContent = '❌ Web Bluetooth не поддерживается этим браузером.';
-                return;
-            }
-            try {
-                btStatus.textContent = 'Поиск устройств... Выберите в списке.';
-                const device = await navigator.bluetooth.requestDevice({
-                    acceptAllDevices: true
-                });
-                
-                btStatus.textContent = 'Подключение к: ' + (device.name || 'Без имени') + '...';
-                const server = await device.gatt.connect();
-                btStatus.textContent = '✅ Подключено: ' + (device.name || device.id);
-                
-                if (navigator.vibrate) navigator.vibrate(100);
-            } catch (error) {
-                btStatus.textContent = 'Ошибка Bluetooth: ' + error.message;
-            }
-        });
+    function toggle(id, turnOn) {
+      sendAction(id, {
+        type: "devices.capabilities.on_off",
+        state: { instance: "on", value: turnOn }
+      });
+    }
 
-        // 3. Голос
-        const speakBtn = document.getElementById('speakBtn');
-        const pitchSlider = document.getElementById('pitch');
-        const rateSlider = document.getElementById('rate');
+    function setVolume(id, v) {
+      sendAction(id, {
+        type: "devices.capabilities.range",
+        state: { instance: "volume", value: v }
+      });
+    }
 
-        speakBtn.addEventListener('click', () => {
-            if (navigator.vibrate) navigator.vibrate(30);
-            const utterance = new SpeechSynthesisUtterance("Привет! Это тест изменения голоса.");
-            utterance.pitch = parseFloat(pitchSlider.value);
-            utterance.rate = parseFloat(rateSlider.value);
-            utterance.lang = 'ru-RU';
-            
-            const voices = speechSynthesis.getVoices();
-            const ruVoice = voices.find(v => v.lang.includes('ru'));
-            if (ruVoice) utterance.voice = ruVoice;
+    function mute(id, val) {
+      sendAction(id, {
+        type: "devices.capabilities.toggle",
+        state: { instance: "mute", value: val }
+      });
+    }
 
-            speechSynthesis.speak(utterance);
-        });
-    </script>
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
 </body>
 </html>
