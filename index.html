@@ -2,82 +2,161 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>СЕРВЕР</title>
+<title>SECURITY ALERT</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%;
-    background: #000; color: #0f0;
-    font-family: "Courier New", monospace;
-    overflow: hidden;
-    user-select: none;
+    background: #050505; color: #d0d0d0;
+    font-family: "Consolas", "Courier New", monospace;
+    overflow: hidden; user-select: none;
   }
+  /* ---------- ОКНО ОШИБКИ БЕЗОПАСНОСТИ ---------- */
+  #secModal {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #secBox {
+    width: 520px; max-width: 92vw;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    box-shadow: 0 0 40px rgba(255,0,0,0.35);
+    border-radius: 4px;
+    overflow: hidden;
+    animation: pop 0.25s ease-out;
+  }
+  @keyframes pop { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  #secBox .title {
+    background: #8b0000; color: #fff;
+    padding: 10px 14px; font-weight: bold; font-size: 15px;
+    display: flex; align-items: center; gap: 10px;
+    letter-spacing: 1px;
+  }
+  #secBox .title .ico {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #f00; color: #000;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px;
+    animation: blinkRed 0.8s infinite alternate;
+  }
+  @keyframes blinkRed { from{opacity:1} to{opacity:0.45} }
+  #secBox .body {
+    padding: 22px 20px; font-size: 14px; line-height: 1.6;
+    color: #ddd;
+  }
+  #secBox .body b { color: #ff4444; }
+  #secBox .body .code {
+    display: inline-block; margin-top: 10px;
+    background: #000; padding: 4px 8px; border: 1px solid #333;
+    color: #0f0; font-size: 13px;
+  }
+  #secBox .footer {
+    padding: 14px 20px; text-align: right;
+    border-top: 1px solid #333; background: #141414;
+  }
+  #okBtn {
+    background: #222; color: #fff;
+    border: 1px solid #666; padding: 8px 26px;
+    font-family: inherit; font-size: 14px;
+    cursor: pointer; border-radius: 3px;
+    transition: background 0.15s;
+  }
+  #okBtn:hover { background: #8b0000; border-color: #f00; }
+  #okBtn:active { transform: scale(0.97); }
+
+  /* ---------- ОСНОВНОЙ ЭКРАН ---------- */
   #wrap {
     height: 100%;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box;
+    text-align: center; padding: 20px; box-sizing: border-box;
   }
-  h1 { font-size: 28px; margin: 0 0 20px; letter-spacing: 2px; }
+  h1 {
+    font-size: 26px; margin: 0 0 18px; letter-spacing: 3px;
+    color: #ff3333; text-shadow: 0 0 15px rgba(255,0,0,0.7);
+  }
   #timer {
-    font-size: 64px; font-weight: bold; color: #f33;
-    text-shadow: 0 0 20px #f00;
-    margin-bottom: 30px;
+    font-size: 72px; font-weight: bold; color: #f33;
+    text-shadow: 0 0 25px #f00, 0 0 5px #fff;
+    margin-bottom: 28px; letter-spacing: 4px;
   }
   #barBox {
-    width: 70%; max-width: 700px; height: 30px;
+    width: 70%; max-width: 720px; height: 32px;
     border: 2px solid #0f0;
-    box-shadow: 0 0 20px #0f0 inset, 0 0 10px #0f0;
-    position: relative; overflow: hidden;
+    box-shadow: 0 0 25px rgba(0,255,0,0.4) inset, 0 0 12px rgba(0,255,0,0.5);
+    position: relative; overflow: hidden; background: #020;
   }
   #bar {
     height: 100%; width: 0%;
     background: linear-gradient(90deg, #0f0, #ff0, #f00);
-    transition: width 1s linear;
+    box-shadow: 0 0 20px #f00;
   }
   #status {
-    margin-top: 25px; font-size: 18px; color: #ff0;
-    min-height: 30px;
-    text-shadow: 0 0 8px #ff0;
+    margin-top: 24px; font-size: 16px; color: #ff0;
+    min-height: 26px; text-shadow: 0 0 8px #ff0;
+    letter-spacing: 1px;
   }
   #warning {
     position: fixed; top: 0; left: 0; right: 0;
-    background: #f00; color: #000; font-weight: bold;
-    padding: 10px; font-size: 18px;
-    text-align: center;
-    display: none;
-    animation: blink 0.6s infinite alternate;
-    z-index: 999;
+    background: #8b0000; color: #fff; font-weight: bold;
+    padding: 12px; font-size: 17px; text-align: center;
+    display: none; letter-spacing: 2px;
+    animation: blinkWarn 0.6s infinite alternate;
+    z-index: 900;
+    border-bottom: 2px solid #f00;
   }
-  @keyframes blink { from{opacity:1} to{opacity:0.55} }
+  @keyframes blinkWarn { from{opacity:1} to{opacity:0.55} }
 
-  .glitch { animation: glitch 0.15s infinite; }
+  .glitch { animation: glitch 0.14s infinite; }
   @keyframes glitch {
-    0%   { transform: translate(0,0); }
-    25%  { transform: translate(-3px,2px); }
-    50%  { transform: translate(3px,-2px); }
-    75%  { transform: translate(-2px,-1px); }
-    100% { transform: translate(2px,1px); }
+    0%   { transform: translate(0,0);   filter: none; }
+    25%  { transform: translate(-4px,2px); filter: hue-rotate(40deg); }
+    50%  { transform: translate(4px,-2px); filter: hue-rotate(-40deg); }
+    75%  { transform: translate(-2px,-1px); filter: brightness(1.4); }
+    100% { transform: translate(2px,1px);  filter: none; }
   }
 
+  /* ---------- ФИНАЛ ---------- */
   #final {
     display: none;
     position: fixed; inset: 0;
     background: #000; color: #f00;
-    flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    z-index: 1000;
-    padding: 20px; box-sizing: border-box;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; z-index: 1000; padding: 20px; box-sizing: border-box;
   }
-  #final h2 { font-size: 42px; margin: 0 0 20px; letter-spacing: 4px; }
-  #final p  { font-size: 20px; margin: 10px; color: #ff0; }
-  #selfTimer { font-size: 72px; color: #f00; margin: 25px 0; text-shadow:0 0 25px #f00; }
-  .sub { color: #0f0; font-size: 16px; }
+  #final h2 { font-size: 44px; margin: 0 0 18px; letter-spacing: 6px;
+    text-shadow: 0 0 30px #f00; }
+  #final p  { font-size: 19px; margin: 8px; color: #ff0; }
+  #selfTimer { font-size: 80px; color: #f00; margin: 22px 0;
+    text-shadow: 0 0 30px #f00; letter-spacing: 6px; }
+  .sub { color: #0f0; font-size: 15px; letter-spacing: 1px; }
+  .scanline {
+    position: fixed; left: 0; right: 0; height: 2px; background: rgba(255,0,0,0.15);
+    animation: scan 3s linear infinite; z-index: 1001; pointer-events: none;
+  }
+  @keyframes scan { from{top:0} to{top:100%} }
 </style>
 </head>
 <body>
+
+<!-- Окно ошибки безопасности -->
+<div id="secModal">
+  <div id="secBox">
+    <div class="title">
+      <span class="ico">!</span>
+      SECURITY ALERT — НАРУШЕНИЕ БЕЗОПАСНОСТИ
+    </div>
+    <div class="body">
+      Обнаружена <b>критическая ошибка безопасности</b>.<br>
+      Несанкционированное подключение к защищённому серверу.<br><br>
+      Для продолжения необходимо подтвердить получение уведомления.<br>
+      <span class="code">ERR_SEC_DECLASSIFY_0x505</span>
+    </div>
+    <div class="footer">
+      <button id="okBtn">ОК</button>
+    </div>
+  </div>
+</div>
 
 <div id="warning">⚠ ВНИМАНИЕ: ОБНАРУЖЕНА ДЕКЛАССИФИКАЦИЯ СЕРВЕРА ⚠</div>
 
@@ -89,6 +168,7 @@
 </div>
 
 <div id="final">
+  <div class="scanline"></div>
   <h2>САМОУНИЧТОЖЕНИЕ</h2>
   <p>ПРОТОКОЛ АКТИВИРОВАН</p>
   <div id="selfTimer">05:00</div>
@@ -98,9 +178,9 @@
 
 <script>
 /* ====================== НАСТРОЙКИ ====================== */
-const TOTAL_MIN   = 15;   // сколько минут до «отключения сервера»
-const SELF_MIN    = 5;    // сколько минут «самоуничтожение»
-const LAG_EVERY   = 1000; // как часто подёргивать экран (мс)
+const TOTAL_MIN = 15;
+const SELF_MIN  = 5;
+const LAG_EVERY = 1000;
 /* ======================================================== */
 
 const totalSec = TOTAL_MIN * 60;
@@ -114,21 +194,180 @@ const wrapEl   = document.getElementById('wrap');
 const finalEl  = document.getElementById('final');
 const selfTEl  = document.getElementById('selfTimer');
 const finalSt  = document.getElementById('finalStatus');
+const secModal = document.getElementById('secModal');
+const okBtn    = document.getElementById('okBtn');
 
-/* фаза 1: обратный отсчёт */
-let left = totalSec;
+/* ========================================================
+   ЗВУКОВОЙ ДВИЖОК (Web Audio API) — без внешних файлов
+   ======================================================== */
+let actx = null;
+let masterGain = null;
+let alarmOsc = null, alarmGain = null;
+let noiseSrc = null, noiseGain = null;
+let beatTimer = null;
+let alarmTimer = null;
 
-/* Запускаем лаги и предупреждение почти сразу */
-setTimeout(() => {
-  warnEl.style.display = 'block';
-  statusEl.textContent = 'ВНИМАНИЕ: сервер деклассифицируется';
-}, 3000);
+function initAudio() {
+  if (actx) return;
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = actx.createGain();
+  masterGain.gain.value = 0.55;
+  masterGain.connect(actx.destination);
+}
 
-const lagInterval = setInterval(() => {
-  // лёгкая тряска + мерцание
-  wrapEl.classList.add('glitch');
-  setTimeout(() => wrapEl.classList.remove('glitch'), 150);
-}, LAG_EVERY);
+/* низкий гул (страшный фон) */
+function startDrone() {
+  if (!actx) return;
+  const osc = actx.createOscillator();
+  const g   = actx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.value = 55;
+  g.gain.value = 0.05;
+  osc.connect(g); g.connect(masterGain);
+  osc.start();
+
+  const osc2 = actx.createOscillator();
+  const g2   = actx.createGain();
+  osc2.type = 'sine';
+  osc2.frequency.value = 41;
+  g2.gain.value = 0.08;
+  osc2.connect(g2); g2.connect(masterGain);
+  osc2.start();
+}
+
+/* белый шум (шипение/помехи) */
+function startNoise() {
+  if (!actx || noiseSrc) return;
+  const bufferSize = 2 * actx.sampleRate;
+  const buffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  noiseSrc = actx.createBufferSource();
+  noiseSrc.buffer = buffer; noiseSrc.loop = true;
+  noiseGain = actx.createGain();
+  noiseGain.gain.value = 0.02;
+  const filter = actx.createBiquadFilter();
+  filter.type = 'bandpass'; filter.frequency.value = 1200; filter.Q.value = 0.7;
+  noiseSrc.connect(filter); filter.connect(noiseGain); noiseGain.connect(masterGain);
+  noiseSrc.start();
+}
+
+/* сирена тревоги (плавно качается) */
+function startSiren() {
+  if (!actx) return;
+  alarmOsc = actx.createOscillator();
+  alarmGain = actx.createGain();
+  alarmOsc.type = 'square';
+  alarmOsc.frequency.value = 660;
+  alarmGain.gain.value = 0.0;
+  alarmOsc.connect(alarmGain); alarmGain.connect(masterGain);
+  alarmOsc.start();
+
+  let up = true;
+  alarmTimer = setInterval(() => {
+    if (!actx) return;
+    const now = actx.currentTime;
+    alarmOsc.frequency.cancelScheduledValues(now);
+    alarmOsc.frequency.linearRampToValueAtTime(up ? 880 : 440, now + 0.6);
+    up = !up;
+  }, 650);
+}
+
+/* короткий «бип» */
+function beep(freq = 880, dur = 0.08, vol = 0.25) {
+  if (!actx) return;
+  const o = actx.createOscillator();
+  const g = actx.createGain();
+  o.type = 'square'; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, actx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(); o.stop(actx.currentTime + dur + 0.02);
+}
+
+/* «сердцебиение» (страшный ритм) */
+function startHeartbeat() {
+  if (beatTimer) return;
+  beatTimer = setInterval(() => {
+    beep(70, 0.16, 0.35);
+    setTimeout(() => beep(55, 0.22, 0.3), 180);
+  }, 1200);
+}
+
+/* жуткий «удар» при финале */
+function impact() {
+  if (!actx) return;
+  const o = actx.createOscillator();
+  const g = actx.createGain();
+  o.type = 'sawtooth';
+  o.frequency.setValueAtTime(120, actx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(20, actx.currentTime + 1.2);
+  g.gain.setValueAtTime(0.5, actx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 1.4);
+  o.connect(g); g.connect(masterGain);
+  o.start(); o.stop(actx.currentTime + 1.5);
+}
+
+/* ========================================================
+   ЛОГИКА СТРАНИЦЫ
+   ======================================================== */
+
+okBtn.addEventListener('click', () => {
+  initAudio();                 // звук можно запустить только по клику
+  secModal.style.display = 'none';
+
+  // страшный фон
+  startDrone();
+  startNoise();
+  startSiren();
+  alarmGain.gain.linearRampToValueAtTime(0.12, actx.currentTime + 2);
+  beep(1200, 0.12, 0.3);
+
+  startMainSequence();
+});
+
+function startMainSequence() {
+  let left = totalSec;
+
+  setTimeout(() => {
+    warnEl.style.display = 'block';
+    statusEl.textContent = 'ВНИМАНИЕ: сервер деклассифицируется';
+  }, 3000);
+
+  const lagInterval = setInterval(() => {
+    wrapEl.classList.add('glitch');
+    setTimeout(() => wrapEl.classList.remove('glitch'), 150);
+    // случайные короткие помехи
+    if (Math.random() < 0.35) beep(200 + Math.random() * 400, 0.05, 0.12);
+    // ускоряем сирену ближе к концу
+    if (alarmTimer && left < 120) {
+      // ничего, просто оставляем
+    }
+  }, LAG_EVERY);
+
+  const timerInterval = setInterval(() => {
+    left--;
+    if (left < 0) left = 0;
+    timerEl.textContent = fmt(left);
+    barEl.style.width = ((totalSec - left) / totalSec * 100) + '%';
+
+    if (left === totalSec - 60) {
+      startHeartbeat(); // через минуту добавляем сердцебиение
+    }
+    if (left <= 60) {
+      warnEl.textContent = '⚠ КРИТИЧЕСКАЯ ДЕКЛАССИФИКАЦИЯ — ДО ОТКЛЮЧЕНИЯ МЕНЬШЕ МИНУТЫ ⚠';
+      if (alarmGain) alarmGain.gain.linearRampToValueAtTime(0.22, actx.currentTime + 1);
+    }
+    if (left <= 10) {
+      statusEl.textContent = 'СВЯЗЬ НЕСТАБИЛЬНА... ПАКЕТЫ ТЕРЯЮТСЯ...';
+    }
+    if (left <= 0) {
+      clearInterval(lagInterval);
+      clearInterval(timerInterval);
+      startShutdown();
+    }
+  }, 1000);
+}
 
 function fmt(sec) {
   const m = Math.floor(sec / 60).toString().padStart(2, '0');
@@ -136,76 +375,75 @@ function fmt(sec) {
   return `${m}:${s}`;
 }
 
-function tick() {
-  left--;
-  if (left < 0) left = 0;
-
-  timerEl.textContent = fmt(left);
-  barEl.style.width = ((totalSec - left) / totalSec * 100) + '%';
-
-  // предупреждение мигает всё быстрее к концу
-  if (left <= 60) {
-    warnEl.textContent = '⚠ КРИТИЧЕСКАЯ ДЕКЛАССИФИКАЦИЯ — ДО ОТКЛЮЧЕНИЯ МЕНЬШЕ МИНУТЫ ⚠';
-  }
-  if (left <= 10) {
-    statusEl.textContent = 'СВЯЗЬ НЕСТАБИЛЬНА... ПАКЕТЫ ТЕРЯЮТСЯ...';
-  }
-
-  if (left <= 0) {
-    clearInterval(lagInterval);
-    startShutdown();
-    return;
-  }
-}
-
-const timerInterval = setInterval(tick, 1000);
-
-/* фаза 2: сервер выключился */
 function startShutdown() {
   barEl.style.width = '100%';
   timerEl.textContent = '00:00';
   wrapEl.classList.remove('glitch');
 
-  // «нет соединения с сервером»
+  // резко обрываем звук сервера, оставляем глухой фон
+  if (alarmGain) alarmGain.gain.linearRampToValueAtTime(0.0, actx.currentTime + 0.4);
+  if (alarmTimer) clearInterval(alarmTimer);
+
   warnEl.style.display = 'block';
   warnEl.style.background = '#000';
   warnEl.style.color = '#f00';
   warnEl.textContent = 'НЕТ СОЕДИНЕНИЯ С СЕРВЕРОМ';
-  statusEl.textContent = '';
   wrapEl.innerHTML = '<h1 style="color:#f00">НЕТ СОЕДИНЕНИЯ С СЕРВЕРОМ</h1>';
 
+  beep(200, 0.4, 0.3);
+
   setTimeout(() => {
-    // «ошибка 505»
     warnEl.textContent = 'ОШИБКА 505 — HTTP VERSION NOT SUPPORTED';
-    wrapEl.innerHTML = '<h1 style="color:#f00">ОШИБКА 505</h1>' +
-                       '<div id="status" style="color:#ff0;margin-top:20px">' +
-                       'Сервер не поддерживает данную версию протокола...</div>';
+    wrapEl.innerHTML =
+      '<h1 style="color:#f00">ОШИБКА 505</h1>' +
+      '<div style="color:#ff0;margin-top:20px">Сервер не поддерживает данную версию протокола...</div>';
+    beep(150, 0.6, 0.35);
   }, 4000);
 
   setTimeout(startSelfDestruct, 8000);
 }
 
-/* фаза 3: самоуничтожение ПК */
 function startSelfDestruct() {
   wrapEl.style.display = 'none';
   warnEl.style.display = 'none';
   finalEl.style.display = 'flex';
 
+  impact();
+
+  // нарастающий вой
+  if (actx) {
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(80, actx.currentTime);
+    o.frequency.linearRampToValueAtTime(1000, actx.currentTime + selfSec);
+    g.gain.setValueAtTime(0.0, actx.currentTime);
+    g.gain.linearRampToValueAtTime(0.12, actx.currentTime + selfSec * 0.5);
+    o.connect(g); g.connect(masterGain);
+    o.start(); o.stop(actx.currentTime + selfSec + 1);
+  }
+
   let s = selfSec;
 
+  // бип каждую секунду
   const si = setInterval(() => {
     s--;
     if (s < 0) s = 0;
     selfTEl.textContent = fmt(s);
 
-    // «ускоряющееся» мигание и сообщения
+    if (s % 5 === 0) beep(440, 0.06, 0.18);
+
     if (s <= 120) finalSt.textContent = 'УДАЛЕНИЕ СИСТЕМНЫХ ФАЙЛОВ...';
     if (s <= 60)  finalSt.textContent = 'ПЕРЕЗАПИСЬ СЕКТОРОВ ДИСКА...';
     if (s <= 30)  finalSt.textContent = 'ФИНАЛЬНАЯ ОЧИСТКА...';
 
     if (s <= 0) {
       clearInterval(si);
-      finalSt.textContent = '';
+
+      // «взрыв» звука
+      impact();
+      if (noiseGain) noiseGain.gain.linearRampToValueAtTime(0.0, actx.currentTime + 1.5);
+
       finalEl.innerHTML =
         '<h2 style="color:#fff">СИСТЕМА УНИЧТОЖЕНА</h2>' +
         '<p class="sub" style="margin-top:20px">ЭТО БЫЛО ТЕСТОВОЕ СООБЩЕНИЕ.</p>' +
