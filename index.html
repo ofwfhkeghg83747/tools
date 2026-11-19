@@ -1,222 +1,218 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Проверка безопасности</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        
-        body {
-            background-color: #000;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<title>СЕРВЕР</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #000; color: #0f0;
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+    user-select: none;
+  }
+  #wrap {
+    height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  h1 { font-size: 28px; margin: 0 0 20px; letter-spacing: 2px; }
+  #timer {
+    font-size: 64px; font-weight: bold; color: #f33;
+    text-shadow: 0 0 20px #f00;
+    margin-bottom: 30px;
+  }
+  #barBox {
+    width: 70%; max-width: 700px; height: 30px;
+    border: 2px solid #0f0;
+    box-shadow: 0 0 20px #0f0 inset, 0 0 10px #0f0;
+    position: relative; overflow: hidden;
+  }
+  #bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #0f0, #ff0, #f00);
+    transition: width 1s linear;
+  }
+  #status {
+    margin-top: 25px; font-size: 18px; color: #ff0;
+    min-height: 30px;
+    text-shadow: 0 0 8px #ff0;
+  }
+  #warning {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: #f00; color: #000; font-weight: bold;
+    padding: 10px; font-size: 18px;
+    text-align: center;
+    display: none;
+    animation: blink 0.6s infinite alternate;
+    z-index: 999;
+  }
+  @keyframes blink { from{opacity:1} to{opacity:0.55} }
 
-        .screen { display: none; width: 100%; max-width: 400px; text-align: center; flex-direction: column; align-items: center; }
-        .screen.active { display: flex; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .glitch { animation: glitch 0.15s infinite; }
+  @keyframes glitch {
+    0%   { transform: translate(0,0); }
+    25%  { transform: translate(-3px,2px); }
+    50%  { transform: translate(3px,-2px); }
+    75%  { transform: translate(-2px,-1px); }
+    100% { transform: translate(2px,1px); }
+  }
 
-        h2 { font-size: 22px; margin-bottom: 15px; font-weight: 600; }
-        p { font-size: 14px; color: #aaa; line-height: 1.5; margin-bottom: 25px; }
-
-        button {
-            width: 100%;
-            padding: 16px;
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s, background 0.2s;
-        }
-        button:active { background: #ccc; transform: scale(0.98); }
-
-        /* Экран камеры */
-        #camera-feed {
-            width: 100%;
-            height: 300px;
-            background: #111;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            object-fit: cover;
-            border: 2px solid #333;
-        }
-
-        /* Спиннер загрузки */
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top: 4px solid #fff; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Скрытая кнопка в углу */
-        #hidden-btn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 60px;
-            height: 60px;
-            background: transparent;
-            z-index: 999;
-            cursor: default;
-        }
-
-        .result-icon { font-size: 60px; margin-bottom: 20px; }
-        .error-text { color: #ff3b30; }
-        .success-text { color: #34c759; }
-    </style>
+  #final {
+    display: none;
+    position: fixed; inset: 0;
+    background: #000; color: #f00;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    z-index: 1000;
+    padding: 20px; box-sizing: border-box;
+  }
+  #final h2 { font-size: 42px; margin: 0 0 20px; letter-spacing: 4px; }
+  #final p  { font-size: 20px; margin: 10px; color: #ff0; }
+  #selfTimer { font-size: 72px; color: #f00; margin: 25px 0; text-shadow:0 0 25px #f00; }
+  .sub { color: #0f0; font-size: 16px; }
+</style>
 </head>
 <body>
 
-    <!-- СКРЫТАЯ КНОПКА -->
-    <div id="hidden-btn" onclick="triggerFail()"></div>
+<div id="warning">⚠ ВНИМАНИЕ: ОБНАРУЖЕНА ДЕКЛАССИФИКАЦИЯ СЕРВЕРА ⚠</div>
 
-    <!-- 1. Старт -->
-    <div id="screen-start" class="screen active">
-        <div class="result-icon">🛡️</div>
-        <h2>Проверка безопасности</h2>
-        <p>Для продолжения необходимо подтвердить ваше местоположение.</p>
-        <button onclick="startCamera('corridor')">Проверить, что вы в коридоре</button>
-    </div>
+<div id="wrap">
+  <h1>СЕРВЕР: ДЕКЛАССИФИКАЦИЯ</h1>
+  <div id="timer">15:00</div>
+  <div id="barBox"><div id="bar"></div></div>
+  <div id="status">Установка соединения...</div>
+</div>
 
-    <!-- 2. Камера (Коридор или Постель) -->
-    <div id="screen-camera" class="screen">
-        <h2 id="camera-title">Наведите камеру на коридор</h2>
-        <video id="camera-feed" autoplay playsinline></video>
-        <button id="camera-btn" onclick="takePhoto()">Сфотографировать</button>
-    </div>
+<div id="final">
+  <h2>САМОУНИЧТОЖЕНИЕ</h2>
+  <p>ПРОТОКОЛ АКТИВИРОВАН</p>
+  <div id="selfTimer">05:00</div>
+  <p class="sub">Не отключайте питание</p>
+  <p class="sub" id="finalStatus"></p>
+</div>
 
-    <!-- 3. Загрузка (после коридора, 5 сек) -->
-    <div id="screen-loading-1" class="screen">
-        <div class="spinner"></div>
-        <h2>Загрузка...</h2>
-        <p>Обработка изображения</p>
-    </div>
+<script>
+/* ====================== НАСТРОЙКИ ====================== */
+const TOTAL_MIN   = 15;   // сколько минут до «отключения сервера»
+const SELF_MIN    = 5;    // сколько минут «самоуничтожение»
+const LAG_EVERY   = 1000; // как часто подёргивать экран (мс)
+/* ======================================================== */
 
-    <!-- 4. Связь с администрацией (10 сек) -->
-    <div id="screen-admin" class="screen">
-        <div class="spinner"></div>
-        <h2>Связь с администрацией</h2>
-        <p>Пожалуйста, ожидайте. Проверка данных...</p>
-    </div>
+const totalSec = TOTAL_MIN * 60;
+const selfSec  = SELF_MIN  * 60;
 
-    <!-- 5. Финальная загрузка (после постели, 20 сек) -->
-    <div id="screen-final-loading" class="screen">
-        <div class="spinner"></div>
-        <h2>Проверка обстановки...</h2>
-        <p>Пожалуйста, подождите. Идет анализ данных.</p>
-    </div>
+const timerEl  = document.getElementById('timer');
+const barEl    = document.getElementById('bar');
+const statusEl = document.getElementById('status');
+const warnEl   = document.getElementById('warning');
+const wrapEl   = document.getElementById('wrap');
+const finalEl  = document.getElementById('final');
+const selfTEl  = document.getElementById('selfTimer');
+const finalSt  = document.getElementById('finalStatus');
 
-    <!-- 6. Успех -->
-    <div id="screen-success" class="screen">
-        <div class="result-icon">✅</div>
-        <h2 class="success-text">Готово</h2>
-        <p>Вы одобрены. Проверка пройдена успешно.</p>
-    </div>
+/* фаза 1: обратный отсчёт */
+let left = totalSec;
 
-    <!-- 7. Ошибка -->
-    <div id="screen-fail" class="screen">
-        <div class="result-icon">⚠️</div>
-        <h2 class="error-text">Внимание</h2>
-        <p class="error-text">Вы не доказали, что вы в коридоре.<br><br>Проверка не пройдена. Мы продолжим проверку позже.</p>
-    </div>
+/* Запускаем лаги и предупреждение почти сразу */
+setTimeout(() => {
+  warnEl.style.display = 'block';
+  statusEl.textContent = 'ВНИМАНИЕ: сервер деклассифицируется';
+}, 3000);
 
-    <script>
-        const video = document.getElementById('camera-feed');
-        const cameraTitle = document.getElementById('camera-title');
-        const cameraBtn = document.getElementById('camera-btn');
-        
-        let stream = null;
-        let isFailed = false;
-        let currentStage = ""; 
+const lagInterval = setInterval(() => {
+  // лёгкая тряска + мерцание
+  wrapEl.classList.add('glitch');
+  setTimeout(() => wrapEl.classList.remove('glitch'), 150);
+}, LAG_EVERY);
 
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
+function fmt(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, '0');
+  const s = (sec % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
 
-        async function startCamera(stage) {
-            if (navigator.vibrate) navigator.vibrate(50);
-            currentStage = stage;
-            
-            if (stage === 'corridor') {
-                cameraTitle.textContent = "Наведите камеру на коридор";
-                cameraBtn.textContent = "Сфотографировать";
-            } else if (stage === 'bed') {
-                cameraTitle.textContent = "Покажите постель";
-                cameraBtn.textContent = "Показать постель";
-            }
+function tick() {
+  left--;
+  if (left < 0) left = 0;
 
-            showScreen('screen-camera');
-            
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' } 
-                });
-                video.srcObject = stream;
-            } catch (err) {
-                console.log("Камера недоступна", err);
-            }
-        }
+  timerEl.textContent = fmt(left);
+  barEl.style.width = ((totalSec - left) / totalSec * 100) + '%';
 
-        function takePhoto() {
-            if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
-            
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
+  // предупреждение мигает всё быстрее к концу
+  if (left <= 60) {
+    warnEl.textContent = '⚠ КРИТИЧЕСКАЯ ДЕКЛАССИФИКАЦИЯ — ДО ОТКЛЮЧЕНИЯ МЕНЬШЕ МИНУТЫ ⚠';
+  }
+  if (left <= 10) {
+    statusEl.textContent = 'СВЯЗЬ НЕСТАБИЛЬНА... ПАКЕТЫ ТЕРЯЮТСЯ...';
+  }
 
-            if (currentStage === 'corridor') {
-                // Этап 1: Коридор
-                showScreen('screen-loading-1'); // 5 сек
-                
-                setTimeout(() => {
-                    showScreen('screen-admin'); // 10 сек
-                    
-                    setTimeout(() => {
-                        // Переходим на этап "Постель" (включаем камеру)
-                        startCamera('bed');
-                    }, 10000); 
+  if (left <= 0) {
+    clearInterval(lagInterval);
+    startShutdown();
+    return;
+  }
+}
 
-                }, 5000);
-                
-            } else if (currentStage === 'bed') {
-                // Этап 2: Постель
-                // Включаем ФИНАЛЬНУЮ загрузку на 20 секунд
-                showScreen('screen-final-loading'); 
-                
-                setTimeout(() => {
-                    if (isFailed) {
-                        showScreen('screen-fail');
-                    } else {
-                        showScreen('screen-success');
-                        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 300]);
-                    }
-                }, 20000); // 20 секунд
-            }
-        }
+const timerInterval = setInterval(tick, 1000);
 
-        function triggerFail() {
-            if (document.getElementById('screen-success').classList.contains('active') || 
-                document.getElementById('screen-fail').classList.contains('active')) {
-                return;
-            }
-            
-            isFailed = true;
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            if (stream) stream.getTracks().forEach(track => track.stop());
-            showScreen('screen-fail');
-        }
-    </script>
+/* фаза 2: сервер выключился */
+function startShutdown() {
+  barEl.style.width = '100%';
+  timerEl.textContent = '00:00';
+  wrapEl.classList.remove('glitch');
+
+  // «нет соединения с сервером»
+  warnEl.style.display = 'block';
+  warnEl.style.background = '#000';
+  warnEl.style.color = '#f00';
+  warnEl.textContent = 'НЕТ СОЕДИНЕНИЯ С СЕРВЕРОМ';
+  statusEl.textContent = '';
+  wrapEl.innerHTML = '<h1 style="color:#f00">НЕТ СОЕДИНЕНИЯ С СЕРВЕРОМ</h1>';
+
+  setTimeout(() => {
+    // «ошибка 505»
+    warnEl.textContent = 'ОШИБКА 505 — HTTP VERSION NOT SUPPORTED';
+    wrapEl.innerHTML = '<h1 style="color:#f00">ОШИБКА 505</h1>' +
+                       '<div id="status" style="color:#ff0;margin-top:20px">' +
+                       'Сервер не поддерживает данную версию протокола...</div>';
+  }, 4000);
+
+  setTimeout(startSelfDestruct, 8000);
+}
+
+/* фаза 3: самоуничтожение ПК */
+function startSelfDestruct() {
+  wrapEl.style.display = 'none';
+  warnEl.style.display = 'none';
+  finalEl.style.display = 'flex';
+
+  let s = selfSec;
+
+  const si = setInterval(() => {
+    s--;
+    if (s < 0) s = 0;
+    selfTEl.textContent = fmt(s);
+
+    // «ускоряющееся» мигание и сообщения
+    if (s <= 120) finalSt.textContent = 'УДАЛЕНИЕ СИСТЕМНЫХ ФАЙЛОВ...';
+    if (s <= 60)  finalSt.textContent = 'ПЕРЕЗАПИСЬ СЕКТОРОВ ДИСКА...';
+    if (s <= 30)  finalSt.textContent = 'ФИНАЛЬНАЯ ОЧИСТКА...';
+
+    if (s <= 0) {
+      clearInterval(si);
+      finalSt.textContent = '';
+      finalEl.innerHTML =
+        '<h2 style="color:#fff">СИСТЕМА УНИЧТОЖЕНА</h2>' +
+        '<p class="sub" style="margin-top:20px">ЭТО БЫЛО ТЕСТОВОЕ СООБЩЕНИЕ.</p>' +
+        '<p class="sub">ВАШ КОМПЬЮТЕР В ПОЛНОМ ПОРЯДКЕ.</p>';
+    }
+  }, 1000);
+}
+</script>
 </body>
-    </html>
+</html>
