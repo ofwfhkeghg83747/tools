@@ -2,455 +2,951 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>SECURITY ALERT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f0c29">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Детектор Движения</title>
 <style>
-  html, body {
-    margin: 0; padding: 0; height: 100%;
-    background: #050505; color: #d0d0d0;
-    font-family: "Consolas", "Courier New", monospace;
-    overflow: hidden; user-select: none;
-  }
-  /* ---------- ОКНО ОШИБКИ БЕЗОПАСНОСТИ ---------- */
-  #secModal {
-    position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0,0,0,0.85);
-    display: flex; align-items: center; justify-content: center;
-  }
-  #secBox {
-    width: 520px; max-width: 92vw;
-    background: #1a1a1a;
-    border: 1px solid #444;
-    box-shadow: 0 0 40px rgba(255,0,0,0.35);
-    border-radius: 4px;
-    overflow: hidden;
-    animation: pop 0.25s ease-out;
-  }
-  @keyframes pop { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
-  #secBox .title {
-    background: #8b0000; color: #fff;
-    padding: 10px 14px; font-weight: bold; font-size: 15px;
-    display: flex; align-items: center; gap: 10px;
-    letter-spacing: 1px;
-  }
-  #secBox .title .ico {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: #f00; color: #000;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 18px;
-    animation: blinkRed 0.8s infinite alternate;
-  }
-  @keyframes blinkRed { from{opacity:1} to{opacity:0.45} }
-  #secBox .body {
-    padding: 22px 20px; font-size: 14px; line-height: 1.6;
-    color: #ddd;
-  }
-  #secBox .body b { color: #ff4444; }
-  #secBox .body .code {
-    display: inline-block; margin-top: 10px;
-    background: #000; padding: 4px 8px; border: 1px solid #333;
-    color: #0f0; font-size: 13px;
-  }
-  #secBox .footer {
-    padding: 14px 20px; text-align: right;
-    border-top: 1px solid #333; background: #141414;
-  }
-  #okBtn {
-    background: #222; color: #fff;
-    border: 1px solid #666; padding: 8px 26px;
-    font-family: inherit; font-size: 14px;
-    cursor: pointer; border-radius: 3px;
-    transition: background 0.15s;
-  }
-  #okBtn:hover { background: #8b0000; border-color: #f00; }
-  #okBtn:active { transform: scale(0.97); }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  /* ---------- ОСНОВНОЙ ЭКРАН ---------- */
-  #wrap {
-    height: 100%;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; padding: 20px; box-sizing: border-box;
-  }
-  h1 {
-    font-size: 26px; margin: 0 0 18px; letter-spacing: 3px;
-    color: #ff3333; text-shadow: 0 0 15px rgba(255,0,0,0.7);
-  }
-  #timer {
-    font-size: 72px; font-weight: bold; color: #f33;
-    text-shadow: 0 0 25px #f00, 0 0 5px #fff;
-    margin-bottom: 28px; letter-spacing: 4px;
-  }
-  #barBox {
-    width: 70%; max-width: 720px; height: 32px;
-    border: 2px solid #0f0;
-    box-shadow: 0 0 25px rgba(0,255,0,0.4) inset, 0 0 12px rgba(0,255,0,0.5);
-    position: relative; overflow: hidden; background: #020;
-  }
-  #bar {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, #0f0, #ff0, #f00);
-    box-shadow: 0 0 20px #f00;
-  }
-  #status {
-    margin-top: 24px; font-size: 16px; color: #ff0;
-    min-height: 26px; text-shadow: 0 0 8px #ff0;
-    letter-spacing: 1px;
-  }
-  #warning {
-    position: fixed; top: 0; left: 0; right: 0;
-    background: #8b0000; color: #fff; font-weight: bold;
-    padding: 12px; font-size: 17px; text-align: center;
-    display: none; letter-spacing: 2px;
-    animation: blinkWarn 0.6s infinite alternate;
-    z-index: 900;
-    border-bottom: 2px solid #f00;
-  }
-  @keyframes blinkWarn { from{opacity:1} to{opacity:0.55} }
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 
-  .glitch { animation: glitch 0.14s infinite; }
-  @keyframes glitch {
-    0%   { transform: translate(0,0);   filter: none; }
-    25%  { transform: translate(-4px,2px); filter: hue-rotate(40deg); }
-    50%  { transform: translate(4px,-2px); filter: hue-rotate(-40deg); }
-    75%  { transform: translate(-2px,-1px); filter: brightness(1.4); }
-    100% { transform: translate(2px,1px);  filter: none; }
-  }
+body {
+  background: #0f0c29;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
 
-  /* ---------- ФИНАЛ ---------- */
-  #final {
-    display: none;
-    position: fixed; inset: 0;
-    background: #000; color: #f00;
-    flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; z-index: 1000; padding: 20px; box-sizing: border-box;
-  }
-  #final h2 { font-size: 44px; margin: 0 0 18px; letter-spacing: 6px;
-    text-shadow: 0 0 30px #f00; }
-  #final p  { font-size: 19px; margin: 8px; color: #ff0; }
-  #selfTimer { font-size: 80px; color: #f00; margin: 22px 0;
-    text-shadow: 0 0 30px #f00; letter-spacing: 6px; }
-  .sub { color: #0f0; font-size: 15px; letter-spacing: 1px; }
-  .scanline {
-    position: fixed; left: 0; right: 0; height: 2px; background: rgba(255,0,0,0.15);
-    animation: scan 3s linear infinite; z-index: 1001; pointer-events: none;
-  }
-  @keyframes scan { from{top:0} to{top:100%} }
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+.topbar h1 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ff416c;
+}
+
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #666;
+  transition: background 0.3s;
+}
+
+.dot.active { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
+.dot.alarm { background: #ff0033; box-shadow: 0 0 8px #ff0033; animation: blink 0.3s infinite; }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.camera-wrap {
+  flex: 1;
+  position: relative;
+  background: #000;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.camera-wrap.alarm {
+  animation: alarmBorder 0.4s infinite;
+}
+
+@keyframes alarmBorder {
+  0%, 100% { box-shadow: inset 0 0 0 4px #ff0033; }
+  50% { box-shadow: inset 0 0 0 4px #ff0033, inset 0 0 40px #ff0033; }
+}
+
+#video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scaleX(-1);
+}
+
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+.alarm-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28px;
+  font-weight: 900;
+  color: #ff0033;
+  text-shadow: 0 0 20px #ff0033;
+  background: rgba(0,0,0,0.85);
+  padding: 14px 28px;
+  border-radius: 14px;
+  display: none;
+  letter-spacing: 3px;
+  border: 2px solid #ff0033;
+  white-space: nowrap;
+}
+
+.alarm-banner.active {
+  display: block;
+  animation: bannerPulse 0.3s infinite;
+}
+
+@keyframes bannerPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.motion-indicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.7);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.motion-bar {
+  width: 60px;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.motion-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff88, #ffd200, #ff0033);
+  width: 0%;
+  transition: width 0.1s;
+}
+
+.bottom-panel {
+  flex-shrink: 0;
+  background: rgba(20,20,35,0.98);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+}
+
+.bottom-panel.open {
+  max-height: 55vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.panel-toggle {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,65,108,0.15);
+  border: none;
+  color: #ff416c;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,65,108,0.3);
+}
+
+.panel-content {
+  padding: 12px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #ff416c;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-top: 4px;
+  border-bottom: 1px solid rgba(255,65,108,0.3);
+  padding-bottom: 4px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-group label {
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.value-badge {
+  background: #ff416c;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 46px;
+  text-align: center;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255,65,108,0.7);
+  margin-top: -10px;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  cursor: pointer;
+}
+
+.switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.switch {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider-sw {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: rgba(255,255,255,0.2);
+  border-radius: 28px;
+  transition: 0.3s;
+}
+
+.slider-sw::before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch input:checked + .slider-sw { background: #ff416c; }
+.switch input:checked + .slider-sw::before { transform: translateX(22px); }
+
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+select option { background: #24243e; }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stat-box {
+  background: rgba(0,0,0,0.3);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-box span { color: #888; }
+.stat-box strong { color: #ffb347; font-size: 16px; }
+
+.alert-log {
+  background: rgba(0,0,0,0.4);
+  border-radius: 8px;
+  padding: 8px;
+  max-height: 100px;
+  overflow-y: auto;
+  font-size: 11px;
+  font-family: monospace;
+  color: #ffb347;
+  -webkit-overflow-scrolling: touch;
+}
+
+.alert-log div { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+.controls-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 14px 8px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 0.1s, opacity 0.2s;
+  touch-action: manipulation;
+}
+
+.btn:active { transform: scale(0.95); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-start { background: linear-gradient(135deg, #00b09b, #96c93d); color: #fff; }
+.btn-stop { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; }
+.btn-test { background: linear-gradient(135deg, #f7971e, #ffd200); color: #000; }
+
+.flash-overlay {
+  position: fixed;
+  inset: 0;
+  background: #ff0033;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.1s;
+}
+
+@media (min-width: 800px) {
+  .camera-wrap { max-height: 60vh; }
+  .bottom-panel.open { max-height: 40vh; }
+}
 </style>
 </head>
 <body>
 
-<!-- Окно ошибки безопасности -->
-<div id="secModal">
-  <div id="secBox">
-    <div class="title">
-      <span class="ico">!</span>
-      SECURITY ALERT — НАРУШЕНИЕ БЕЗОПАСНОСТИ
-    </div>
-    <div class="body">
-      Обнаружена <b>критическая ошибка безопасности</b>.<br>
-      Несанкционированное подключение к защищённому серверу.<br><br>
-      Для продолжения необходимо подтвердить получение уведомления.<br>
-      <span class="code">ERR_SEC_DECLASSIFY_0x505</span>
-    </div>
-    <div class="footer">
-      <button id="okBtn">ОК</button>
-    </div>
+<div class="topbar">
+  <h1>ДЕТЕКТОР ДВИЖЕНИЯ</h1>
+  <div class="topbar-status">
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Не активна</span>
   </div>
 </div>
 
-<div id="warning">⚠ ВНИМАНИЕ: ОБНАРУЖЕНА ДЕКЛАССИФИКАЦИЯ СЕРВЕРА ⚠</div>
-
-<div id="wrap">
-  <h1>СЕРВЕР: ДЕКЛАССИФИКАЦИЯ</h1>
-  <div id="timer">15:00</div>
-  <div id="barBox"><div id="bar"></div></div>
-  <div id="status">Установка соединения...</div>
+<div class="camera-wrap" id="cameraWrap">
+  <video id="video" autoplay playsinline muted></video>
+  <canvas id="overlay"></canvas>
+  <div class="alarm-banner" id="alarmBanner">ДВИЖЕНИЕ</div>
+  <div class="motion-indicator">
+    <span id="motionScore">0%</span>
+    <div class="motion-bar"><div class="motion-bar-fill" id="motionFill"></div></div>
+  </div>
 </div>
 
-<div id="final">
-  <div class="scanline"></div>
-  <h2>САМОУНИЧТОЖЕНИЕ</h2>
-  <p>ПРОТОКОЛ АКТИВИРОВАН</p>
-  <div id="selfTimer">05:00</div>
-  <p class="sub">Не отключайте питание</p>
-  <p class="sub" id="finalStatus"></p>
+<div class="controls-bar">
+  <button class="btn btn-start" id="btnStart">Старт</button>
+  <button class="btn btn-stop" id="btnStop" disabled>Стоп</button>
+  <button class="btn btn-test" id="btnTest">Тест</button>
 </div>
+
+<button class="panel-toggle" id="panelToggle">НАСТРОЙКИ</button>
+
+<div class="bottom-panel" id="bottomPanel">
+  <div class="panel-content">
+    <div class="section-title">Статистика</div>
+    <div class="stat-grid">
+      <div class="stat-box"><span>Срабатываний</span><strong id="triggerCount">0</strong></div>
+      <div class="stat-box"><span>Громкость</span><strong id="volDisplay">80%</strong></div>
+    </div>
+
+    <div class="section-title">Чувствительность</div>
+    <div class="control-group">
+      <label><span>Порог движения</span><span class="value-badge" id="sensitivityVal">15%</span></label>
+      <input type="range" id="sensitivity" min="1" max="60" value="15">
+    </div>
+
+    <div class="control-group">
+      <label><span>Громкость сирены</span><span class="value-badge" id="volVal">80%</span></label>
+      <input type="range" id="volume" min="0" max="100" value="80">
+    </div>
+
+    <div class="control-group">
+      <label><span>Задержка тишины</span><span class="value-badge" id="delayVal">2с</span></label>
+      <input type="range" id="silenceDelay" min="0" max="10" value="2">
+    </div>
+
+    <div class="control-group">
+      <label><span>Скорость реакции</span><span class="value-badge" id="fpsVal">30 fps</span></label>
+      <input type="range" id="fpsLimit" min="5" max="60" value="30">
+    </div>
+
+    <div class="section-title">Тип сирены</div>
+    <select id="alarmType">
+      <option value="classic">Классическая сирена</option>
+      <option value="police">Полицейская</option>
+      <option value="ambulance">Скорая помощь</option>
+      <option value="buzzer">Зуммер</option>
+      <option value="scream">Крик</option>
+      <option value="beep">Бип-бип</option>
+    </select>
+
+    <div class="section-title">Дополнительно</div>
+
+    <div class="switch-row">
+      <span>Показывать зоны движения</span>
+      <label class="switch"><input type="checkbox" id="showZones" checked><span class="slider-sw"></span></label>
+    </div>
+
+    <div class="switch-row">
+      <span>Звук при детекции</span>
+      <label class="switch"><input type="checkbox" id="soundEnabled" checked><span class="slider-sw"></span></label>
+    </div>
+
+    <div class="switch-row">
+      <span>Вспышка экрана</span>
+      <label class="switch"><input type="checkbox" id="flashEnabled" checked><span class="slider-sw"></span></label>
+    </div>
+
+    <div class="switch-row">
+      <span>Вибрация</span>
+      <label class="switch"><input type="checkbox" id="vibrateEnabled" checked><span class="slider-sw"></span></label>
+    </div>
+
+    <div class="section-title">Журнал событий</div>
+    <div class="alert-log" id="alertLog">
+      <div>Ожидание запуска...</div>
+    </div>
+    <button class="btn btn-stop" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);" id="btnClearLog">Очистить журнал</button>
+  </div>
+</div>
+
+<div class="flash-overlay" id="flashOverlay"></div>
 
 <script>
-/* ====================== НАСТРОЙКИ ====================== */
-const TOTAL_MIN = 15;
-const SELF_MIN  = 5;
-const LAG_EVERY = 1000;
-/* ======================================================== */
+'use strict';
 
-const totalSec = TOTAL_MIN * 60;
-const selfSec  = SELF_MIN  * 60;
+const video = document.getElementById('video');
+const overlay = document.getElementById('overlay');
+const ctx = overlay.getContext('2d');
+const cameraWrap = document.getElementById('cameraWrap');
+const statusDot = document.getElementById('statusDot');
+const statusText = document.getElementById('statusText');
+const alarmBanner = document.getElementById('alarmBanner');
+const motionScoreEl = document.getElementById('motionScore');
+const motionFill = document.getElementById('motionFill');
+const triggerCountEl = document.getElementById('triggerCount');
+const alertLog = document.getElementById('alertLog');
+const flashOverlay = document.getElementById('flashOverlay');
 
-const timerEl  = document.getElementById('timer');
-const barEl    = document.getElementById('bar');
-const statusEl = document.getElementById('status');
-const warnEl   = document.getElementById('warning');
-const wrapEl   = document.getElementById('wrap');
-const finalEl  = document.getElementById('final');
-const selfTEl  = document.getElementById('selfTimer');
-const finalSt  = document.getElementById('finalStatus');
-const secModal = document.getElementById('secModal');
-const okBtn    = document.getElementById('okBtn');
+const btnStart = document.getElementById('btnStart');
+const btnStop = document.getElementById('btnStop');
+const btnTest = document.getElementById('btnTest');
+const btnClearLog = document.getElementById('btnClearLog');
+const panelToggle = document.getElementById('panelToggle');
+const bottomPanel = document.getElementById('bottomPanel');
 
-/* ========================================================
-   ЗВУКОВОЙ ДВИЖОК (Web Audio API) — без внешних файлов
-   ======================================================== */
-let actx = null;
-let masterGain = null;
-let alarmOsc = null, alarmGain = null;
-let noiseSrc = null, noiseGain = null;
-let beatTimer = null;
-let alarmTimer = null;
+const sensitivityEl = document.getElementById('sensitivity');
+const sensitivityVal = document.getElementById('sensitivityVal');
+const volumeEl = document.getElementById('volume');
+const volVal = document.getElementById('volVal');
+const volDisplay = document.getElementById('volDisplay');
+const silenceDelayEl = document.getElementById('silenceDelay');
+const delayVal = document.getElementById('delayVal');
+const fpsLimitEl = document.getElementById('fpsLimit');
+const fpsVal = document.getElementById('fpsVal');
+const alarmTypeEl = document.getElementById('alarmType');
 
-function initAudio() {
-  if (actx) return;
-  actx = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = actx.createGain();
-  masterGain.gain.value = 0.55;
-  masterGain.connect(actx.destination);
-}
+const showZonesEl = document.getElementById('showZones');
+const soundEnabledEl = document.getElementById('soundEnabled');
+const flashEnabledEl = document.getElementById('flashEnabled');
+const vibrateEnabledEl = document.getElementById('vibrateEnabled');
 
-/* низкий гул (страшный фон) */
-function startDrone() {
-  if (!actx) return;
-  const osc = actx.createOscillator();
-  const g   = actx.createGain();
-  osc.type = 'sawtooth';
-  osc.frequency.value = 55;
-  g.gain.value = 0.05;
-  osc.connect(g); g.connect(masterGain);
-  osc.start();
+let stream = null;
+let running = false;
+let previousFrame = null;
+let alarmActive = false;
+let lastMotionTime = 0;
+let triggerCount = 0;
+let audioCtx = null;
+let alarmOscillator = null;
+let alarmGain = null;
+let alarmInterval = null;
+let lastFrameTime = 0;
+let frameInterval = 1000 / 30;
+let flashInterval = null;
 
-  const osc2 = actx.createOscillator();
-  const g2   = actx.createGain();
-  osc2.type = 'sine';
-  osc2.frequency.value = 41;
-  g2.gain.value = 0.08;
-  osc2.connect(g2); g2.connect(masterGain);
-  osc2.start();
-}
-
-/* белый шум (шипение/помехи) */
-function startNoise() {
-  if (!actx || noiseSrc) return;
-  const bufferSize = 2 * actx.sampleRate;
-  const buffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-  noiseSrc = actx.createBufferSource();
-  noiseSrc.buffer = buffer; noiseSrc.loop = true;
-  noiseGain = actx.createGain();
-  noiseGain.gain.value = 0.02;
-  const filter = actx.createBiquadFilter();
-  filter.type = 'bandpass'; filter.frequency.value = 1200; filter.Q.value = 0.7;
-  noiseSrc.connect(filter); filter.connect(noiseGain); noiseGain.connect(masterGain);
-  noiseSrc.start();
-}
-
-/* сирена тревоги (плавно качается) */
-function startSiren() {
-  if (!actx) return;
-  alarmOsc = actx.createOscillator();
-  alarmGain = actx.createGain();
-  alarmOsc.type = 'square';
-  alarmOsc.frequency.value = 660;
-  alarmGain.gain.value = 0.0;
-  alarmOsc.connect(alarmGain); alarmGain.connect(masterGain);
-  alarmOsc.start();
-
-  let up = true;
-  alarmTimer = setInterval(() => {
-    if (!actx) return;
-    const now = actx.currentTime;
-    alarmOsc.frequency.cancelScheduledValues(now);
-    alarmOsc.frequency.linearRampToValueAtTime(up ? 880 : 440, now + 0.6);
-    up = !up;
-  }, 650);
-}
-
-/* короткий «бип» */
-function beep(freq = 880, dur = 0.08, vol = 0.25) {
-  if (!actx) return;
-  const o = actx.createOscillator();
-  const g = actx.createGain();
-  o.type = 'square'; o.frequency.value = freq;
-  g.gain.setValueAtTime(vol, actx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur);
-  o.connect(g); g.connect(masterGain);
-  o.start(); o.stop(actx.currentTime + dur + 0.02);
-}
-
-/* «сердцебиение» (страшный ритм) */
-function startHeartbeat() {
-  if (beatTimer) return;
-  beatTimer = setInterval(() => {
-    beep(70, 0.16, 0.35);
-    setTimeout(() => beep(55, 0.22, 0.3), 180);
-  }, 1200);
-}
-
-/* жуткий «удар» при финале */
-function impact() {
-  if (!actx) return;
-  const o = actx.createOscillator();
-  const g = actx.createGain();
-  o.type = 'sawtooth';
-  o.frequency.setValueAtTime(120, actx.currentTime);
-  o.frequency.exponentialRampToValueAtTime(20, actx.currentTime + 1.2);
-  g.gain.setValueAtTime(0.5, actx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 1.4);
-  o.connect(g); g.connect(masterGain);
-  o.start(); o.stop(actx.currentTime + 1.5);
-}
-
-/* ========================================================
-   ЛОГИКА СТРАНИЦЫ
-   ======================================================== */
-
-okBtn.addEventListener('click', () => {
-  initAudio();                 // звук можно запустить только по клику
-  secModal.style.display = 'none';
-
-  // страшный фон
-  startDrone();
-  startNoise();
-  startSiren();
-  alarmGain.gain.linearRampToValueAtTime(0.12, actx.currentTime + 2);
-  beep(1200, 0.12, 0.3);
-
-  startMainSequence();
+panelToggle.addEventListener('click', () => {
+  bottomPanel.classList.toggle('open');
+  panelToggle.textContent = bottomPanel.classList.contains('open') ? 'СКРЫТЬ' : 'НАСТРОЙКИ';
 });
 
-function startMainSequence() {
-  let left = totalSec;
-
-  setTimeout(() => {
-    warnEl.style.display = 'block';
-    statusEl.textContent = 'ВНИМАНИЕ: сервер деклассифицируется';
-  }, 3000);
-
-  const lagInterval = setInterval(() => {
-    wrapEl.classList.add('glitch');
-    setTimeout(() => wrapEl.classList.remove('glitch'), 150);
-    // случайные короткие помехи
-    if (Math.random() < 0.35) beep(200 + Math.random() * 400, 0.05, 0.12);
-    // ускоряем сирену ближе к концу
-    if (alarmTimer && left < 120) {
-      // ничего, просто оставляем
-    }
-  }, LAG_EVERY);
-
-  const timerInterval = setInterval(() => {
-    left--;
-    if (left < 0) left = 0;
-    timerEl.textContent = fmt(left);
-    barEl.style.width = ((totalSec - left) / totalSec * 100) + '%';
-
-    if (left === totalSec - 60) {
-      startHeartbeat(); // через минуту добавляем сердцебиение
-    }
-    if (left <= 60) {
-      warnEl.textContent = '⚠ КРИТИЧЕСКАЯ ДЕКЛАССИФИКАЦИЯ — ДО ОТКЛЮЧЕНИЯ МЕНЬШЕ МИНУТЫ ⚠';
-      if (alarmGain) alarmGain.gain.linearRampToValueAtTime(0.22, actx.currentTime + 1);
-    }
-    if (left <= 10) {
-      statusEl.textContent = 'СВЯЗЬ НЕСТАБИЛЬНА... ПАКЕТЫ ТЕРЯЮТСЯ...';
-    }
-    if (left <= 0) {
-      clearInterval(lagInterval);
-      clearInterval(timerInterval);
-      startShutdown();
-    }
-  }, 1000);
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
 }
 
-function fmt(sec) {
-  const m = Math.floor(sec / 60).toString().padStart(2, '0');
-  const s = (sec % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
+function startAlarmSound() {
+  if (!soundEnabledEl.checked) return;
+  initAudio();
+  stopAlarmSound();
+
+  alarmGain = audioCtx.createGain();
+  alarmGain.gain.value = 0;
+  alarmGain.connect(audioCtx.destination);
+
+  alarmOscillator = audioCtx.createOscillator();
+  alarmOscillator.type = 'sawtooth';
+  alarmOscillator.connect(alarmGain);
+  alarmOscillator.start();
+
+  const vol = parseFloat(volumeEl.value) / 100;
+  alarmGain.gain.setTargetAtTime(vol * 0.35, audioCtx.currentTime, 0.05);
+
+  playSirenPattern();
 }
 
-function startShutdown() {
-  barEl.style.width = '100%';
-  timerEl.textContent = '00:00';
-  wrapEl.classList.remove('glitch');
+function playSirenPattern() {
+  if (alarmInterval) clearInterval(alarmInterval);
+  const type = alarmTypeEl.value;
+  const now = () => audioCtx.currentTime;
 
-  // резко обрываем звук сервера, оставляем глухой фон
-  if (alarmGain) alarmGain.gain.linearRampToValueAtTime(0.0, actx.currentTime + 0.4);
-  if (alarmTimer) clearInterval(alarmTimer);
+  switch (type) {
+    case 'classic':
+      alarmOscillator.type = 'sawtooth';
+      alarmInterval = setInterval(() => {
+        if (!alarmActive || !alarmOscillator) return;
+        const t = now();
+        alarmOscillator.frequency.setValueAtTime(600, t);
+        alarmOscillator.frequency.linearRampToValueAtTime(1200, t + 0.4);
+      }, 400);
+      break;
 
-  warnEl.style.display = 'block';
-  warnEl.style.background = '#000';
-  warnEl.style.color = '#f00';
-  warnEl.textContent = 'НЕТ СОЕДИНЕНИЯ С СЕРВЕРОМ';
-  wrapEl.innerHTML = '<h1 style="color:#f00">НЕТ СОЕДИНЕНИЯ С СЕРВЕРОМ</h1>';
+    case 'police': {
+      alarmOscillator.type = 'square';
+      let hiLo = false;
+      alarmInterval = setInterval(() => {
+        if (!alarmActive || !alarmOscillator) return;
+        alarmOscillator.frequency.setValueAtTime(hiLo ? 900 : 1400, now());
+        hiLo = !hiLo;
+      }, 300);
+      break;
+    }
 
-  beep(200, 0.4, 0.3);
+    case 'ambulance':
+      alarmOscillator.type = 'sine';
+      alarmInterval = setInterval(() => {
+        if (!alarmActive || !alarmOscillator) return;
+        const t = now();
+        alarmOscillator.frequency.setValueAtTime(1800, t);
+        alarmOscillator.frequency.linearRampToValueAtTime(2200, t + 0.2);
+        alarmOscillator.frequency.linearRampToValueAtTime(1800, t + 0.4);
+      }, 500);
+      break;
 
-  setTimeout(() => {
-    warnEl.textContent = 'ОШИБКА 505 — HTTP VERSION NOT SUPPORTED';
-    wrapEl.innerHTML =
-      '<h1 style="color:#f00">ОШИБКА 505</h1>' +
-      '<div style="color:#ff0;margin-top:20px">Сервер не поддерживает данную версию протокола...</div>';
-    beep(150, 0.6, 0.35);
-  }, 4000);
+    case 'buzzer':
+      alarmOscillator.type = 'square';
+      alarmInterval = setInterval(() => {
+        if (!alarmActive || !alarmOscillator) return;
+        alarmOscillator.frequency.setValueAtTime(150, now());
+      }, 100);
+      break;
 
-  setTimeout(startSelfDestruct, 8000);
+    case 'scream':
+      alarmOscillator.type = 'sawtooth';
+      alarmInterval = setInterval(() => {
+        if (!alarmActive || !alarmOscillator) return;
+        alarmOscillator.frequency.setValueAtTime(400 + Math.random() * 1600, now());
+      }, 50);
+      break;
+
+    case 'beep': {
+      alarmOscillator.type = 'sine';
+      let beepOn = false;
+      alarmInterval = setInterval(() => {
+        if (!alarmActive || !alarmGain) return;
+        beepOn = !beepOn;
+        const vol = parseFloat(volumeEl.value) / 100;
+        alarmGain.gain.setTargetAtTime(beepOn ? vol * 0.4 : 0.001, now(), 0.01);
+      }, 150);
+      break;
+    }
+  }
 }
 
-function startSelfDestruct() {
-  wrapEl.style.display = 'none';
-  warnEl.style.display = 'none';
-  finalEl.style.display = 'flex';
+function stopAlarmSound() {
+  if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+  if (alarmOscillator) {
+    try { alarmOscillator.stop(); alarmOscillator.disconnect(); } catch (e) {}
+    alarmOscillator = null;
+  }
+  if (alarmGain) {
+    try { alarmGain.disconnect(); } catch (e) {}
+    alarmGain = null;
+  }
+}
 
-  impact();
+function startFlash() {
+  if (!flashEnabledEl.checked) return;
+  if (flashInterval) clearInterval(flashInterval);
+  let on = false;
+  flashInterval = setInterval(() => {
+    if (!alarmActive) {
+      flashOverlay.style.opacity = '0';
+      clearInterval(flashInterval);
+      flashInterval = null;
+      return;
+    }
+    on = !on;
+    flashOverlay.style.opacity = on ? '0.25' : '0';
+  }, 250);
+}
 
-  // нарастающий вой
-  if (actx) {
-    const o = actx.createOscillator();
-    const g = actx.createGain();
-    o.type = 'sawtooth';
-    o.frequency.setValueAtTime(80, actx.currentTime);
-    o.frequency.linearRampToValueAtTime(1000, actx.currentTime + selfSec);
-    g.gain.setValueAtTime(0.0, actx.currentTime);
-    g.gain.linearRampToValueAtTime(0.12, actx.currentTime + selfSec * 0.5);
-    o.connect(g); g.connect(masterGain);
-    o.start(); o.stop(actx.currentTime + selfSec + 1);
+function triggerAlarm() {
+  lastMotionTime = Date.now();
+  if (alarmActive) return;
+
+  alarmActive = true;
+  triggerCount++;
+  triggerCountEl.textContent = triggerCount;
+
+  cameraWrap.classList.add('alarm');
+  statusDot.classList.add('alarm');
+  statusDot.classList.remove('active');
+  statusText.textContent = 'ДВИЖЕНИЕ';
+  alarmBanner.classList.add('active');
+
+  startAlarmSound();
+  startFlash();
+
+  if (vibrateEnabledEl.checked && navigator.vibrate) {
+    navigator.vibrate([200, 100, 200, 100, 200]);
   }
 
-  let s = selfSec;
-
-  // бип каждую секунду
-  const si = setInterval(() => {
-    s--;
-    if (s < 0) s = 0;
-    selfTEl.textContent = fmt(s);
-
-    if (s % 5 === 0) beep(440, 0.06, 0.18);
-
-    if (s <= 120) finalSt.textContent = 'УДАЛЕНИЕ СИСТЕМНЫХ ФАЙЛОВ...';
-    if (s <= 60)  finalSt.textContent = 'ПЕРЕЗАПИСЬ СЕКТОРОВ ДИСКА...';
-    if (s <= 30)  finalSt.textContent = 'ФИНАЛЬНАЯ ОЧИСТКА...';
-
-    if (s <= 0) {
-      clearInterval(si);
-
-      // «взрыв» звука
-      impact();
-      if (noiseGain) noiseGain.gain.linearRampToValueAtTime(0.0, actx.currentTime + 1.5);
-
-      finalEl.innerHTML =
-        '<h2 style="color:#fff">СИСТЕМА УНИЧТОЖЕНА</h2>' +
-        '<p class="sub" style="margin-top:20px">ЭТО БЫЛО ТЕСТОВОЕ СООБЩЕНИЕ.</p>' +
-        '<p class="sub">ВАШ КОМПЬЮТЕР В ПОЛНОМ ПОРЯДКЕ.</p>';
-    }
-  }, 1000);
+  logAlert('Движение. Срабатывание #' + triggerCount);
 }
+
+function clearAlarm() {
+  if (!alarmActive) return;
+  alarmActive = false;
+  cameraWrap.classList.remove('alarm');
+  statusDot.classList.remove('alarm');
+  if (running) {
+    statusDot.classList.add('active');
+    statusText.textContent = 'Наблюдение';
+  } else {
+    statusText.textContent = 'Не активна';
+  }
+  alarmBanner.classList.remove('active');
+  stopAlarmSound();
+  flashOverlay.style.opacity = '0';
+  if (flashInterval) { clearInterval(flashInterval); flashInterval = null; }
+}
+
+function logAlert(msg) {
+  const time = new Date().toLocaleTimeString('ru-RU');
+  const div = document.createElement('div');
+  div.textContent = '[' + time + '] ' + msg;
+  alertLog.prepend(div);
+  while (alertLog.children.length > 30) {
+    alertLog.removeChild(alertLog.lastChild);
+  }
+}
+
+const smallCanvas = document.createElement('canvas');
+const smallCtx = smallCanvas.getContext('2d', { willReadFrequently: true });
+const GRID_W = 32;
+const GRID_H = 24;
+smallCanvas.width = GRID_W;
+smallCanvas.height = GRID_H;
+
+function processFrame() {
+  if (!running) return;
+
+  requestAnimationFrame(processFrame);
+
+  if (!video.videoWidth) return;
+
+  const now = performance.now();
+  if (now - lastFrameTime < frameInterval) return;
+  lastFrameTime = now;
+
+  const vw = video.videoWidth;
+  const vh = video.videoHeight;
+
+  if (overlay.width !== vw || overlay.height !== vh) {
+    overlay.width = vw;
+    overlay.height = vh;
+  }
+
+  smallCtx.drawImage(video, 0, 0, GRID_W, GRID_H);
+  const frameData = smallCtx.getImageData(0, 0, GRID_W, GRID_H);
+  const pixels = frameData.data;
+  const threshold = parseFloat(sensitivityEl.value) * 2.55;
+
+  ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+  if (previousFrame) {
+    const prevPixels = previousFrame;
+    let motionPixels = 0;
+    const totalPixels = GRID_W * GRID_H;
+
+    for (let y = 0; y < GRID_H; y++) {
+      for (let x = 0; x < GRID_W; x++) {
+        const i = (y * GRID_W + x) * 4;
+        const dr = Math.abs(pixels[i] - prevPixels[i]);
+        const dg = Math.abs(pixels[i + 1] - prevPixels[i + 1]);
+        const db = Math.abs(pixels[i + 2] - prevPixels[i + 2]);
+        const diff = (dr + dg + db) / 3;
+
+        if (diff > threshold) {
+          motionPixels++;
+          if (showZonesEl.checked) {
+            const px = (x / GRID_W) * vw;
+            const py = (y / GRID_H) * vh;
+            const pw = vw / GRID_W;
+            const ph = vh / GRID_H;
+            ctx.fillStyle = 'rgba(255, 0, 51, 0.4)';
+            ctx.fillRect(px, py, pw, ph);
+          }
+        }
+      }
+    }
+
+    const motionPercent = (motionPixels / totalPixels) * 100;
+    motionScoreEl.textContent = motionPercent.toFixed(1) + '%';
+    motionFill.style.width = Math.min(100, motionPercent * 3) + '%';
+
+    if (motionPercent > 0.5) {
+      triggerAlarm();
+    }
+  }
+
+  previousFrame = new Uint8ClampedArray(pixels);
+
+  if (alarmActive) {
+    const silenceDelay = parseFloat(silenceDelayEl.value) * 1000;
+    const timeSinceMotion = Date.now() - lastMotionTime;
+    if (timeSinceMotion > silenceDelay + 500) {
+      clearAlarm();
+    }
+  }
+}
+
+async function startCamera() {
+  try {
+    initAudio();
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: 'environment' },
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      },
+      audio: false
+    });
+
+    video.srcObject = stream;
+    running = true;
+    previousFrame = null;
+
+    btnStart.disabled = true;
+    btnStop.disabled = false;
+    statusText.textContent = 'Наблюдение';
+    statusDot.classList.add('active');
+
+    logAlert('Камера запущена');
+
+    frameInterval = 1000 / parseInt(fpsLimitEl.value);
+    lastFrameTime = 0;
+    requestAnimationFrame(processFrame);
+  } catch (err) {
+    logAlert('Ошибка камеры: ' + err.message);
+    statusText.textContent = 'Ошибка';
+    alert('Не удалось получить доступ к камере. Разрешите доступ в настройках браузера.');
+  }
+}
+
+function stopCamera() {
+  running = false;
+  clearAlarm();
+  stopAlarmSound();
+
+  if (stream) {
+    stream.getTracks().forEach(t => t.stop());
+    stream = null;
+  }
+  video.srcObject = null;
+  previousFrame = null;
+
+  ctx.clearRect(0, 0, overlay.width, overlay.height);
+  motionScoreEl.textContent = '0%';
+  motionFill.style.width = '0%';
+
+  btnStart.disabled = false;
+  btnStop.disabled = true;
+  statusText.textContent = 'Не активна';
+  statusDot.classList.remove('active', 'alarm');
+
+  logAlert('Камера остановлена');
+}
+
+sensitivityEl.addEventListener('input', () => {
+  sensitivityVal.textContent = sensitivityEl.value + '%';
+});
+
+volumeEl.addEventListener('input', () => {
+  volVal.textContent = volumeEl.value + '%';
+  volDisplay.textContent = volumeEl.value + '%';
+  if (alarmGain && alarmActive) {
+    const vol = parseFloat(volumeEl.value) / 100;
+    alarmGain.gain.setTargetAtTime(vol * 0.35, audioCtx.currentTime, 0.05);
+  }
+});
+
+silenceDelayEl.addEventListener('input', () => {
+  delayVal.textContent = silenceDelayEl.value + 'с';
+});
+
+fpsLimitEl.addEventListener('input', () => {
+  const fps = parseInt(fpsLimitEl.value);
+  fpsVal.textContent = fps + ' fps';
+  frameInterval = 1000 / fps;
+});
+
+alarmTypeEl.addEventListener('change', () => {
+  if (alarmActive) {
+    stopAlarmSound();
+    setTimeout(startAlarmSound, 100);
+  }
+});
+
+btnStart.addEventListener('click', () => {
+  initAudio();
+  startCamera();
+});
+
+btnStop.addEventListener('click', stopCamera);
+
+btnTest.addEventListener('click', () => {
+  initAudio();
+  triggerAlarm();
+  setTimeout(clearAlarm, 3000);
+  logAlert('Тест сирены (3 сек)');
+});
+
+btnClearLog.addEventListener('click', () => {
+  alertLog.innerHTML = '<div>Журнал очищен</div>';
+});
+
+let wakeLock = null;
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+    }
+  } catch (e) {}
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && running) {
+    requestWakeLock();
+  }
+});
+
+logAlert('Готов к работе. Нажмите "Старт"');
 </script>
 </body>
 </html>
