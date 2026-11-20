@@ -116,6 +116,10 @@ select option { background: #24243e; }
       <span>Отправлять статус о движении</span>
       <label class="switch"><input type="checkbox" id="ntfyEnabled" checked><span class="slider-sw"></span></label>
     </div>
+    <div class="switch-row">
+      <span>Принимать команды (1/2)</span>
+      <label class="switch"><input type="checkbox" id="listenEnabled" checked><span class="slider-sw"></span></label>
+    </div>
 
     <div class="section-title">Управление фонариком</div>
     <div class="switch-row">
@@ -203,6 +207,7 @@ const vibrateEnabledEl = document.getElementById('vibrateEnabled');
 
 const ntfyTopicEl = document.getElementById('ntfyTopic');
 const ntfyEnabledEl = document.getElementById('ntfyEnabled');
+const listenEnabledEl = document.getElementById('listenEnabled');
 const torchManualEl = document.getElementById('torchManual');
 const torchAutoEl = document.getElementById('torchAuto');
 
@@ -222,6 +227,10 @@ let lastFrameTime = 0;
 let frameInterval = 1000 / 30;
 let flashInterval = null;
 let torchSupported = false;
+let torchState = false;
+
+// SSE подписка на команды
+let ntfySse = null;
 
 panelToggle.addEventListener('click', () => {
   bottomPanel.classList.toggle('open');
@@ -239,6 +248,7 @@ async function toggleTorch(state) {
     if (caps.torch) {
       torchSupported = true;
       await videoTrack.applyConstraints({ advanced: [{ torch: state }] });
+      torchState = state;
       logAlert('Фонарик: ' + (state ? 'ВКЛ' : 'ВЫКЛ'));
     } else {
       torchSupported = false;
@@ -253,7 +263,7 @@ async function toggleTorch(state) {
 
 torchManualEl.addEventListener('change', () => toggleTorch(torchManualEl.checked));
 
-// ---- NTFY (через no-cors, чтобы обойти блокировку) ----
+// ---- NTFY: ОТПРАВКА ----
 async function sendNtfyStatus(isMotion) {
   const topic = ntfyTopicEl.value.trim() || 'moy_detektor_123';
   if (!ntfyEnabledEl.checked) return;
@@ -278,12 +288,74 @@ async function sendNtfyStatus(isMotion) {
       },
       body: message
     });
-    // При no-cors ответ непрозрачный, но запрос уходит.
     logAlert(isMotion ? 'ntfy: отправлено (движение)' : 'ntfy: отправлено (покой)');
   } catch (err) {
     logAlert('ntfy ошибка: ' + err.message);
   }
 }
+
+// ---- NTFY: ПРИЁМ КОМАНД (SSE) ----
+function startNtfyListener() {
+  const topic = ntfyTopicEl.value.trim() || 'moy_detektor_123';
+  const url = 'https://ntfy.sh/' + encodeURIComponent(topic) + '/sse';
+
+  if (ntfySse) { try { ntfySse.close(); } catch (e) {} ntfySse = null; }
+
+  if (!listenEnabledEl.checked) {
+    logAlert('Приём команд отключён');
+    return;
+  }
+
+  try {
+    ntfySse = new EventSource(url);
+    logAlert('Слушаю команды в теме: ' + topic);
+
+    ntfySse.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        // Игнорируем собственные сообщения (мы отправляли их как "Detector")
+        const title = (data.title || '').toString().toLowerCase();
+        if (title === 'detector') return;
+
+        const text = (data.message || '').toString().trim();
+        if (text === '1') {
+          toggleTorch(true);
+          torchManualEl.checked = true;
+          logAlert('Удалённая команда: фонарик ВКЛ');
+        } else if (text === '2') {
+          toggleTorch(false);
+          torchManualEl.checked = false;
+          logAlert('Удалённая команда: фонарик ВЫКЛ');
+        } else if (text.length > 0) {
+          logAlert('Команда получена, неизвестная: ' + text);
+        }
+      } catch (e) {
+        logAlert('Ошибка обработки команды: ' + e.message);
+      }
+    };
+
+    ntfySse.onerror = () => {
+      logAlert('Потеря связи с ntfy. Переподключение...');
+      // EventSource переподключается сам, но на всякий случай
+    };
+  } catch (e) {
+    logAlert('Не удалось запустить приём: ' + e.message);
+  }
+}
+
+function stopNtfyListener() {
+  if (ntfySse) { try { ntfySse.close(); } catch (e) {} ntfySse = null; }
+  logAlert('Приём команд остановлен');
+}
+
+listenEnabledEl.addEventListener('change', () => {
+  if (listenEnabledEl.checked) startNtfyListener();
+  else stopNtfyListener();
+});
+
+ntfyTopicEl.addEventListener('change', () => {
+  if (listenEnabledEl.checked) startNtfyListener();
+});
 
 // ---- ЗВУК ----
 function initAudio() {
@@ -406,7 +478,7 @@ function triggerAlarm() {
   startAlarmSound();
   startFlash();
 
-  if (torchAutoEl.checked && torchSupported) toggleTorch(true);
+  if (torchAutoEl.checked && torchSupported && !torchState) toggleTorch(true);
 
   sendNtfyStatus(true);
 
@@ -427,7 +499,10 @@ function clearAlarm() {
   flashOverlay.style.opacity = '0';
   if (flashInterval) { clearInterval(flashInterval); flashInterval = null; }
 
-  if (torchAutoEl.checked && torchSupported && !torchManualEl.checked) toggleTorch(false);
+  // Не гасим фонарик, если пользователь включил его вручную (или по команде 1)
+  if (torchAutoEl.checked && torchSupported && !torchManualEl.checked && torchState) {
+    toggleTorch(false);
+  }
 
   sendNtfyStatus(false);
 }
@@ -555,6 +630,9 @@ async function startCamera() {
     statusDot.classList.add('active');
     logAlert('Камера запущена. ' + video.videoWidth + 'x' + video.videoHeight);
 
+    // Запускаем приём команд сразу после старта камеры
+    if (listenEnabledEl.checked) startNtfyListener();
+
     lastFrameTime = 0;
     requestAnimationFrame(processFrame);
   } catch (err) {
@@ -570,6 +648,7 @@ function stopCamera() {
   running = false;
   clearAlarm();
   stopAlarmSound();
+  stopNtfyListener();
   if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
   video.srcObject = null;
   videoTrack = null;
