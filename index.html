@@ -213,7 +213,7 @@ let running = false;
 let previousFrame = null;
 let alarmActive = false;
 let lastMotionTime = 0;
-let lastWebhookTime = 0;
+let lastNtfyTime = 0;
 let audioCtx = null;
 let alarmOscillator = null;
 let alarmGain = null;
@@ -235,8 +235,8 @@ async function toggleTorch(state) {
     return;
   }
   try {
-    const capabilities = videoTrack.getCapabilities ? videoTrack.getCapabilities() : {};
-    if (capabilities.torch) {
+    const caps = videoTrack.getCapabilities ? videoTrack.getCapabilities() : {};
+    if (caps.torch) {
       torchSupported = true;
       await videoTrack.applyConstraints({ advanced: [{ torch: state }] });
       logAlert('Фонарик: ' + (state ? 'ВКЛ' : 'ВЫКЛ'));
@@ -253,32 +253,35 @@ async function toggleTorch(state) {
 
 torchManualEl.addEventListener('change', () => toggleTorch(torchManualEl.checked));
 
-// ---- NTFY ----
+// ---- NTFY (через no-cors, чтобы обойти блокировку) ----
 async function sendNtfyStatus(isMotion) {
   const topic = ntfyTopicEl.value.trim() || 'moy_detektor_123';
   if (!ntfyEnabledEl.checked) return;
 
   const now = Date.now();
-  if (now - lastWebhookTime < 3000) return; // анти-спам 3 сек
-  lastWebhookTime = now;
+  if (now - lastNtfyTime < 3000) return; // не чаще раза в 3 сек
+  lastNtfyTime = now;
 
-  const url = 'https://ntfy.sh/' + topic;
-  const message = isMotion ? 'ВНИМАНИЕ! ОБНАРУЖЕНО ДВИЖЕНИЕ!' : 'Движение прекратилось. Обстановка спокойна.';
-  const headers = {
-    'Title': 'Детектор движения',
-    'Priority': isMotion ? 'high' : 'default',
-    'Tags': isMotion ? 'warning' : 'white_check_mark'
-  };
+  const url = 'https://ntfy.sh/' + encodeURIComponent(topic);
+  const message = isMotion
+    ? 'ВНИМАНИЕ! ОБНАРУЖЕНО ДВИЖЕНИЕ!'
+    : 'Движение прекратилось. Обстановка спокойна.';
 
   try {
-    const response = await fetch(url, { method: 'POST', headers: headers, body: message });
-    if (response.ok) {
-      logAlert(isMotion ? 'ntfy: отправлено (Движение)' : 'ntfy: отправлено (Покой)');
-    } else {
-      logAlert('ntfy ошибка: ' + response.status);
-    }
+    await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Title': 'Detector',
+        'Priority': isMotion ? 'high' : 'default',
+        'Tags': isMotion ? 'warning' : 'white_check_mark'
+      },
+      body: message
+    });
+    // При no-cors ответ непрозрачный, но запрос уходит.
+    logAlert(isMotion ? 'ntfy: отправлено (движение)' : 'ntfy: отправлено (покой)');
   } catch (err) {
-    logAlert('ntfy сеть: ' + err.message);
+    logAlert('ntfy ошибка: ' + err.message);
   }
 }
 
@@ -516,21 +519,15 @@ function processFrame() {
 async function startCamera() {
   try {
     initAudio();
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
 
-    // Освобождаем старый поток перед новым
-    if (stream) {
-      stream.getTracks().forEach(t => t.stop());
-      stream = null;
-    }
-
-    // Сначала пробуем заднюю камеру, если не вышло — любую
     try {
       stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: false
       });
     } catch (e1) {
-      logAlert('Задняя камера недоступна, пробуем фронтальную');
+      logAlert('Задняя камера недоступна, берём фронтальную');
       stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
     }
 
@@ -540,12 +537,11 @@ async function startCamera() {
     const caps = videoTrack.getCapabilities ? videoTrack.getCapabilities() : {};
     torchSupported = !!caps.torch;
     if (!torchSupported) {
-      logAlert('Фонарик не поддерживается этим устройством/браузером');
+      logAlert('Фонарик не поддерживается');
       torchAutoEl.checked = false;
       torchManualEl.checked = false;
     }
 
-    // Ждём, пока видео реально начнёт воспроизводиться
     await new Promise((resolve) => {
       if (video.readyState >= 2) return resolve();
       video.onloadedmetadata = () => resolve();
@@ -557,7 +553,7 @@ async function startCamera() {
     btnStop.disabled = false;
     statusText.textContent = 'Наблюдение';
     statusDot.classList.add('active');
-    logAlert('Камера запущена. Разрешение: ' + video.videoWidth + 'x' + video.videoHeight);
+    logAlert('Камера запущена. ' + video.videoWidth + 'x' + video.videoHeight);
 
     lastFrameTime = 0;
     requestAnimationFrame(processFrame);
@@ -565,7 +561,8 @@ async function startCamera() {
     logAlert('Ошибка камеры: ' + err.message);
     statusText.textContent = 'Ошибка камеры';
     statusDot.classList.remove('active');
-    alert('Не удалось получить доступ к камере.\n\nПричина: ' + err.message + '\n\nПроверьте:\n1) Разрешён ли доступ к камере для этого сайта в настройках браузера\n2) Открыта ли страница по HTTPS (или localhost)\n3) Нет ли другой программы, использующей камеру');
+    alert('Не удалось получить доступ к камере.\n\n' + err.message +
+      '\n\nПроверьте:\n1) Разрешён ли доступ к камере в браузере\n2) Открыта ли страница по HTTPS\n3) Не занята ли камера другим приложением');
   }
 }
 
@@ -603,7 +600,7 @@ btnTest.addEventListener('click', () => { initAudio(); triggerAlarm(); setTimeou
 btnClearLog.addEventListener('click', () => { alertLog.innerHTML = '<div>Журнал очищен</div>'; });
 
 // ---- СТАРТ ----
-logAlert('Готов к работе. Тема ntfy: moy_detektor_123');
+logAlert('Готов. Тема ntfy: moy_detektor_123');
 </script>
 </body>
 </html>
