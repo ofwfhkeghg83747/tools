@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Windows — Desktop</title>
+<title>Windows</title>
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -10,87 +10,70 @@
     font-family: "Segoe UI", Tahoma, sans-serif;
     overflow: hidden; user-select: none;
     background: #0b1020;
+    transition: filter 1s ease, background 1s ease;
   }
 
   /* ---------- РАБОЧИЙ СТОЛ ---------- */
   #desktop {
     position: fixed; inset: 0;
-    background:
-      radial-gradient(circle at 30% 20%, #1e3a5f 0%, #0b1020 60%, #000 100%);
-    overflow: auto;
-    padding: 12px;
+    background: radial-gradient(circle at 30% 20%, #1e3a5f 0%, #0b1020 60%, #000 100%);
+    overflow: auto; padding: 12px;
+    transition: background 2s ease;
   }
   #desktop::before {
-    content: "";
-    position: fixed; inset: 0;
+    content: ""; position: fixed; inset: 0;
     background-image:
       linear-gradient(rgba(80,140,255,0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(80,140,255,0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-  #iconGrid {
-    position: relative; z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 100px);
-    grid-auto-rows: 104px;
-    gap: 4px;
+    background-size: 40px 40px; pointer-events: none; z-index: 0;
   }
 
-  /* иконки */
-  .icon {
-    width: 96px; padding: 8px 4px;
-    text-align: center; color: #fff;
-    cursor: pointer; border-radius: 6px;
-    transition: background 0.15s;
-    font-size: 11.5px;
+  /* Испорченные обои (включаются скриптом) */
+  body.infected #desktop {
+    background: #000 url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23000"/><text x="10" y="30" fill="%23f00" font-family="monospace" font-size="12" transform="rotate(15 50 50)">ERROR</text><text x="40" y="70" fill="%23555" font-family="monospace" font-size="10" transform="rotate(-10 50 50)">SYSTEM FAIL</text></svg>') repeat;
+    animation: bgGlitch 0.2s infinite;
   }
-  .icon:hover { background: rgba(255,255,255,0.12); }
-  .icon:active { background: rgba(255,255,255,0.22); }
-  .icon .pic {
-    width: 48px; height: 48px; margin: 0 auto 4px;
-    background: #ffd166;
-    border: 2px solid #c9a227;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: bold; color: #333; font-size: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  }
-  .icon.folder .pic {
-    background: #ffcf4d; border-color: #b8960c;
-    border-radius: 4px 4px 8px 8px;
-    position: relative;
-  }
-  .icon.folder .pic::before {
-    content: "";
-    position: absolute; top: -6px; left: 4px;
-    width: 22px; height: 8px;
-    background: #ffcf4d; border: 2px solid #b8960c;
-    border-bottom: none; border-radius: 4px 4px 0 0;
-  }
-  .icon.folder .pic::after { content: ""; }
-  .icon .name {
-    text-shadow: 0 1px 2px #000; line-height: 1.15;
-    word-break: break-word;
-    max-height: 2.4em; overflow: hidden;
+  body.infected #desktop::before { display: none; }
+  @keyframes bgGlitch {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
   }
 
-  /* ---------- ПАНЕЛЬ ЗАДАЧ ---------- */
+  /* ---------- КРОВЬ ---------- */
+  #bloodContainer {
+    position: fixed; top: 0; left: 0; right: 0; height: 100%;
+    pointer-events: none; z-index: 9999; display: none;
+    overflow: hidden;
+  }
+  .blood-drop {
+    position: absolute; top: -50px;
+    background: linear-gradient(to bottom, rgba(139,0,0,0.9) 0%, rgba(255,0,0,0.8) 80%, rgba(255,0,0,0.1) 100%);
+    border-radius: 0 0 50% 50%;
+    box-shadow: 0 0 8px rgba(255,0,0,0.5);
+    transition: height 3s linear;
+    filter: url(#goo);
+  }
+  .blood-puddle {
+    position: absolute; bottom: 0;
+    background: #8b0000; border-radius: 50% 50% 0 0;
+    box-shadow: 0 -2px 10px rgba(255,0,0,0.6);
+    transition: width 3s ease, height 3s ease, opacity 3s;
+  }
+  svg.goo-filter { position: absolute; width: 0; height: 0; pointer-events: none; }
+
+  /* ---------- ЗАДАЧИ ---------- */
   #taskbar {
     position: fixed; bottom: 0; left: 0; right: 0; height: 48px;
-    background: rgba(10,14,26,0.92);
-    border-top: 1px solid #2a3550;
+    background: rgba(10,14,26,0.92); border-top: 1px solid #2a3550;
     display: flex; align-items: center; padding: 0 10px; gap: 8px;
     color: #dbe4ff; font-size: 13px; z-index: 5000;
     backdrop-filter: blur(6px);
   }
   #startBtn {
-    width: 38px; height: 38px; border-radius: 6px;
+    width: 40px; height: 40px; border-radius: 6px;
     background: #1b6cff; color: #fff; border: none;
-    font-size: 20px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: bold;
+    font-size: 18px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; font-weight: bold;
   }
   #startBtn:hover { background: #3a86ff; }
   #explorerBtn {
@@ -101,271 +84,208 @@
   #explorerBtn:hover { background: #2d3f6e; }
   #clock { margin-left: auto; padding: 0 10px; font-variant-numeric: tabular-nums; }
 
+  /* ---------- МЕНЮ ПУСК ---------- */
+  #startMenu {
+    position: fixed; bottom: 56px; left: 10px; width: 320px;
+    background: rgba(20, 25, 40, 0.95); border: 1px solid #354a7a;
+    border-radius: 8px; z-index: 6000; display: none;
+    flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px); overflow: hidden;
+  }
+  #startMenu .search-box {
+    padding: 12px; border-bottom: 1px solid #2a3550;
+  }
+  #startSearch {
+    width: 100%; background: #0b1020; border: 1px solid #354a7a;
+    color: #fff; padding: 8px 12px; border-radius: 4px; outline: none;
+    font-family: inherit; font-size: 13px;
+  }
+  #startSearch:focus { border-color: #1b6cff; }
+  #startItems { padding: 6px; max-height: 300px; overflow-y: auto; }
+  .start-item {
+    padding: 8px 12px; color: #dbe4ff; font-size: 13px; cursor: pointer;
+    border-radius: 4px; display: flex; align-items: center; gap: 10px;
+  }
+  .start-item:hover { background: #2d3f6e; }
+
+  /* ---------- ИКОНКИ ---------- */
+  #iconGrid {
+    position: relative; z-index: 1; display: grid;
+    grid-template-columns: repeat(auto-fill, 100px); grid-auto-rows: 104px; gap: 4px;
+  }
+  .icon {
+    width: 96px; padding: 8px 4px; text-align: center; color: #fff;
+    cursor: pointer; border-radius: 6px; transition: background 0.15s;
+    font-size: 11.5px;
+  }
+  .icon:hover { background: rgba(255,255,255,0.12); }
+  .icon .pic {
+    width: 48px; height: 48px; margin: 0 auto 4px;
+    background: #ffd166; border: 2px solid #c9a227; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; color: #333; font-size: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  }
+  .icon.locked .pic { background: #8b0000; border-color: #500; color: #fff; }
+  .icon .name { text-shadow: 0 1px 2px #000; line-height: 1.15; word-break: break-word; }
+
   /* ---------- ОКНА ---------- */
   .win {
-    position: fixed; z-index: 4000;
-    background: #f0f0f0; color: #111;
-    border: 1px solid #555;
-    border-radius: 6px; overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-    display: none;
+    position: fixed; z-index: 4000; background: #f0f0f0; color: #111;
+    border: 1px solid #555; border-radius: 6px; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6); display: none;
     animation: winIn 0.18s ease-out;
   }
   @keyframes winIn { from{transform:scale(0.94);opacity:0} to{transform:scale(1);opacity:1} }
-
   .win .titlebar {
     height: 34px; background: linear-gradient(#e8e8e8, #cfcfcf);
-    border-bottom: 1px solid #999;
-    display: flex; align-items: center; padding: 0 8px;
-    font-size: 13px; font-weight: 600; color: #222; gap: 8px;
-    cursor: default;
+    border-bottom: 1px solid #999; display: flex; align-items: center;
+    padding: 0 8px; font-size: 13px; font-weight: 600; color: #222; gap: 8px;
   }
   .win .titlebar .ico {
-    width: 18px; height: 18px; border-radius: 4px;
-    background: #c9a227; display: flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 4px; background: #c9a227;
+    display: flex; align-items: center; justify-content: center;
     font-size: 11px; color: #fff; font-weight: bold;
   }
   .win .titlebar .spacer { flex: 1; }
   .win .titlebar .btns { display: flex; gap: 4px; }
   .win .titlebar .btns button {
-    width: 26px; height: 22px; border: 1px solid #999;
-    background: #e0e0e0; cursor: pointer; font-size: 12px;
-    border-radius: 3px; color: #333;
+    width: 26px; height: 22px; border: 1px solid #999; background: #e0e0e0;
+    cursor: pointer; font-size: 12px; border-radius: 3px; color: #333;
   }
   .win .titlebar .btns button:hover { background: #d0d0d0; }
-  .win .body { padding: 0; }
+
+  /* ---------- ОКНО ВЫПОЛНИТЬ ---------- */
+  #runWin {
+    width: 420px; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: #f0f0f0; border-radius: 8px; border: 1px solid #888;
+  }
+  #runWin .body { padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+  .run-row { display: flex; align-items: center; gap: 12px; }
+  .run-row label { font-size: 12.5px; color: #333; min-width: 65px; }
+  #runInput {
+    flex: 1; border: 1px solid #aaa; padding: 6px 10px; border-radius: 3px;
+    font-family: inherit; font-size: 13px; outline: none;
+  }
+  #runInput:focus { border-color: #1b6cff; }
+  .run-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+  .run-btn {
+    padding: 6px 20px; border-radius: 4px; border: 1px solid #888;
+    background: #e1e1e1; font-family: inherit; font-size: 13px; cursor: pointer;
+  }
+  .run-btn:hover { background: #d0d0d0; }
+  .run-btn.primary { border-color: #1b6cff; background: #fff; }
+  .run-btn.primary:hover { background: #eef4ff; }
 
   /* ---------- ПРОВОДНИК ---------- */
-  #explorerWin {
-    width: 860px; max-width: 96vw;
-    height: 600px; max-height: 92vh;
-    left: 50%; top: 50%; transform: translate(-50%,-50%);
-  }
-  #explorerWin .body {
-    display: flex; flex-direction: column;
-    height: calc(100% - 34px);
-    background: #f7f7f7;
-  }
+  #explorerWin { width: 860px; max-width: 96vw; height: 600px; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+  #explorerWin .body { display: flex; flex-direction: column; height: calc(100% - 34px); background: #f7f7f7; }
   .toolbar {
-    height: 44px; flex: 0 0 auto;
-    background: #ececec; border-bottom: 1px solid #ccc;
-    display: flex; align-items: center; padding: 0 8px; gap: 6px;
-    font-size: 12px;
+    height: 44px; flex: 0 0 auto; background: #ececec; border-bottom: 1px solid #ccc;
+    display: flex; align-items: center; padding: 0 8px; gap: 6px; font-size: 12px;
   }
   .toolbar button {
-    background: #fff; border: 1px solid #bbb;
-    height: 30px; min-width: 34px; padding: 0 8px;
-    border-radius: 4px; cursor: pointer; font-size: 13px;
+    background: #fff; border: 1px solid #bbb; height: 30px; min-width: 34px;
+    padding: 0 8px; border-radius: 4px; cursor: pointer; font-size: 13px;
   }
   .toolbar button:hover { background: #eef4ff; border-color: #1b6cff; }
   .toolbar button:disabled { opacity: 0.45; cursor: default; }
   #pathBar {
     flex: 1; height: 30px; background: #fff; border: 1px solid #bbb;
-    border-radius: 4px; display: flex; align-items: center;
-    padding: 0 8px; font-size: 12.5px; color: #333;
-    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    border-radius: 4px; display: flex; align-items: center; padding: 0 8px;
+    font-size: 12.5px; color: #333; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
   }
-  .explorer-split {
-    flex: 1; display: flex; min-height: 0;
-  }
-  /* левая панель — дерево */
+  .explorer-split { flex: 1; display: flex; min-height: 0; }
   #treePane {
-    width: 240px; flex: 0 0 240px;
-    background: #f0f3f8; border-right: 1px solid #ccc;
-    overflow: auto; padding: 6px;
-    font-size: 12.5px;
+    width: 240px; flex: 0 0 240px; background: #f0f3f8;
+    border-right: 1px solid #ccc; overflow: auto; padding: 6px; font-size: 12.5px;
   }
-  .tree-item {
-    padding: 5px 8px; border-radius: 4px; cursor: pointer;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    color: #222;
-  }
+  .tree-item { padding: 5px 8px; border-radius: 4px; cursor: pointer; white-space: nowrap; overflow: hidden; color: #222; }
   .tree-item:hover { background: #e2e9f5; }
-  .tree-item.active { background: #1b6cff; color: #fff; }
-  .tree-item .arr { display: inline-block; width: 12px; color: #888; }
-  .tree-item.active .arr { color: #cfe0ff; }
-
-  /* правая панель — содержимое */
   #contentPane {
-    flex: 1; overflow: auto; padding: 10px;
-    background: #fff;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 110px);
-    grid-auto-rows: 110px;
-    gap: 6px;
-    align-content: start;
+    flex: 1; overflow: auto; padding: 10px; background: #fff;
+    display: grid; grid-template-columns: repeat(auto-fill, 110px);
+    grid-auto-rows: 110px; gap: 6px; align-content: start;
   }
   .citem {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-start;
-    padding: 6px 4px; border-radius: 6px; cursor: pointer;
-    text-align: center; font-size: 11.5px; color: #222;
-    word-break: break-word;
-    border: 1px solid transparent;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: 6px 4px; border-radius: 6px; cursor: pointer; text-align: center;
+    font-size: 11.5px; color: #222; word-break: break-word; border: 1px solid transparent;
   }
   .citem:hover { background: #eaf1ff; border-color: #bcd4ff; }
-  .citem .cpic {
-    width: 44px; height: 44px; margin-bottom: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 30px;
-  }
+  .citem .cpic { width: 44px; height: 44px; margin-bottom: 4px; font-size: 30px; display: flex; justify-content: center; align-items: center; }
   .citem.folder .cpic { color: #e0a800; }
   .citem.file .cpic { color: #6b7a99; }
   .citem.file.txt .cpic { color: #2f6db3; }
   .citem.file.key .cpic { color: #cc33cc; }
   .citem.file.key { background: #fff6ff; }
-  .citem.file.key:hover { background: #ffe6ff; }
-
-  /* ---------- ОКНО ФАЙЛА ---------- */
-  #fileWin {
-    width: 460px; max-width: 92vw;
-    left: 50%; top: 50%; transform: translate(-50%,-50%);
-    background: #fff;
-  }
-  #fileWin .titlebar { background: #f0f0f0; }
-  #fileWin .body { padding: 18px 22px; }
-  #fileTitle { font-size: 15px; font-weight: bold; margin-bottom: 12px; color: #222; }
-  #fileContent {
-    font-family: "Consolas", monospace; font-size: 13px;
-    background: #fafafa; border: 1px solid #ddd; border-radius: 4px;
-    padding: 12px; white-space: pre-wrap; color: #222;
-    max-height: 260px; overflow: auto;
-  }
-  #fileContent .key {
-    display: inline-block; margin-top: 8px;
-    background: #1b1b1b; color: #0f0;
-    padding: 6px 10px; border-radius: 4px; font-weight: bold;
-    letter-spacing: 2px;
-  }
-  .file-actions { text-align: right; margin-top: 14px; }
-  .btn-dark {
-    background: #2a2a2a; color: #eee; border: 1px solid #555;
-    padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px;
-  }
-  .btn-dark:hover { background: #3a3a3a; }
 
   /* ---------- ОКНО ВЫКУПА ---------- */
-  #ransomWin {
-    width: 760px; max-width: 95vw;
-    height: 560px; max-height: 90vh;
-    left: 50%; top: 50%; transform: translate(-50%,-50%);
-    background: #0a0a0a; color: #eee;
-  }
-  #ransomWin .titlebar {
-    background: #1a1a1a; color: #ddd; border-bottom: 1px solid #333;
-  }
+  #ransomWin { width: 760px; max-width: 95vw; height: 560px; max-height: 90vh; left: 50%; top: 50%; transform: translate(-50%,-50%); background: #0a0a0a; color: #eee; }
+  #ransomWin .titlebar { background: #1a1a1a; color: #ddd; border-bottom: 1px solid #333; }
   #ransomWin .titlebar .ico { background: #8b0000; }
-  #ransomContent {
-    padding: 0; height: calc(100% - 34px);
-    overflow-y: auto; background: #0a0a0a;
-  }
-  .ransom-frame {
-    border: 6px double #ffcc00;
-    margin: 12px; padding: 18px 22px 20px;
-    background: #0d0d0d;
-  }
-  .ransom-title {
-    text-align: center; color: #ff3333;
-    font-size: 26px; font-weight: 800;
-    letter-spacing: 1px; margin: 0 0 6px;
-    text-shadow: 0 0 12px rgba(255,0,0,0.6);
-  }
-  .ransom-sub {
-    text-align: center; color: #ff5555;
-    font-size: 18px; font-weight: bold; margin-bottom: 16px;
-  }
-  .ransom-text {
-    color: #ddd; font-size: 14px; line-height: 1.55; margin-bottom: 12px;
-  }
-  .ransom-text b { color: #fff; }
+  #ransomContent { padding: 0; height: calc(100% - 34px); overflow-y: auto; }
+  .ransom-frame { border: 6px double #ffcc00; margin: 12px; padding: 18px 22px 20px; background: #0d0d0d; }
+  .ransom-title { text-align: center; color: #ff3333; font-size: 26px; font-weight: 800; letter-spacing: 1px; margin: 0 0 6px; text-shadow: 0 0 12px rgba(255,0,0,0.6); }
+  .ransom-sub { text-align: center; color: #ff5555; font-size: 18px; font-weight: bold; margin-bottom: 16px; }
+  .ransom-text { color: #ddd; font-size: 14px; line-height: 1.55; margin-bottom: 12px; }
   .ransom-text .yellow { color: #ffdd33; font-weight: bold; }
-  .ransom-text .red { color: #ff4444; font-weight: bold; }
-  .ransom-warning {
-    display: flex; gap: 10px; align-items: flex-start;
-    margin: 14px 0 18px; font-size: 12px; line-height: 1.45;
-    color: #ff5555; font-weight: bold;
-  }
-  .ransom-warning .tri {
-    width: 0; height: 0; flex: 0 0 auto;
-    border-left: 22px solid transparent;
-    border-right: 22px solid transparent;
-    border-bottom: 38px solid #ff2222;
-    position: relative; margin-top: 2px;
-    filter: drop-shadow(0 0 4px #f00);
-  }
-  .ransom-warning .tri::after {
-    content: "!"; position: absolute; left: -5px; top: 12px;
-    color: #fff; font-weight: 900; font-size: 20px;
-  }
-  .ransom-controls {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 14px; margin-top: 8px;
-  }
-  .btn {
-    background: #f3c623; color: #222;
-    border: 2px solid #b8960c;
-    padding: 8px 26px; font-size: 15px; font-weight: bold;
-    border-radius: 4px; cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    transition: transform 0.1s, background 0.15s;
-  }
+  .ransom-warning { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0 18px; font-size: 12px; line-height: 1.45; color: #ff5555; font-weight: bold; }
+  .ransom-warning .tri { width: 0; height: 0; flex: 0 0 auto; border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 38px solid #ff2222; position: relative; margin-top: 2px; filter: drop-shadow(0 0 4px #f00); }
+  .ransom-warning .tri::after { content: "!"; position: absolute; left: -5px; top: 12px; color: #fff; font-weight: 900; font-size: 20px; }
+  .ransom-controls { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 8px; }
+  .btn { background: #f3c623; color: #222; border: 2px solid #b8960c; padding: 8px 26px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; transition: transform 0.1s; }
   .btn:hover { background: #ffdb4d; }
-  .btn:active { transform: scale(0.97); }
-  .btn:disabled { background: #777; border-color: #555; cursor: not-allowed; }
-  .timer-big {
-    font-family: "Consolas", monospace;
-    font-size: 40px; font-weight: bold;
-    color: #ffdd33; letter-spacing: 3px;
-    text-shadow: 0 0 10px rgba(255,200,0,0.5);
-    flex: 1; text-align: center;
-  }
-  .ransom-footer {
-    margin-top: 14px; font-size: 12px; color: #bbb;
-    text-align: center; background: #000; padding: 6px;
-    border: 1px solid #333;
-  }
+  .timer-big { font-family: "Consolas", monospace; font-size: 40px; font-weight: bold; color: #ffdd33; letter-spacing: 3px; text-shadow: 0 0 10px rgba(255,200,0,0.5); flex: 1; text-align: center; }
+  .ransom-footer { margin-top: 14px; font-size: 12px; color: #bbb; text-align: center; background: #000; padding: 6px; border: 1px solid #333; }
 
   /* ---------- ОКНО ПАРОЛЯ ---------- */
-  #passWin {
-    width: 420px; max-width: 92vw;
-    left: 50%; top: 50%; transform: translate(-50%,-50%);
-    background: #1a1a1a; color: #eee;
-  }
+  #passWin { width: 420px; left: 50%; top: 50%; transform: translate(-50%,-50%); background: #1a1a1a; color: #eee; }
   #passWin .titlebar { background: #111; color: #ddd; border-bottom: 1px solid #333; }
   #passWin .titlebar .ico { background: #8b0000; }
   #passWin .body { padding: 22px; }
   #passWin label { display: block; font-size: 13px; color: #bbb; margin-bottom: 8px; }
-  #passInput {
-    width: 100%; padding: 10px 12px; font-size: 16px;
-    font-family: "Consolas", monospace;
-    background: #000; color: #0f0; border: 1px solid #444;
-    border-radius: 4px; outline: none; letter-spacing: 2px;
-  }
+  #passInput { width: 100%; padding: 10px 12px; font-size: 16px; font-family: "Consolas", monospace; background: #000; color: #0f0; border: 1px solid #444; border-radius: 4px; outline: none; letter-spacing: 2px; }
   #passInput:focus { border-color: #1b6cff; box-shadow: 0 0 8px rgba(27,108,255,0.5); }
-  #passMsg {
-    min-height: 20px; margin-top: 10px; font-size: 13px;
-    color: #ff4444; font-weight: bold; text-align: center;
-  }
+  #passMsg { min-height: 20px; margin-top: 10px; font-size: 13px; color: #ff4444; font-weight: bold; text-align: center; }
   #passMsg.ok { color: #22cc55; }
   .pass-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+  .btn-dark { background: #2a2a2a; color: #eee; border: 1px solid #555; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+  .btn-dark:hover { background: #3a3a3a; }
 
   /* ---------- ФИНАЛ ---------- */
-  #finalScreen {
-    position: fixed; inset: 0; z-index: 10000;
-    background: #000; color: #22cc55;
-    display: none; flex-direction: column;
-    align-items: center; justify-content: center;
-    font-family: "Consolas", monospace; text-align: center;
-    padding: 20px;
-  }
+  #finalScreen { position: fixed; inset: 0; z-index: 10000; background: #000; color: #22cc55; display: none; flex-direction: column; align-items: center; justify-content: center; font-family: "Consolas", monospace; text-align: center; padding: 20px; }
   #finalScreen h1 { color: #22cc55; font-size: 34px; margin: 0 0 14px; letter-spacing: 2px; }
   #finalScreen p { font-size: 16px; color: #aaa; margin: 6px; }
 </style>
 </head>
 <body>
 
+<!-- Фильтр для крови (слипание капель) -->
+<svg class="goo-filter">
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+      <feBlend in="SourceGraphic" in2="goo" />
+    </filter>
+  </defs>
+</svg>
+
+<div id="bloodContainer"></div>
+
 <div id="desktop">
   <div id="iconGrid"></div>
+</div>
+
+<!-- Меню Пуск -->
+<div id="startMenu">
+  <div class="search-box">
+    <input type="text" id="startSearch" placeholder="Найти программу...">
+  </div>
+  <div id="startItems">
+    <div class="start-item" onclick="openExplorer()">📁 Проводник</div>
+    <div class="start-item" onclick="openRansom()">⚠️ README_ENCRYPTED</div>
+  </div>
 </div>
 
 <div id="taskbar">
@@ -377,12 +297,8 @@
 <!-- ================= ПРОВОДНИК ================= -->
 <div class="win" id="explorerWin">
   <div class="titlebar">
-    <div class="ico">📁</div>
-    <div>Проводник</div>
-    <div class="spacer"></div>
-    <div class="btns">
-      <button onclick="closeExplorer()">✕</button>
-    </div>
+    <div class="ico">📁</div><div>Проводник</div><div class="spacer"></div>
+    <div class="btns"><button onclick="closeExplorer()">✕</button></div>
   </div>
   <div class="body">
     <div class="toolbar">
@@ -398,82 +314,29 @@
   </div>
 </div>
 
-<!-- ================= ОКНО ФАЙЛА ================= -->
-<div class="win" id="fileWin">
-  <div class="titlebar">
-    <div class="ico" style="background:#2f6db3">📄</div>
-    <div id="fileWinTitle">Файл</div>
-    <div class="spacer"></div>
-    <div class="btns">
-      <button onclick="closeFile()">✕</button>
-    </div>
-  </div>
-  <div class="body">
-    <div id="fileTitle"></div>
-    <div id="fileContent"></div>
-    <div class="file-actions">
-      <button class="btn-dark" onclick="closeFile()">Закрыть</button>
-    </div>
-  </div>
-</div>
-
 <!-- ================= ОКНО ВЫКУПА ================= -->
 <div class="win" id="ransomWin">
   <div class="titlebar">
-    <div class="ico">!</div>
-    <div>README_ENCRYPTED.txt</div>
-    <div class="spacer"></div>
-    <div class="btns">
-      <button onclick="closeRansom()">✕</button>
-    </div>
+    <div class="ico">!</div><div>README_ENCRYPTED.txt</div><div class="spacer"></div>
+    <div class="btns"><button onclick="closeRansom()">✕</button></div>
   </div>
   <div class="body">
     <div id="ransomContent">
       <div class="ransom-frame">
         <h1 class="ransom-title">Ваши файлы зашифрованы.</h1>
         <div class="ransom-sub">Your personal files are encrypted.</div>
-
-        <div class="ransom-text">
-          Ваши документы, фотографии, базы данных и другие важные файлы были
-          зашифрованы самым сильным шифрованием с уникальным ключом, сгенерированным
-          для данного компьютера. Приватный ключ хранится на секретном сервере в
-          интернете и никто не сможет расшифровать ваши файлы пока вы не оплатите и не
-          получите приватный ключ.
-        </div>
-
-        <div class="ransom-text">
-          У вас есть <span class="yellow">72 часа</span> для совершения оплаты.
-          В противном случае, все ваши файлы останутся зашифрованы навсегда и никто
-          их не расшифрует.
-        </div>
-
-        <div class="ransom-text">
-          Нажмите «Файлы» для просмотра списка зашифрованных файлов.
-        </div>
-
-        <div class="ransom-text">
-          Нажмите «Далее» для подключения к серверу и следуйте инструкциям.
-        </div>
-
+        <div class="ransom-text">Ваши документы, фотографии, базы данных и другие важные файлы были зашифрованы самым сильным шифрованием. Приватный ключ хранится на секретном сервере. Никто не сможет расшифровать ваши файлы пока вы не оплатите.</div>
+        <div class="ransom-text">У вас есть <span class="yellow">72 часа</span> для совершения оплаты.</div>
         <div class="ransom-warning">
           <div class="tri"></div>
-          <div>
-            ВНИМАНИЕ! НЕ УДАЛЯЙТЕ ПРОГРАММУ. ЭТО НЕ ПОМОЖЕТ ВОССТАНОВИТЬ ФАЙЛЫ.
-            ЧАСТИЧКА СИСТЕМЫ ПРИВЕДЕТ К ТОМУ, ЧТО ВСЕ ВАШИ ФАЙЛЫ БУДУТ
-            УНИЧТОЖЕНЫ И ВЫ ПОТЕРЯЕТЕ СВОИ ДАННЫЕ. ЕДИНСТВЕННЫЙ ШАНС НА
-            ВОССТАНОВЛЕНИЕ ФАЙЛОВ — СЛЕДОВАТЬ ИНСТРУКЦИЯМ.
-          </div>
+          <div>ВНИМАНИЕ! НЕ УДАЛЯЙТЕ ПРОГРАММУ. ЭТО НЕ ПОМОЖЕТ ВОССТАНОВИТЬ ФАЙЛЫ.</div>
         </div>
-
         <div class="ransom-controls">
           <button class="btn" onclick="showFilesInfo()">Файлы</button>
           <div class="timer-big" id="ransomTimer">72:00:00</div>
-          <button class="btn" id="nextBtn" onclick="openPasswordWindow()">Далее &gt;&gt;</button>
+          <button class="btn" onclick="openPasswordWindow()">Далее &gt;&gt;</button>
         </div>
-
-        <div class="ransom-footer">
-          can open it and use copy-paste for address and key.
-        </div>
+        <div class="ransom-footer">can open it and use copy-paste for address and key.</div>
       </div>
     </div>
   </div>
@@ -482,12 +345,8 @@
 <!-- ================= ОКНО ПАРОЛЯ ================= -->
 <div class="win" id="passWin">
   <div class="titlebar">
-    <div class="ico">🔒</div>
-    <div>Подключение к серверу — Введите ключ</div>
-    <div class="spacer"></div>
-    <div class="btns">
-      <button onclick="closePass()">✕</button>
-    </div>
+    <div class="ico">🔒</div><div>Подключение к серверу — Введите ключ</div><div class="spacer"></div>
+    <div class="btns"><button onclick="closePass()">✕</button></div>
   </div>
   <div class="body">
     <label>Введите приватный ключ (password):</label>
@@ -496,6 +355,24 @@
     <div class="pass-actions">
       <button class="btn-dark" onclick="closePass()">Отмена</button>
       <button class="btn" onclick="checkPassword()">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ОКНО ВЫПОЛНИТЬ ================= -->
+<div class="win" id="runWin">
+  <div class="titlebar">
+    <div class="ico" style="background:#1b6cff">▶</div><div>Выполнить</div><div class="spacer"></div>
+    <div class="btns"><button onclick="closeRun()">✕</button></div>
+  </div>
+  <div class="body">
+    <div class="run-row">
+      <label>Открыть:</label>
+      <input type="text" id="runInput" placeholder="cmd" autocomplete="off">
+    </div>
+    <div class="run-actions">
+      <button class="run-btn primary" onclick="executeRun()">ОК</button>
+      <button class="run-btn" onclick="closeRun()">Отмена</button>
     </div>
   </div>
 </div>
@@ -511,84 +388,45 @@
 /* =====================================================================
    НАСТРОЙКИ
    ===================================================================== */
-const CORRECT_PASSWORD = "12345678900987654321";
+const CORRECT_PASSWORD = "12345678900987654321"; // Пароль из файла
+const RUN_COMMAND = "1234"; // Секретная команда
 
-const DESKTOP_FOLDERS = 300;   // папок прямо на рабочем столе
-const TREE_FOLDERS    = 20;    // папок в корне «Мой компьютер»
-const SUB_MIN         = 4;     // минимум подпапок в каждой папке
-const SUB_MAX         = 8;     // максимум подпапок
-const DEPTH           = 3;     // глубина вложенности
+const DESKTOP_FOLDERS = 300; 
+const TREE_FOLDERS    = 20;
+const DEPTH           = 3; 
 /* ===================================================================== */
 
-/* ---------- ГЕНЕРАЦИЯ ДЕРЕВА ПАПОК И ПОИСК МЕСТА ДЛЯ ПАРОЛЯ ---------- */
-
+/* ---------- ГЕНЕРАЦИЯ ПАПОК ---------- */
 function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-const WORDS = ["Документы","Загрузки","Музыка","Видео","Изображения","Архив","Отчёты","Проекты",
-  "База","Сканы","Книги","Фото","Семейное","Работа","Учёба","Резерв","Копии","Разное",
-  "Important","Backup","Data","Files","Docs","Photos","Music","Video","Work","Home","Old",
-  "2023","2024","2025","Отпуск","Отчёт","Прайс","Сметы","Схемы","Чертежи","Клиенты"];
-
-const FILE_NAMES = ["отчёт","список","документ","заметка","данные","информация","файл","запись",
-  "log","report","data","notes","info","list","file","backup","config","ключ"];
+const WORDS = ["Документы","Загрузки","Музыка","Видео","Изображения","Архив","Отчёты","Проекты","База","Сканы","Книги","Фото","Семейное","Работа","Учёба","Резерв","Копии","Разное","Important","Backup","Data","Files","Docs","Photos","Music","Video","Work","Home","Old","2023","2024","2025","Отпуск","Отчёт","Прайс","Сметы","Схемы","Чертежи","Клиенты"];
+const FILE_NAMES = ["отчёт","список","документ","заметка","данные","информация","файл","запись","log","report","data","notes","info","list","file","backup","config","ключ"];
 
 function genId() { return Math.random().toString(36).slice(2, 10); }
 
-// Создаём папку
 function makeFolder(name, depth) {
-  const folder = {
-    id: genId(),
-    name: name,
-    type: "folder",
-    children: [],
-    files: []
-  };
-
+  const folder = { id: genId(), name: name, type: "folder", children: [], files: [] };
   if (depth > 0) {
-    const subCount = randInt(SUB_MIN, SUB_MAX);
-    for (let i = 0; i < subCount; i++) {
-      const subName = pick(WORDS) + " " + randInt(1, 99);
-      folder.children.push(makeFolder(subName, depth - 1));
-    }
+    const subCount = randInt(4, 8);
+    for (let i = 0; i < subCount; i++) folder.children.push(makeFolder(pick(WORDS) + " " + randInt(1, 99), depth - 1));
   }
-
-  // добавляем обычные файлы (пустышки)
   const fileCount = randInt(0, 3);
-  for (let i = 0; i < fileCount; i++) {
-    folder.files.push({
-      name: pick(FILE_NAMES) + "_" + randInt(100, 999) + ".txt",
-      content: "Содержимое файла повреждено шифрованием. Обратитесь к администратору.",
-      isKey: false
-    });
-  }
-
+  for (let i = 0; i < fileCount; i++) folder.files.push({ name: pick(FILE_NAMES) + "_" + randInt(100, 999) + ".txt", content: "Содержимое повреждено шифрованием.", isKey: false });
   return folder;
 }
 
-// Собираем все папки в дерево (рекурсивно)
-function collectAllFolders(folder, out) {
-  out.push(folder);
-  folder.children.forEach(c => collectAllFolders(c, out));
-}
+function collectAllFolders(folder, out) { out.push(folder); folder.children.forEach(c => collectAllFolders(c, out)); }
 
-// ---- Создаём корневые папки «Мой компьютер» ----
 const rootFolders = [];
-for (let i = 0; i < TREE_FOLDERS; i++) {
-  rootFolders.push(makeFolder(pick(WORDS) + " " + randInt(1, 99), DEPTH));
-}
+for (let i = 0; i < TREE_FOLDERS; i++) rootFolders.push(makeFolder(pick(WORDS) + " " + randInt(1, 99), DEPTH));
 
-// ---- Создаём папки рабочего стола ----
 const desktopFolders = [];
-for (let i = 0; i < DESKTOP_FOLDERS; i++) {
-  desktopFolders.push(makeFolder(pick(WORDS) + " " + randInt(1, 999), 2));
-}
+for (let i = 0; i < DESKTOP_FOLDERS; i++) desktopFolders.push(makeFolder(pick(WORDS) + " " + randInt(1, 999), 2));
 
-// ---- Прячем пароль в одной случайной папке ----
+// Прячем пароль (в 1 папку)
 const allFolders = [];
 rootFolders.forEach(f => collectAllFolders(f, allFolders));
 desktopFolders.forEach(f => collectAllFolders(f, allFolders));
-
 const secretFolder = pick(allFolders);
 secretFolder.files.push({
   name: "секретный_ключ.key",
@@ -596,170 +434,80 @@ secretFolder.files.push({
   isKey: true
 });
 
-// Для наглядности: у «секретной» папки добавим пометку (не в UI, просто логика)
-
-/* =====================================================================
-   РАБОЧИЙ СТОЛ
-   ===================================================================== */
-
+/* ---------- РАБОЧИЙ СТОЛ ---------- */
 const iconGrid = document.getElementById("iconGrid");
-
-// Иконка приложения-вымогателя
 const appIcon = document.createElement("div");
 appIcon.className = "icon locked";
-appIcon.innerHTML = '<div class="pic" style="background:#8b0000;border-color:#500;color:#fff">!</div><div class="name">README_ENCRYPTED</div>';
+appIcon.innerHTML = '<div class="pic">!</div><div class="name">README_ENCRYPTED</div>';
 appIcon.addEventListener("click", openRansom);
 iconGrid.appendChild(appIcon);
 
-// Папки на рабочем столе
 desktopFolders.forEach(folder => {
   const el = document.createElement("div");
   el.className = "icon folder";
-  el.innerHTML = '<div class="pic"></div><div class="name">' + escapeHtml(folder.name) + '</div>';
+  el.innerHTML = '<div class="pic" style="background:#ffcf4d;border-color:#b8960c;border-radius:4px 4px 8px 8px;"></div><div class="name">' + escapeHtml(folder.name) + '</div>';
   el.addEventListener("dblclick", () => openFolderInExplorer(folder));
-  el.addEventListener("click", () => {
-    // одиночный клик только выделяет; по двойному — открывает
-  });
   iconGrid.appendChild(el);
 });
 
-/* =====================================================================
-   ПРОВОДНИК
-   ===================================================================== */
+/* ---------- ПРОВОДНИК ---------- */
+const explorerWin = document.getElementById("explorerWin");
+const treePane = document.getElementById("treePane");
+const contentPane = document.getElementById("contentPane");
+const pathBar = document.getElementById("pathBar");
+const backBtn = document.getElementById("backBtn");
 
-const explorerWin  = document.getElementById("explorerWin");
-const treePane     = document.getElementById("treePane");
-const contentPane  = document.getElementById("contentPane");
-const pathBar      = document.getElementById("pathBar");
-const backBtn      = document.getElementById("backBtn");
+let currentFolder = null, history = [], expandedIds = new Set();
 
-let currentFolder = null;     // объект папки (null = Мой компьютер)
-let history = [];             // стек назад
-let expandedIds = new Set();  // раскрытые папки в дереве
-
-function openExplorer() {
-  explorerWin.style.display = "block";
-  if (!currentFolder) {
-    renderHome();
-  } else {
-    renderExplorer();
-  }
-}
-
+function openExplorer() { explorerWin.style.display = "block"; if (!currentFolder) renderHome(); else renderExplorer(); document.getElementById('startMenu').style.display = 'none'; }
 function closeExplorer() { explorerWin.style.display = "none"; }
+function explorerHome() { currentFolder = null; history = []; renderHome(); }
+function explorerBack() { if (history.length) { currentFolder = history.pop(); renderExplorer(); } else explorerHome(); }
+function refreshExplorer() { if (currentFolder) renderExplorer(); else renderHome(); }
+function openFolderInExplorer(folder) { if (currentFolder) history.push(currentFolder); currentFolder = folder; openExplorer(); renderExplorer(); }
 
-function explorerHome() {
-  currentFolder = null;
-  history = [];
-  renderHome();
-}
-
-function explorerBack() {
-  if (history.length) {
-    currentFolder = history.pop();
-    renderExplorer();
-  } else {
-    explorerHome();
-  }
-}
-
-function refreshExplorer() {
-  if (currentFolder) renderExplorer();
-  else renderHome();
-}
-
-function openFolderInExplorer(folder) {
-  if (currentFolder) history.push(currentFolder);
-  currentFolder = folder;
-  openExplorer();
-  renderExplorer();
-}
-
-/* ---- Домашний вид (Мой компьютер) ---- */
 function renderHome() {
-  backBtn.disabled = true;
-  pathBar.textContent = "Мой компьютер";
-  contentPane.innerHTML = "";
-  treePane.innerHTML = "";
-
-  // Дерево: корневой уровень
+  backBtn.disabled = true; pathBar.textContent = "Мой компьютер"; contentPane.innerHTML = ""; treePane.innerHTML = "";
   rootFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
   desktopFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
-
-  // Содержимое: корневые папки
-  rootFolders.forEach(f => {
-    contentPane.appendChild(makeContentItem(f, () => openFolderInExplorer(f)));
-  });
-  // и папки рабочего стола
-  desktopFolders.forEach(f => {
-    contentPane.appendChild(makeContentItem(f, () => openFolderInExplorer(f)));
-  });
+  rootFolders.forEach(f => contentPane.appendChild(makeContentItem(f, () => openFolderInExplorer(f))));
+  desktopFolders.forEach(f => contentPane.appendChild(makeContentItem(f, () => openFolderInExplorer(f))));
 }
 
-/* ---- Вид папки ---- */
 function renderExplorer() {
   if (!currentFolder) { renderHome(); return; }
   backBtn.disabled = history.length === 0;
   pathBar.textContent = buildPath(currentFolder);
-  contentPane.innerHTML = "";
-  treePane.innerHTML = "";
-
-  // дерево — показываем все корневые и текущую ветку
+  contentPane.innerHTML = ""; treePane.innerHTML = "";
   rootFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
   desktopFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
-
-  // содержимое — подпапки и файлы
-  currentFolder.children.forEach(sub => {
-    contentPane.appendChild(makeContentItem(sub, () => openFolderInExplorer(sub)));
-  });
-  currentFolder.files.forEach(file => {
-    contentPane.appendChild(makeFileItem(file));
-  });
-
+  currentFolder.children.forEach(sub => contentPane.appendChild(makeContentItem(sub, () => openFolderInExplorer(sub))));
+  currentFolder.files.forEach(file => contentPane.appendChild(makeFileItem(file)));
   if (currentFolder.children.length === 0 && currentFolder.files.length === 0) {
-    const empty = document.createElement("div");
-    empty.style.cssText = "padding:20px;color:#888;font-size:13px;grid-column:1/-1;";
-    empty.textContent = "Эта папка пуста.";
-    contentPane.appendChild(empty);
+    contentPane.innerHTML = '<div style="padding:20px;color:#888;grid-column:1/-1;">Эта папка пуста.</div>';
   }
 }
 
-/* путь до папки */
 function buildPath(folder) {
-  // Ищем в корнях
-  const chains = [];
-  function find(node, path) {
-    if (node === folder) { chains.push(path); return; }
-    node.children.forEach(c => find(c, path.concat([node.name])));
-  }
-  rootFolders.forEach(f => find(f, []));
-  desktopFolders.forEach(f => find(f, []));
-  const chain = chains[0] || [];
+  let chains = [];
+  function find(node, path) { if (node === folder) { chains.push(path); return; } node.children.forEach(c => find(c, path.concat([node.name]))); }
+  rootFolders.forEach(f => find(f, [])); desktopFolders.forEach(f => find(f, []));
+  let chain = chains[0] || [];
   return "Мой компьютер" + (chain.length ? " \\ " + chain.join(" \\ ") + " \\ " : " \\ ") + folder.name;
 }
 
-/* ---- элементы дерева ---- */
 function makeTreeItem(folder, level) {
-  const wrap = document.createElement("div");
-  const item = document.createElement("div");
-  item.className = "tree-item";
-  item.style.paddingLeft = (8 + level * 14) + "px";
+  const wrap = document.createElement("div"), item = document.createElement("div");
+  item.className = "tree-item"; item.style.paddingLeft = (8 + level * 14) + "px";
   const hasChildren = folder.children.length > 0;
   const arrow = hasChildren ? (expandedIds.has(folder.id) ? "▼" : "▶") : "&nbsp;";
-  item.innerHTML = '<span class="arr">' + arrow + '</span>📁 ' + escapeHtml(folder.name);
-
+  item.innerHTML = '<span class="arr" style="color:#888;display:inline-block;width:12px;">' + arrow + '</span>📁 ' + escapeHtml(folder.name);
   item.addEventListener("click", (e) => {
-    e.stopPropagation();
-    if (folder === currentFolder) return;
-    if (hasChildren) {
-      if (expandedIds.has(folder.id)) expandedIds.delete(folder.id);
-      else expandedIds.add(folder.id);
-    }
+    e.stopPropagation(); if (folder === currentFolder) return;
+    if (hasChildren) { if (expandedIds.has(folder.id)) expandedIds.delete(folder.id); else expandedIds.add(folder.id); }
     openFolderInExplorer(folder);
   });
-
   wrap.appendChild(item);
-
   if (hasChildren && expandedIds.has(folder.id)) {
     const kids = document.createElement("div");
     folder.children.forEach(c => kids.appendChild(makeTreeItem(c, level + 1)));
@@ -768,183 +516,197 @@ function makeTreeItem(folder, level) {
   return wrap;
 }
 
-/* ---- элементы контента ---- */
 function makeContentItem(folder, onClick) {
   const el = document.createElement("div");
   el.className = "citem folder";
   el.innerHTML = '<div class="cpic">📁</div><div>' + escapeHtml(folder.name) + '</div>';
   el.addEventListener("dblclick", onClick);
-  el.addEventListener("click", () => {}); // выделение
   return el;
 }
 
 function makeFileItem(file) {
   const el = document.createElement("div");
   el.className = "citem file" + (file.isKey ? " key" : (file.name.endsWith(".txt") ? " txt" : ""));
-  const icon = file.isKey ? "🔑" : "📄";
-  el.innerHTML = '<div class="cpic">' + icon + '</div><div>' + escapeHtml(file.name) + '</div>';
+  el.innerHTML = '<div class="cpic">' + (file.isKey ? "🔑" : "📄") + '</div><div>' + escapeHtml(file.name) + '</div>';
   el.addEventListener("dblclick", () => openFile(file));
-  el.addEventListener("click", () => {});
   return el;
 }
 
-/* ---- окно файла ---- */
-const fileWin       = document.getElementById("fileWin");
-const fileWinTitle  = document.getElementById("fileWinTitle");
-const fileTitle     = document.getElementById("fileTitle");
-const fileContent   = document.getElementById("fileContent");
+/* ---------- ВЫКУП И ПАРОЛЬ ---------- */
+const ransomWin = document.getElementById("ransomWin"), passWin = document.getElementById("passWin");
+const passInput = document.getElementById("passInput"), passMsg = document.getElementById("passMsg");
+const finalScr = document.getElementById("finalScreen");
 
-function openFile(file) {
-  fileWin.style.display = "block";
-  fileWinTitle.textContent = file.name;
-  fileTitle.textContent = file.name;
-
-  if (file.isKey) {
-    // разбиваем на части, чтобы пароль был оформлен
-    const parts = file.content.split("Пароль: ");
-    if (parts.length === 2) {
-      fileContent.innerHTML = escapeHtml(parts[0]) +
-        '<span class="key">' + escapeHtml(parts[1].split("\n")[0]) + '</span>' +
-        escapeHtml(parts[1].split("\n").slice(1).join("\n"));
-    } else {
-      fileContent.textContent = file.content;
-    }
-  } else {
-    fileContent.textContent = file.content;
-  }
-}
-
-function closeFile() { fileWin.style.display = "none"; }
-
-/* =====================================================================
-   ОКНО ВЫКУПА И ПАРОЛЬ
-   ===================================================================== */
-
-const ransomWin = document.getElementById("ransomWin");
-const passWin   = document.getElementById("passWin");
-const passInput = document.getElementById("passInput");
-const passMsg   = document.getElementById("passMsg");
-const finalScr  = document.getElementById("finalScreen");
-
-let ransomTimerInterval = null;
-const TOTAL_RANSOM_SEC = 72 * 60 * 60;
-let ransomLeft = TOTAL_RANSOM_SEC;
+let ransomTimerInterval = null, ransomLeft = 72 * 60 * 60;
 
 function openRansom() {
-  ransomWin.style.display = "block";
-  passWin.style.display = "none";
+  ransomWin.style.display = "block"; passWin.style.display = "none";
+  document.getElementById('startMenu').style.display = 'none';
   startRansomTimer();
+  infectSystem(); // ВКЛЮЧАЕМ ЗАРАЗУ
 }
-function closeRansom() {
-  ransomWin.style.display = "none";
-  stopRansomTimer();
-}
-function fmtTimer(sec) {
-  const h = Math.floor(sec / 3600).toString().padStart(2,'0');
-  const m = Math.floor((sec % 3600) / 60).toString().padStart(2,'0');
-  const s = (sec % 60).toString().padStart(2,'0');
-  return `${h}:${m}:${s}`;
-}
+function closeRansom() { ransomWin.style.display = "none"; stopRansomTimer(); }
 function startRansomTimer() {
-  stopRansomTimer();
-  document.getElementById('ransomTimer').textContent = fmtTimer(ransomLeft);
+  stopRansomTimer(); document.getElementById('ransomTimer').textContent = fmtTimer(ransomLeft);
   ransomTimerInterval = setInterval(() => {
-    ransomLeft--;
-    if (ransomLeft < 0) ransomLeft = 0;
+    ransomLeft--; if (ransomLeft < 0) ransomLeft = 0;
     document.getElementById('ransomTimer').textContent = fmtTimer(ransomLeft);
   }, 1000);
 }
-function stopRansomTimer() {
-  if (ransomTimerInterval) clearInterval(ransomTimerInterval);
-  ransomTimerInterval = null;
+function stopRansomTimer() { if (ransomTimerInterval) clearInterval(ransomTimerInterval); }
+function fmtTimer(sec) {
+  const h = Math.floor(sec / 3600).toString().padStart(2,'0'), m = Math.floor((sec % 3600) / 60).toString().padStart(2,'0'), s = (sec % 60).toString().padStart(2,'0');
+  return `${h}:${m}:${s}`;
 }
-
-function showFilesInfo() {
-  alert("Список зашифрованных файлов недоступен без подключения к серверу.\nНайдите секретный ключ в папках и нажмите «Далее».");
-}
-
-function openPasswordWindow() {
-  passWin.style.display = "block";
-  passInput.value = "";
-  passMsg.textContent = "";
-  passMsg.classList.remove("ok");
-  setTimeout(() => passInput.focus(), 100);
-}
+function showFilesInfo() { alert("Список зашифрованных файлов недоступен без подключения к серверу.\nНайдите секретный ключ в папках."); }
+function openPasswordWindow() { passWin.style.display = "block"; passInput.value = ""; passMsg.textContent = ""; passMsg.classList.remove("ok"); setTimeout(() => passInput.focus(), 100); }
 function closePass() { passWin.style.display = "none"; }
 
 function checkPassword() {
-  const val = passInput.value.trim();
-  if (val === CORRECT_PASSWORD) {
-    passMsg.textContent = "Ключ принят. Подключение к серверу...";
-    passMsg.classList.add("ok");
+  if (passInput.value.trim() === CORRECT_PASSWORD) {
+    passMsg.textContent = "Ключ принят. Подключение к серверу..."; passMsg.classList.add("ok");
     setTimeout(() => {
-      passWin.style.display = "none";
-      ransomWin.style.display = "none";
-      stopRansomTimer();
+      passWin.style.display = "none"; ransomWin.style.display = "none"; stopRansomTimer();
       finalScr.style.display = "flex";
+      // Лечим компьютер
+      document.body.classList.remove('infected');
+      document.getElementById('bloodContainer').style.display = 'none';
+      document.body.style.filter = 'none';
     }, 900);
   } else {
-    passMsg.textContent = "Неверный ключ. Попробуйте ещё раз.";
-    passMsg.classList.remove("ok");
-    passInput.value = "";
-    passInput.focus();
+    passMsg.textContent = "Неверный ключ. Попробуйте ещё раз."; passMsg.classList.remove("ok");
+    passInput.value = ""; passInput.focus();
+  }
+}
+passInput.addEventListener("keydown", (e) => { if (e.key === "Enter") checkPassword(); if (e.key === "Escape") closePass(); });
+
+/* ---------- ОКНО ВЫПОЛНИТЬ ---------- */
+const runWin = document.getElementById("runWin"), runInput = document.getElementById("runInput");
+
+// Горячие клавиши Q + P
+let keysPressed = {};
+document.addEventListener('keydown', (e) => {
+  keysPressed[e.key.toLowerCase()] = true;
+  if (keysPressed['q'] && keysPressed['p']) {
+    e.preventDefault();
+    runWin.style.display = "block";
+    runInput.value = "";
+    document.getElementById('startMenu').style.display = 'none';
+    setTimeout(() => runInput.focus(), 100);
+  }
+});
+document.addEventListener('keyup', (e) => { keysPressed[e.key.toLowerCase()] = false; });
+
+function closeRun() { runWin.style.display = "none"; }
+
+function executeRun() {
+  const cmd = runInput.value.trim();
+  if (cmd === RUN_COMMAND) {
+    closeRun();
+    // Открываем папку с паролем
+    openFolderInExplorer(secretFolder);
+  } else {
+    alert("Windows не может найти файл '" + cmd + "'. Проверьте правильность имени и повторите попытку.");
+  }
+}
+runInput.addEventListener("keydown", (e) => { if (e.key === "Enter") executeRun(); if (e.key === "Escape") closeRun(); });
+
+
+/* ---------- ЭФФЕКТ ЗАРАЖЕНИЯ, ТОРМОЗА И КРОВЬ ---------- */
+let bloodInterval = null;
+
+function infectSystem() {
+  document.body.classList.add('infected'); // Меняет обои на глючные
+  document.body.style.filter = 'contrast(1.2) saturate(1.5)'; // Искажает цвета
+  
+  const bloodContainer = document.getElementById('bloodContainer');
+  bloodContainer.style.display = 'block';
+  
+  // Запускаем "тормоза" (создаем тяжелый цикл каждые 200мс)
+  if (!window.lagInterval) {
+    window.lagInterval = setInterval(() => {
+      let t = performance.now();
+      while (performance.now() - t < 80) { /* тупим */ } 
+    }, 250);
+  }
+
+  // Кровь течет каждую минуту
+  if (!bloodInterval) {
+    spawnBlood(); // сразу первая капля
+    bloodInterval = setInterval(spawnBlood, 60000); // каждую минуту
   }
 }
 
-passInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") checkPassword();
-  if (e.key === "Escape") closePass();
+function spawnBlood() {
+  const cont = document.getElementById('bloodContainer');
+  // Создаем 2-4 капли за раз
+  const count = randInt(2, 4);
+  for (let i = 0; i < count; i++) {
+    const drop = document.createElement('div');
+    drop.className = 'blood-drop';
+    const w = randInt(10, 35);
+    drop.style.width = w + 'px';
+    drop.style.left = randInt(0, 95) + '%';
+    drop.style.height = '0px'; // Начинаем с нуля
+    cont.appendChild(drop);
+    
+    // Анимация стекания
+    setTimeout(() => {
+      drop.style.height = randInt(200, 800) + 'px';
+    }, 50);
+
+    // Оставляем пятно внизу
+    setTimeout(() => {
+      const puddle = document.createElement('div');
+      puddle.className = 'blood-puddle';
+      const pw = randInt(60, 150);
+      puddle.style.width = '0px';
+      puddle.style.height = randInt(10, 25) + 'px';
+      puddle.style.left = drop.style.left;
+      puddle.style.transform = `translateX(-${pw/2}px)`; // Центрируем
+      cont.appendChild(puddle);
+      
+      setTimeout(() => { puddle.style.width = pw + 'px'; }, 50);
+    }, 2500); // Пятно появляется когда капля долетела
+  }
+}
+
+/* ---------- МЕНЮ ПУСК ---------- */
+const startBtn = document.getElementById('startBtn'), startMenu = document.getElementById('startMenu'), startSearch = document.getElementById('startSearch');
+startBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isHidden = startMenu.style.display === 'none' || startMenu.style.display === '';
+  startMenu.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) { startSearch.value = ''; startSearch.focus(); }
+});
+document.addEventListener('click', (e) => {
+  if (!startMenu.contains(e.target) && e.target !== startBtn) startMenu.style.display = 'none';
+});
+startSearch.addEventListener('input', (e) => {
+  const val = e.target.value.toLowerCase();
+  const items = startMenu.querySelectorAll('.start-item');
+  items.forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(val) ? 'flex' : 'none';
+  });
 });
 
-/* =====================================================================
-   ВСПОМОГАТЕЛЬНОЕ
-   ===================================================================== */
+/* ---------- ВСПОМОГАТЕЛЬНОЕ ---------- */
+function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function updateClock() { const d = new Date(); document.getElementById("clock").textContent = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0'); }
+setInterval(updateClock, 1000); updateClock();
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-/* ---------- часы ---------- */
-function updateClock() {
-  const d = new Date();
-  document.getElementById("clock").textContent =
-    d.getHours().toString().padStart(2,'0') + ":" +
-    d.getMinutes().toString().padStart(2,'0');
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-/* ---------- перетаскивание окон ---------- */
 function makeDraggable(win) {
-  const titlebar = win.querySelector(".titlebar");
-  let dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
-
+  const titlebar = win.querySelector(".titlebar"); let dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
   titlebar.addEventListener("mousedown", (e) => {
     if (e.target.tagName === "BUTTON") return;
-    const rect = win.getBoundingClientRect();
-    win.style.transform = "none";
-    win.style.left = rect.left + "px";
-    win.style.top  = rect.top  + "px";
-    dragging = true;
-    startX = e.clientX; startY = e.clientY;
-    origLeft = rect.left; origTop = rect.top;
-    e.preventDefault();
+    const rect = win.getBoundingClientRect(); win.style.transform = "none";
+    win.style.left = rect.left + "px"; win.style.top = rect.top + "px";
+    dragging = true; startX = e.clientX; startY = e.clientY; origLeft = rect.left; origTop = rect.top; e.preventDefault();
   });
-
-  document.addEventListener("mousemove", (e) => {
-    if (!dragging) return;
-    win.style.left = (origLeft + e.clientX - startX) + "px";
-    win.style.top  = (origTop  + e.clientY - startY) + "px";
-  });
-
+  document.addEventListener("mousemove", (e) => { if (!dragging) return; win.style.left = (origLeft + e.clientX - startX) + "px"; win.style.top = (origTop + e.clientY - startY) + "px"; });
   document.addEventListener("mouseup", () => { dragging = false; });
 }
-
-[ransomWin, passWin, explorerWin, fileWin].forEach(makeDraggable);
+[ransomWin, passWin, explorerWin, runWin].forEach(makeDraggable);
 </script>
 </body>
 </html>
