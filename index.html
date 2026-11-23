@@ -28,7 +28,6 @@
     background-size: 40px 40px; pointer-events: none; z-index: 0;
   }
 
-  /* Испорченные обои (включаются скриптом) */
   body.infected #desktop {
     background: #000 url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23000"/><text x="10" y="30" fill="%23f00" font-family="monospace" font-size="12" transform="rotate(15 50 50)">ERROR</text><text x="40" y="70" fill="%23555" font-family="monospace" font-size="10" transform="rotate(-10 50 50)">SYSTEM FAIL</text></svg>') repeat;
     animation: bgGlitch 0.2s infinite;
@@ -51,7 +50,6 @@
     border-radius: 0 0 50% 50%;
     box-shadow: 0 0 8px rgba(255,0,0,0.5);
     transition: height 3s linear;
-    filter: url(#goo);
   }
   .blood-puddle {
     position: absolute; bottom: 0;
@@ -59,7 +57,6 @@
     box-shadow: 0 -2px 10px rgba(255,0,0,0.6);
     transition: width 3s ease, height 3s ease, opacity 3s;
   }
-  svg.goo-filter { position: absolute; width: 0; height: 0; pointer-events: none; }
 
   /* ---------- ЗАДАЧИ ---------- */
   #taskbar {
@@ -82,7 +79,21 @@
     cursor: pointer; font-size: 13px;
   }
   #explorerBtn:hover { background: #2d3f6e; }
+  #runBtnHidden {
+    background: #1e1e1e; color: #555; border: 1px solid #333;
+    height: 34px; padding: 0 10px; border-radius: 6px;
+    cursor: pointer; font-size: 13px; opacity: 0.4;
+  }
+  #runBtnHidden:hover { opacity: 1; color: #fff; }
   #clock { margin-left: auto; padding: 0 10px; font-variant-numeric: tabular-nums; }
+  
+  /* Отладка клавиш */
+  #debugKeys {
+    position: fixed; top: 10px; right: 10px; z-index: 99999;
+    background: rgba(0,0,0,0.7); color: #0f0; padding: 5px 10px;
+    font-family: monospace; font-size: 12px; border-radius: 4px;
+    display: none;
+  }
 
   /* ---------- МЕНЮ ПУСК ---------- */
   #startMenu {
@@ -92,9 +103,7 @@
     flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     backdrop-filter: blur(10px); overflow: hidden;
   }
-  #startMenu .search-box {
-    padding: 12px; border-bottom: 1px solid #2a3550;
-  }
+  #startMenu .search-box { padding: 12px; border-bottom: 1px solid #2a3550; }
   #startSearch {
     width: 100%; background: #0b1020; border: 1px solid #354a7a;
     color: #fff; padding: 8px 12px; border-radius: 4px; outline: none;
@@ -158,6 +167,7 @@
   #runWin {
     width: 420px; left: 50%; top: 50%; transform: translate(-50%,-50%);
     background: #f0f0f0; border-radius: 8px; border: 1px solid #888;
+    z-index: 9000 !important;
   }
   #runWin .body { padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
   .run-row { display: flex; align-items: center; gap: 12px; }
@@ -260,24 +270,14 @@
 </head>
 <body>
 
-<!-- Фильтр для крови (слипание капель) -->
-<svg class="goo-filter">
-  <defs>
-    <filter id="goo">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
-      <feBlend in="SourceGraphic" in2="goo" />
-    </filter>
-  </defs>
-</svg>
-
 <div id="bloodContainer"></div>
+
+<div id="debugKeys">Нажмите Q и P</div>
 
 <div id="desktop">
   <div id="iconGrid"></div>
 </div>
 
-<!-- Меню Пуск -->
 <div id="startMenu">
   <div class="search-box">
     <input type="text" id="startSearch" placeholder="Найти программу...">
@@ -285,12 +285,14 @@
   <div id="startItems">
     <div class="start-item" onclick="openExplorer()">📁 Проводник</div>
     <div class="start-item" onclick="openRansom()">⚠️ README_ENCRYPTED</div>
+    <div class="start-item" onclick="openRunWindow()">▶ Выполнить (Пуск)</div>
   </div>
 </div>
 
 <div id="taskbar">
   <button id="startBtn">≡</button>
   <button id="explorerBtn" onclick="openExplorer()">📁 Проводник</button>
+  <button id="runBtnHidden" onclick="openRunWindow()">▶</button>
   <div id="clock">--:--</div>
 </div>
 
@@ -325,7 +327,7 @@
       <div class="ransom-frame">
         <h1 class="ransom-title">Ваши файлы зашифрованы.</h1>
         <div class="ransom-sub">Your personal files are encrypted.</div>
-        <div class="ransom-text">Ваши документы, фотографии, базы данных и другие важные файлы были зашифрованы самым сильным шифрованием. Приватный ключ хранится на секретном сервере. Никто не сможет расшифровать ваши файлы пока вы не оплатите.</div>
+        <div class="ransom-text">Ваши документы, фотографии, базы данных и другие важные файлы были зашифрованы. Приватный ключ хранится на секретном сервере. Никто не сможет расшифровать ваши файлы пока вы не оплатите.</div>
         <div class="ransom-text">У вас есть <span class="yellow">72 часа</span> для совершения оплаты.</div>
         <div class="ransom-warning">
           <div class="tri"></div>
@@ -368,7 +370,7 @@
   <div class="body">
     <div class="run-row">
       <label>Открыть:</label>
-      <input type="text" id="runInput" placeholder="cmd" autocomplete="off">
+      <input type="text" id="runInput" placeholder="Введите команду..." autocomplete="off">
     </div>
     <div class="run-actions">
       <button class="run-btn primary" onclick="executeRun()">ОК</button>
@@ -396,7 +398,6 @@ const TREE_FOLDERS    = 20;
 const DEPTH           = 3; 
 /* ===================================================================== */
 
-/* ---------- ГЕНЕРАЦИЯ ПАПОК ---------- */
 function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 const WORDS = ["Документы","Загрузки","Музыка","Видео","Изображения","Архив","Отчёты","Проекты","База","Сканы","Книги","Фото","Семейное","Работа","Учёба","Резерв","Копии","Разное","Important","Backup","Data","Files","Docs","Photos","Music","Video","Work","Home","Old","2023","2024","2025","Отпуск","Отчёт","Прайс","Сметы","Схемы","Чертежи","Клиенты"];
@@ -423,7 +424,6 @@ for (let i = 0; i < TREE_FOLDERS; i++) rootFolders.push(makeFolder(pick(WORDS) +
 const desktopFolders = [];
 for (let i = 0; i < DESKTOP_FOLDERS; i++) desktopFolders.push(makeFolder(pick(WORDS) + " " + randInt(1, 999), 2));
 
-// Прячем пароль (в 1 папку)
 const allFolders = [];
 rootFolders.forEach(f => collectAllFolders(f, allFolders));
 desktopFolders.forEach(f => collectAllFolders(f, allFolders));
@@ -543,7 +543,7 @@ function openRansom() {
   ransomWin.style.display = "block"; passWin.style.display = "none";
   document.getElementById('startMenu').style.display = 'none';
   startRansomTimer();
-  infectSystem(); // ВКЛЮЧАЕМ ЗАРАЗУ
+  infectSystem();
 }
 function closeRansom() { ransomWin.style.display = "none"; stopRansomTimer(); }
 function startRansomTimer() {
@@ -568,7 +568,6 @@ function checkPassword() {
     setTimeout(() => {
       passWin.style.display = "none"; ransomWin.style.display = "none"; stopRansomTimer();
       finalScr.style.display = "flex";
-      // Лечим компьютер
       document.body.classList.remove('infected');
       document.getElementById('bloodContainer').style.display = 'none';
       document.body.style.filter = 'none';
@@ -583,19 +582,41 @@ passInput.addEventListener("keydown", (e) => { if (e.key === "Enter") checkPassw
 /* ---------- ОКНО ВЫПОЛНИТЬ ---------- */
 const runWin = document.getElementById("runWin"), runInput = document.getElementById("runInput");
 
-// Горячие клавиши Q + P
-let keysPressed = {};
+// ПРОСТОЙ ПЕРЕХВАТ КЛАВИШ (отладка и вызов)
+let isQDown = false;
+let isPDown = false;
+
 document.addEventListener('keydown', (e) => {
-  keysPressed[e.key.toLowerCase()] = true;
-  if (keysPressed['q'] && keysPressed['p']) {
+  // Отладочный вывод
+  document.getElementById('debugKeys').style.display = 'block';
+  document.getElementById('debugKeys').textContent = 'Клавиша: ' + e.key.toUpperCase();
+
+  const key = e.key.toLowerCase();
+  if (key === 'q') isQDown = true;
+  if (key === 'p') isPDown = true;
+
+  // Если обе нажаты — открываем
+  if (isQDown && isPDown) {
     e.preventDefault();
-    runWin.style.display = "block";
-    runInput.value = "";
-    document.getElementById('startMenu').style.display = 'none';
-    setTimeout(() => runInput.focus(), 100);
+    openRunWindow();
+    isQDown = false; 
+    isPDown = false;
+    document.getElementById('debugKeys').style.display = 'none';
   }
 });
-document.addEventListener('keyup', (e) => { keysPressed[e.key.toLowerCase()] = false; });
+
+document.addEventListener('keyup', (e) => {
+  const key = e.key.toLowerCase();
+  if (key === 'q') isQDown = false;
+  if (key === 'p') isPDown = false;
+});
+
+function openRunWindow() {
+  runWin.style.display = "block";
+  runInput.value = "";
+  document.getElementById('startMenu').style.display = 'none';
+  setTimeout(() => runInput.focus(), 100);
+}
 
 function closeRun() { runWin.style.display = "none"; }
 
@@ -616,13 +637,12 @@ runInput.addEventListener("keydown", (e) => { if (e.key === "Enter") executeRun(
 let bloodInterval = null;
 
 function infectSystem() {
-  document.body.classList.add('infected'); // Меняет обои на глючные
-  document.body.style.filter = 'contrast(1.2) saturate(1.5)'; // Искажает цвета
+  document.body.classList.add('infected');
+  document.body.style.filter = 'contrast(1.2) saturate(1.5)';
   
   const bloodContainer = document.getElementById('bloodContainer');
   bloodContainer.style.display = 'block';
   
-  // Запускаем "тормоза" (создаем тяжелый цикл каждые 200мс)
   if (!window.lagInterval) {
     window.lagInterval = setInterval(() => {
       let t = performance.now();
@@ -630,16 +650,14 @@ function infectSystem() {
     }, 250);
   }
 
-  // Кровь течет каждую минуту
   if (!bloodInterval) {
-    spawnBlood(); // сразу первая капля
-    bloodInterval = setInterval(spawnBlood, 60000); // каждую минуту
+    spawnBlood();
+    bloodInterval = setInterval(spawnBlood, 60000);
   }
 }
 
 function spawnBlood() {
   const cont = document.getElementById('bloodContainer');
-  // Создаем 2-4 капли за раз
   const count = randInt(2, 4);
   for (let i = 0; i < count; i++) {
     const drop = document.createElement('div');
@@ -647,15 +665,13 @@ function spawnBlood() {
     const w = randInt(10, 35);
     drop.style.width = w + 'px';
     drop.style.left = randInt(0, 95) + '%';
-    drop.style.height = '0px'; // Начинаем с нуля
+    drop.style.height = '0px';
     cont.appendChild(drop);
     
-    // Анимация стекания
     setTimeout(() => {
       drop.style.height = randInt(200, 800) + 'px';
     }, 50);
 
-    // Оставляем пятно внизу
     setTimeout(() => {
       const puddle = document.createElement('div');
       puddle.className = 'blood-puddle';
@@ -663,11 +679,11 @@ function spawnBlood() {
       puddle.style.width = '0px';
       puddle.style.height = randInt(10, 25) + 'px';
       puddle.style.left = drop.style.left;
-      puddle.style.transform = `translateX(-${pw/2}px)`; // Центрируем
+      puddle.style.transform = `translateX(-${pw/2}px)`;
       cont.appendChild(puddle);
       
       setTimeout(() => { puddle.style.width = pw + 'px'; }, 50);
-    }, 2500); // Пятно появляется когда капля долетела
+    }, 2500);
   }
 }
 
