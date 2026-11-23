@@ -2,684 +2,949 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0f0c29">
-<title>Детектор Движения + Фонарик</title>
+<title>Windows — Desktop</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
-body { background: #0f0c29; color: #fff; display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    overflow: hidden; user-select: none;
+    background: #0b1020;
+  }
 
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-.topbar h1 { font-size: 15px; font-weight: 700; letter-spacing: 1px; color: #ff416c; }
-.topbar-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #aaa; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: #666; transition: background 0.3s; }
-.dot.active { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
-.dot.alarm { background: #ff0033; box-shadow: 0 0 8px #ff0033; animation: blink 0.3s infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  /* ---------- РАБОЧИЙ СТОЛ ---------- */
+  #desktop {
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(circle at 30% 20%, #1e3a5f 0%, #0b1020 60%, #000 100%);
+    overflow: auto;
+    padding: 12px;
+  }
+  #desktop::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(80,140,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(80,140,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  #iconGrid {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    grid-auto-rows: 104px;
+    gap: 4px;
+  }
 
-.camera-wrap { flex: 1; position: relative; background: #000; overflow: hidden; min-height: 0; }
-.camera-wrap.alarm { animation: alarmBorder 0.4s infinite; }
-@keyframes alarmBorder { 0%, 100% { box-shadow: inset 0 0 0 4px #ff0033; } 50% { box-shadow: inset 0 0 0 4px #ff0033, inset 0 0 40px #ff0033; } }
+  /* иконки */
+  .icon {
+    width: 96px; padding: 8px 4px;
+    text-align: center; color: #fff;
+    cursor: pointer; border-radius: 6px;
+    transition: background 0.15s;
+    font-size: 11.5px;
+  }
+  .icon:hover { background: rgba(255,255,255,0.12); }
+  .icon:active { background: rgba(255,255,255,0.22); }
+  .icon .pic {
+    width: 48px; height: 48px; margin: 0 auto 4px;
+    background: #ffd166;
+    border: 2px solid #c9a227;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; color: #333; font-size: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  }
+  .icon.folder .pic {
+    background: #ffcf4d; border-color: #b8960c;
+    border-radius: 4px 4px 8px 8px;
+    position: relative;
+  }
+  .icon.folder .pic::before {
+    content: "";
+    position: absolute; top: -6px; left: 4px;
+    width: 22px; height: 8px;
+    background: #ffcf4d; border: 2px solid #b8960c;
+    border-bottom: none; border-radius: 4px 4px 0 0;
+  }
+  .icon.folder .pic::after { content: ""; }
+  .icon .name {
+    text-shadow: 0 1px 2px #000; line-height: 1.15;
+    word-break: break-word;
+    max-height: 2.4em; overflow: hidden;
+  }
 
-#video { width: 100%; height: 100%; object-fit: cover; display: block; transform: scaleX(-1); }
-#overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; transform: scaleX(-1); }
+  /* ---------- ПАНЕЛЬ ЗАДАЧ ---------- */
+  #taskbar {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 48px;
+    background: rgba(10,14,26,0.92);
+    border-top: 1px solid #2a3550;
+    display: flex; align-items: center; padding: 0 10px; gap: 8px;
+    color: #dbe4ff; font-size: 13px; z-index: 5000;
+    backdrop-filter: blur(6px);
+  }
+  #startBtn {
+    width: 38px; height: 38px; border-radius: 6px;
+    background: #1b6cff; color: #fff; border: none;
+    font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+  }
+  #startBtn:hover { background: #3a86ff; }
+  #explorerBtn {
+    background: #223055; color: #dbe4ff; border: 1px solid #354a7a;
+    height: 34px; padding: 0 14px; border-radius: 6px;
+    cursor: pointer; font-size: 13px;
+  }
+  #explorerBtn:hover { background: #2d3f6e; }
+  #clock { margin-left: auto; padding: 0 10px; font-variant-numeric: tabular-nums; }
 
-.alarm-banner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: 900; color: #ff0033; text-shadow: 0 0 20px #ff0033; background: rgba(0,0,0,0.85); padding: 14px 28px; border-radius: 14px; display: none; letter-spacing: 3px; border: 2px solid #ff0033; white-space: nowrap; }
-.alarm-banner.active { display: block; animation: bannerPulse 0.3s infinite; }
-@keyframes bannerPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.08); } }
+  /* ---------- ОКНА ---------- */
+  .win {
+    position: fixed; z-index: 4000;
+    background: #f0f0f0; color: #111;
+    border: 1px solid #555;
+    border-radius: 6px; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    display: none;
+    animation: winIn 0.18s ease-out;
+  }
+  @keyframes winIn { from{transform:scale(0.94);opacity:0} to{transform:scale(1);opacity:1} }
 
-.motion-indicator { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 6px 12px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); }
-.motion-bar { width: 60px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; overflow: hidden; }
-.motion-bar-fill { height: 100%; background: linear-gradient(90deg, #00ff88, #ffd200, #ff0033); width: 0%; transition: width 0.1s; }
+  .win .titlebar {
+    height: 34px; background: linear-gradient(#e8e8e8, #cfcfcf);
+    border-bottom: 1px solid #999;
+    display: flex; align-items: center; padding: 0 8px;
+    font-size: 13px; font-weight: 600; color: #222; gap: 8px;
+    cursor: default;
+  }
+  .win .titlebar .ico {
+    width: 18px; height: 18px; border-radius: 4px;
+    background: #c9a227; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff; font-weight: bold;
+  }
+  .win .titlebar .spacer { flex: 1; }
+  .win .titlebar .btns { display: flex; gap: 4px; }
+  .win .titlebar .btns button {
+    width: 26px; height: 22px; border: 1px solid #999;
+    background: #e0e0e0; cursor: pointer; font-size: 12px;
+    border-radius: 3px; color: #333;
+  }
+  .win .titlebar .btns button:hover { background: #d0d0d0; }
+  .win .body { padding: 0; }
 
-.controls-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 10px 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-.btn { padding: 14px 8px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; transition: transform 0.1s, opacity 0.2s; touch-action: manipulation; }
-.btn:active { transform: scale(0.95); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-start { background: linear-gradient(135deg, #00b09b, #96c93d); color: #fff; }
-.btn-stop { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; }
-.btn-test { background: linear-gradient(135deg, #f7971e, #ffd200); color: #000; }
+  /* ---------- ПРОВОДНИК ---------- */
+  #explorerWin {
+    width: 860px; max-width: 96vw;
+    height: 600px; max-height: 92vh;
+    left: 50%; top: 50%; transform: translate(-50%,-50%);
+  }
+  #explorerWin .body {
+    display: flex; flex-direction: column;
+    height: calc(100% - 34px);
+    background: #f7f7f7;
+  }
+  .toolbar {
+    height: 44px; flex: 0 0 auto;
+    background: #ececec; border-bottom: 1px solid #ccc;
+    display: flex; align-items: center; padding: 0 8px; gap: 6px;
+    font-size: 12px;
+  }
+  .toolbar button {
+    background: #fff; border: 1px solid #bbb;
+    height: 30px; min-width: 34px; padding: 0 8px;
+    border-radius: 4px; cursor: pointer; font-size: 13px;
+  }
+  .toolbar button:hover { background: #eef4ff; border-color: #1b6cff; }
+  .toolbar button:disabled { opacity: 0.45; cursor: default; }
+  #pathBar {
+    flex: 1; height: 30px; background: #fff; border: 1px solid #bbb;
+    border-radius: 4px; display: flex; align-items: center;
+    padding: 0 8px; font-size: 12.5px; color: #333;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .explorer-split {
+    flex: 1; display: flex; min-height: 0;
+  }
+  /* левая панель — дерево */
+  #treePane {
+    width: 240px; flex: 0 0 240px;
+    background: #f0f3f8; border-right: 1px solid #ccc;
+    overflow: auto; padding: 6px;
+    font-size: 12.5px;
+  }
+  .tree-item {
+    padding: 5px 8px; border-radius: 4px; cursor: pointer;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: #222;
+  }
+  .tree-item:hover { background: #e2e9f5; }
+  .tree-item.active { background: #1b6cff; color: #fff; }
+  .tree-item .arr { display: inline-block; width: 12px; color: #888; }
+  .tree-item.active .arr { color: #cfe0ff; }
 
-.panel-toggle { width: 100%; padding: 12px; background: rgba(255,65,108,0.15); border: none; color: #ff416c; font-weight: 700; font-size: 13px; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; flex-shrink: 0; border-top: 1px solid rgba(255,65,108,0.3); }
+  /* правая панель — содержимое */
+  #contentPane {
+    flex: 1; overflow: auto; padding: 10px;
+    background: #fff;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 110px);
+    grid-auto-rows: 110px;
+    gap: 6px;
+    align-content: start;
+  }
+  .citem {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    padding: 6px 4px; border-radius: 6px; cursor: pointer;
+    text-align: center; font-size: 11.5px; color: #222;
+    word-break: break-word;
+    border: 1px solid transparent;
+  }
+  .citem:hover { background: #eaf1ff; border-color: #bcd4ff; }
+  .citem .cpic {
+    width: 44px; height: 44px; margin-bottom: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+  }
+  .citem.folder .cpic { color: #e0a800; }
+  .citem.file .cpic { color: #6b7a99; }
+  .citem.file.txt .cpic { color: #2f6db3; }
+  .citem.file.key .cpic { color: #cc33cc; }
+  .citem.file.key { background: #fff6ff; }
+  .citem.file.key:hover { background: #ffe6ff; }
 
-.bottom-panel { flex-shrink: 0; background: rgba(20,20,35,0.98); border-top: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: max-height 0.3s ease; max-height: 0; }
-.bottom-panel.open { max-height: 55vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  /* ---------- ОКНО ФАЙЛА ---------- */
+  #fileWin {
+    width: 460px; max-width: 92vw;
+    left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: #fff;
+  }
+  #fileWin .titlebar { background: #f0f0f0; }
+  #fileWin .body { padding: 18px 22px; }
+  #fileTitle { font-size: 15px; font-weight: bold; margin-bottom: 12px; color: #222; }
+  #fileContent {
+    font-family: "Consolas", monospace; font-size: 13px;
+    background: #fafafa; border: 1px solid #ddd; border-radius: 4px;
+    padding: 12px; white-space: pre-wrap; color: #222;
+    max-height: 260px; overflow: auto;
+  }
+  #fileContent .key {
+    display: inline-block; margin-top: 8px;
+    background: #1b1b1b; color: #0f0;
+    padding: 6px 10px; border-radius: 4px; font-weight: bold;
+    letter-spacing: 2px;
+  }
+  .file-actions { text-align: right; margin-top: 14px; }
+  .btn-dark {
+    background: #2a2a2a; color: #eee; border: 1px solid #555;
+    padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px;
+  }
+  .btn-dark:hover { background: #3a3a3a; }
 
-.panel-content { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 14px; }
-.section-title { font-size: 11px; text-transform: uppercase; color: #ff416c; letter-spacing: 2px; font-weight: 700; margin-top: 4px; border-bottom: 1px solid rgba(255,65,108,0.3); padding-bottom: 4px; }
+  /* ---------- ОКНО ВЫКУПА ---------- */
+  #ransomWin {
+    width: 760px; max-width: 95vw;
+    height: 560px; max-height: 90vh;
+    left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: #0a0a0a; color: #eee;
+  }
+  #ransomWin .titlebar {
+    background: #1a1a1a; color: #ddd; border-bottom: 1px solid #333;
+  }
+  #ransomWin .titlebar .ico { background: #8b0000; }
+  #ransomContent {
+    padding: 0; height: calc(100% - 34px);
+    overflow-y: auto; background: #0a0a0a;
+  }
+  .ransom-frame {
+    border: 6px double #ffcc00;
+    margin: 12px; padding: 18px 22px 20px;
+    background: #0d0d0d;
+  }
+  .ransom-title {
+    text-align: center; color: #ff3333;
+    font-size: 26px; font-weight: 800;
+    letter-spacing: 1px; margin: 0 0 6px;
+    text-shadow: 0 0 12px rgba(255,0,0,0.6);
+  }
+  .ransom-sub {
+    text-align: center; color: #ff5555;
+    font-size: 18px; font-weight: bold; margin-bottom: 16px;
+  }
+  .ransom-text {
+    color: #ddd; font-size: 14px; line-height: 1.55; margin-bottom: 12px;
+  }
+  .ransom-text b { color: #fff; }
+  .ransom-text .yellow { color: #ffdd33; font-weight: bold; }
+  .ransom-text .red { color: #ff4444; font-weight: bold; }
+  .ransom-warning {
+    display: flex; gap: 10px; align-items: flex-start;
+    margin: 14px 0 18px; font-size: 12px; line-height: 1.45;
+    color: #ff5555; font-weight: bold;
+  }
+  .ransom-warning .tri {
+    width: 0; height: 0; flex: 0 0 auto;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-bottom: 38px solid #ff2222;
+    position: relative; margin-top: 2px;
+    filter: drop-shadow(0 0 4px #f00);
+  }
+  .ransom-warning .tri::after {
+    content: "!"; position: absolute; left: -5px; top: 12px;
+    color: #fff; font-weight: 900; font-size: 20px;
+  }
+  .ransom-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; margin-top: 8px;
+  }
+  .btn {
+    background: #f3c623; color: #222;
+    border: 2px solid #b8960c;
+    padding: 8px 26px; font-size: 15px; font-weight: bold;
+    border-radius: 4px; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    transition: transform 0.1s, background 0.15s;
+  }
+  .btn:hover { background: #ffdb4d; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { background: #777; border-color: #555; cursor: not-allowed; }
+  .timer-big {
+    font-family: "Consolas", monospace;
+    font-size: 40px; font-weight: bold;
+    color: #ffdd33; letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(255,200,0,0.5);
+    flex: 1; text-align: center;
+  }
+  .ransom-footer {
+    margin-top: 14px; font-size: 12px; color: #bbb;
+    text-align: center; background: #000; padding: 6px;
+    border: 1px solid #333;
+  }
 
-.control-group { display: flex; flex-direction: column; gap: 6px; }
-.control-group label { font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-.value-badge { background: #ff416c; color: #fff; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; min-width: 46px; text-align: center; }
+  /* ---------- ОКНО ПАРОЛЯ ---------- */
+  #passWin {
+    width: 420px; max-width: 92vw;
+    left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: #1a1a1a; color: #eee;
+  }
+  #passWin .titlebar { background: #111; color: #ddd; border-bottom: 1px solid #333; }
+  #passWin .titlebar .ico { background: #8b0000; }
+  #passWin .body { padding: 22px; }
+  #passWin label { display: block; font-size: 13px; color: #bbb; margin-bottom: 8px; }
+  #passInput {
+    width: 100%; padding: 10px 12px; font-size: 16px;
+    font-family: "Consolas", monospace;
+    background: #000; color: #0f0; border: 1px solid #444;
+    border-radius: 4px; outline: none; letter-spacing: 2px;
+  }
+  #passInput:focus { border-color: #1b6cff; box-shadow: 0 0 8px rgba(27,108,255,0.5); }
+  #passMsg {
+    min-height: 20px; margin-top: 10px; font-size: 13px;
+    color: #ff4444; font-weight: bold; text-align: center;
+  }
+  #passMsg.ok { color: #22cc55; }
+  .pass-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
 
-input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; background: transparent; outline: none; }
-input[type="range"]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #ff416c, #ff4b2b); cursor: pointer; box-shadow: 0 0 10px rgba(255,65,108,0.7); margin-top: -10px; }
-input[type="range"]::-moz-range-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); }
-input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border: none; border-radius: 50%; background: linear-gradient(135deg, #ff416c, #ff4b2b); cursor: pointer; }
-
-.switch-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 14px; }
-.switch { position: relative; width: 50px; height: 28px; flex-shrink: 0; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider-sw { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.2); border-radius: 28px; transition: 0.3s; }
-.slider-sw::before { content: ""; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.3s; }
-.switch input:checked + .slider-sw { background: #ff416c; }
-.switch input:checked + .slider-sw::before { transform: translateX(22px); }
-
-select, input[type="text"] { width: 100%; padding: 12px; border-radius: 10px; background: rgba(0,0,0,0.4); color: #fff; border: 1px solid rgba(255,255,255,0.2); font-size: 14px; cursor: pointer; }
-select option { background: #24243e; }
-
-.alert-log { background: rgba(0,0,0,0.4); border-radius: 8px; padding: 8px; max-height: 100px; overflow-y: auto; font-size: 11px; font-family: monospace; color: #ffb347; -webkit-overflow-scrolling: touch; }
-.alert-log div { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-.flash-overlay { position: fixed; inset: 0; background: #ff0033; opacity: 0; pointer-events: none; z-index: 9999; transition: opacity 0.1s; }
+  /* ---------- ФИНАЛ ---------- */
+  #finalScreen {
+    position: fixed; inset: 0; z-index: 10000;
+    background: #000; color: #22cc55;
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: "Consolas", monospace; text-align: center;
+    padding: 20px;
+  }
+  #finalScreen h1 { color: #22cc55; font-size: 34px; margin: 0 0 14px; letter-spacing: 2px; }
+  #finalScreen p { font-size: 16px; color: #aaa; margin: 6px; }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <h1>ДЕТЕКТОР + ФОНАРИК</h1>
-  <div class="topbar-status">
-    <div class="dot" id="statusDot"></div>
-    <span id="statusText">Не активна</span>
+<div id="desktop">
+  <div id="iconGrid"></div>
+</div>
+
+<div id="taskbar">
+  <button id="startBtn">≡</button>
+  <button id="explorerBtn" onclick="openExplorer()">📁 Проводник</button>
+  <div id="clock">--:--</div>
+</div>
+
+<!-- ================= ПРОВОДНИК ================= -->
+<div class="win" id="explorerWin">
+  <div class="titlebar">
+    <div class="ico">📁</div>
+    <div>Проводник</div>
+    <div class="spacer"></div>
+    <div class="btns">
+      <button onclick="closeExplorer()">✕</button>
+    </div>
+  </div>
+  <div class="body">
+    <div class="toolbar">
+      <button id="backBtn" onclick="explorerBack()">← Назад</button>
+      <button onclick="explorerHome()">🏠 Мой компьютер</button>
+      <div id="pathBar">Мой компьютер</div>
+      <button onclick="refreshExplorer()">⟳</button>
+    </div>
+    <div class="explorer-split">
+      <div id="treePane"></div>
+      <div id="contentPane"></div>
+    </div>
   </div>
 </div>
 
-<div class="camera-wrap" id="cameraWrap">
-  <video id="video" autoplay playsinline muted></video>
-  <canvas id="overlay"></canvas>
-  <div class="alarm-banner" id="alarmBanner">ДВИЖЕНИЕ</div>
-  <div class="motion-indicator">
-    <span id="motionScore">0%</span>
-    <div class="motion-bar"><div class="motion-bar-fill" id="motionFill"></div></div>
+<!-- ================= ОКНО ФАЙЛА ================= -->
+<div class="win" id="fileWin">
+  <div class="titlebar">
+    <div class="ico" style="background:#2f6db3">📄</div>
+    <div id="fileWinTitle">Файл</div>
+    <div class="spacer"></div>
+    <div class="btns">
+      <button onclick="closeFile()">✕</button>
+    </div>
+  </div>
+  <div class="body">
+    <div id="fileTitle"></div>
+    <div id="fileContent"></div>
+    <div class="file-actions">
+      <button class="btn-dark" onclick="closeFile()">Закрыть</button>
+    </div>
   </div>
 </div>
 
-<div class="controls-bar">
-  <button class="btn btn-start" id="btnStart">Старт</button>
-  <button class="btn btn-stop" id="btnStop" disabled>Стоп</button>
-  <button class="btn btn-test" id="btnTest">Тест</button>
-</div>
+<!-- ================= ОКНО ВЫКУПА ================= -->
+<div class="win" id="ransomWin">
+  <div class="titlebar">
+    <div class="ico">!</div>
+    <div>README_ENCRYPTED.txt</div>
+    <div class="spacer"></div>
+    <div class="btns">
+      <button onclick="closeRansom()">✕</button>
+    </div>
+  </div>
+  <div class="body">
+    <div id="ransomContent">
+      <div class="ransom-frame">
+        <h1 class="ransom-title">Ваши файлы зашифрованы.</h1>
+        <div class="ransom-sub">Your personal files are encrypted.</div>
 
-<button class="panel-toggle" id="panelToggle">НАСТРОЙКИ И УВЕДОМЛЕНИЯ</button>
+        <div class="ransom-text">
+          Ваши документы, фотографии, базы данных и другие важные файлы были
+          зашифрованы самым сильным шифрованием с уникальным ключом, сгенерированным
+          для данного компьютера. Приватный ключ хранится на секретном сервере в
+          интернете и никто не сможет расшифровать ваши файлы пока вы не оплатите и не
+          получите приватный ключ.
+        </div>
 
-<div class="bottom-panel" id="bottomPanel">
-  <div class="panel-content">
-    
-    <div class="section-title">Уведомления (ntfy)</div>
-    <div class="control-group">
-      <label><span>Ваша тема (Topic)</span></label>
-      <input type="text" id="ntfyTopic" value="moy_detektor_123">
-    </div>
-    <div class="switch-row">
-      <span>Отправлять статус о движении</span>
-      <label class="switch"><input type="checkbox" id="ntfyEnabled" checked><span class="slider-sw"></span></label>
-    </div>
-    <div class="switch-row">
-      <span>Принимать команды (1/2)</span>
-      <label class="switch"><input type="checkbox" id="listenEnabled" checked><span class="slider-sw"></span></label>
-    </div>
+        <div class="ransom-text">
+          У вас есть <span class="yellow">72 часа</span> для совершения оплаты.
+          В противном случае, все ваши файлы останутся зашифрованы навсегда и никто
+          их не расшифрует.
+        </div>
 
-    <div class="section-title">Управление фонариком</div>
-    <div class="switch-row">
-      <span>Включить фонарик сейчас</span>
-      <label class="switch"><input type="checkbox" id="torchManual"><span class="slider-sw"></span></label>
-    </div>
-    <div class="switch-row">
-      <span>Авто-фонарик при движении</span>
-      <label class="switch"><input type="checkbox" id="torchAuto" checked><span class="slider-sw"></span></label>
-    </div>
+        <div class="ransom-text">
+          Нажмите «Файлы» для просмотра списка зашифрованных файлов.
+        </div>
 
-    <div class="section-title">Чувствительность</div>
-    <div class="control-group">
-      <label><span>Порог движения</span><span class="value-badge" id="sensitivityVal">15%</span></label>
-      <input type="range" id="sensitivity" min="1" max="60" value="15">
-    </div>
-    <div class="control-group">
-      <label><span>Громкость сирены</span><span class="value-badge" id="volVal">80%</span></label>
-      <input type="range" id="volume" min="0" max="100" value="80">
-    </div>
-    <div class="control-group">
-      <label><span>Задержка тишины</span><span class="value-badge" id="delayVal">2с</span></label>
-      <input type="range" id="silenceDelay" min="0" max="10" value="2">
-    </div>
+        <div class="ransom-text">
+          Нажмите «Далее» для подключения к серверу и следуйте инструкциям.
+        </div>
 
-    <div class="section-title">Тип сирены</div>
-    <select id="alarmType">
-      <option value="classic">Классическая сирена</option>
-      <option value="police">Полицейская</option>
-      <option value="ambulance">Скорая помощь</option>
-      <option value="buzzer">Зуммер</option>
-      <option value="scream">Крик</option>
-      <option value="beep">Бип-бип</option>
-    </select>
+        <div class="ransom-warning">
+          <div class="tri"></div>
+          <div>
+            ВНИМАНИЕ! НЕ УДАЛЯЙТЕ ПРОГРАММУ. ЭТО НЕ ПОМОЖЕТ ВОССТАНОВИТЬ ФАЙЛЫ.
+            ЧАСТИЧКА СИСТЕМЫ ПРИВЕДЕТ К ТОМУ, ЧТО ВСЕ ВАШИ ФАЙЛЫ БУДУТ
+            УНИЧТОЖЕНЫ И ВЫ ПОТЕРЯЕТЕ СВОИ ДАННЫЕ. ЕДИНСТВЕННЫЙ ШАНС НА
+            ВОССТАНОВЛЕНИЕ ФАЙЛОВ — СЛЕДОВАТЬ ИНСТРУКЦИЯМ.
+          </div>
+        </div>
 
-    <div class="section-title">Дополнительно</div>
-    <div class="switch-row"><span>Показывать зоны движения</span><label class="switch"><input type="checkbox" id="showZones" checked><span class="slider-sw"></span></label></div>
-    <div class="switch-row"><span>Звук при детекции</span><label class="switch"><input type="checkbox" id="soundEnabled" checked><span class="slider-sw"></span></label></div>
-    <div class="switch-row"><span>Вспышка экрана</span><label class="switch"><input type="checkbox" id="flashEnabled" checked><span class="slider-sw"></span></label></div>
-    <div class="switch-row"><span>Вибрация</span><label class="switch"><input type="checkbox" id="vibrateEnabled" checked><span class="slider-sw"></span></label></div>
+        <div class="ransom-controls">
+          <button class="btn" onclick="showFilesInfo()">Файлы</button>
+          <div class="timer-big" id="ransomTimer">72:00:00</div>
+          <button class="btn" id="nextBtn" onclick="openPasswordWindow()">Далее &gt;&gt;</button>
+        </div>
 
-    <div class="section-title">Журнал событий</div>
-    <div class="alert-log" id="alertLog"><div>Ожидание запуска...</div></div>
-    <button class="btn btn-stop" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);" id="btnClearLog">Очистить журнал</button>
+        <div class="ransom-footer">
+          can open it and use copy-paste for address and key.
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="flash-overlay" id="flashOverlay"></div>
+<!-- ================= ОКНО ПАРОЛЯ ================= -->
+<div class="win" id="passWin">
+  <div class="titlebar">
+    <div class="ico">🔒</div>
+    <div>Подключение к серверу — Введите ключ</div>
+    <div class="spacer"></div>
+    <div class="btns">
+      <button onclick="closePass()">✕</button>
+    </div>
+  </div>
+  <div class="body">
+    <label>Введите приватный ключ (password):</label>
+    <input type="text" id="passInput" placeholder="************" autocomplete="off">
+    <div id="passMsg"></div>
+    <div class="pass-actions">
+      <button class="btn-dark" onclick="closePass()">Отмена</button>
+      <button class="btn" onclick="checkPassword()">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ФИНАЛЬНЫЙ ЭКРАН ================= -->
+<div id="finalScreen">
+  <h1>ДОСТУП РАЗРЕШЁН</h1>
+  <p>Ключ принят сервером.</p>
+  <p>Расшифровка файлов запущена...</p>
+</div>
 
 <script>
-'use strict';
+/* =====================================================================
+   НАСТРОЙКИ
+   ===================================================================== */
+const CORRECT_PASSWORD = "12345678900987654321";
 
-// ---- DOM ----
-const video = document.getElementById('video');
-const overlay = document.getElementById('overlay');
-const ctx = overlay.getContext('2d');
-const cameraWrap = document.getElementById('cameraWrap');
-const statusDot = document.getElementById('statusDot');
-const statusText = document.getElementById('statusText');
-const alarmBanner = document.getElementById('alarmBanner');
-const motionScoreEl = document.getElementById('motionScore');
-const motionFill = document.getElementById('motionFill');
-const alertLog = document.getElementById('alertLog');
-const flashOverlay = document.getElementById('flashOverlay');
+const DESKTOP_FOLDERS = 300;   // папок прямо на рабочем столе
+const TREE_FOLDERS    = 20;    // папок в корне «Мой компьютер»
+const SUB_MIN         = 4;     // минимум подпапок в каждой папке
+const SUB_MAX         = 8;     // максимум подпапок
+const DEPTH           = 3;     // глубина вложенности
+/* ===================================================================== */
 
-const btnStart = document.getElementById('btnStart');
-const btnStop = document.getElementById('btnStop');
-const btnTest = document.getElementById('btnTest');
-const btnClearLog = document.getElementById('btnClearLog');
-const panelToggle = document.getElementById('panelToggle');
-const bottomPanel = document.getElementById('bottomPanel');
+/* ---------- ГЕНЕРАЦИЯ ДЕРЕВА ПАПОК И ПОИСК МЕСТА ДЛЯ ПАРОЛЯ ---------- */
 
-const sensitivityEl = document.getElementById('sensitivity');
-const sensitivityVal = document.getElementById('sensitivityVal');
-const volumeEl = document.getElementById('volume');
-const volVal = document.getElementById('volVal');
-const silenceDelayEl = document.getElementById('silenceDelay');
-const delayVal = document.getElementById('delayVal');
-const alarmTypeEl = document.getElementById('alarmType');
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-const showZonesEl = document.getElementById('showZones');
-const soundEnabledEl = document.getElementById('soundEnabled');
-const flashEnabledEl = document.getElementById('flashEnabled');
-const vibrateEnabledEl = document.getElementById('vibrateEnabled');
+const WORDS = ["Документы","Загрузки","Музыка","Видео","Изображения","Архив","Отчёты","Проекты",
+  "База","Сканы","Книги","Фото","Семейное","Работа","Учёба","Резерв","Копии","Разное",
+  "Important","Backup","Data","Files","Docs","Photos","Music","Video","Work","Home","Old",
+  "2023","2024","2025","Отпуск","Отчёт","Прайс","Сметы","Схемы","Чертежи","Клиенты"];
 
-const ntfyTopicEl = document.getElementById('ntfyTopic');
-const ntfyEnabledEl = document.getElementById('ntfyEnabled');
-const listenEnabledEl = document.getElementById('listenEnabled');
-const torchManualEl = document.getElementById('torchManual');
-const torchAutoEl = document.getElementById('torchAuto');
+const FILE_NAMES = ["отчёт","список","документ","заметка","данные","информация","файл","запись",
+  "log","report","data","notes","info","list","file","backup","config","ключ"];
 
-// ---- STATE ----
-let stream = null;
-let videoTrack = null;
-let running = false;
-let previousFrame = null;
-let alarmActive = false;
-let lastMotionTime = 0;
-let lastNtfyTime = 0;
-let audioCtx = null;
-let alarmOscillator = null;
-let alarmGain = null;
-let alarmInterval = null;
-let lastFrameTime = 0;
-let frameInterval = 1000 / 30;
-let flashInterval = null;
-let torchSupported = false;
-let torchState = false;
+function genId() { return Math.random().toString(36).slice(2, 10); }
 
-// SSE подписка на команды
-let ntfySse = null;
+// Создаём папку
+function makeFolder(name, depth) {
+  const folder = {
+    id: genId(),
+    name: name,
+    type: "folder",
+    children: [],
+    files: []
+  };
 
-panelToggle.addEventListener('click', () => {
-  bottomPanel.classList.toggle('open');
-  panelToggle.textContent = bottomPanel.classList.contains('open') ? 'СКРЫТЬ' : 'НАСТРОЙКИ И УВЕДОМЛЕНИЯ';
+  if (depth > 0) {
+    const subCount = randInt(SUB_MIN, SUB_MAX);
+    for (let i = 0; i < subCount; i++) {
+      const subName = pick(WORDS) + " " + randInt(1, 99);
+      folder.children.push(makeFolder(subName, depth - 1));
+    }
+  }
+
+  // добавляем обычные файлы (пустышки)
+  const fileCount = randInt(0, 3);
+  for (let i = 0; i < fileCount; i++) {
+    folder.files.push({
+      name: pick(FILE_NAMES) + "_" + randInt(100, 999) + ".txt",
+      content: "Содержимое файла повреждено шифрованием. Обратитесь к администратору.",
+      isKey: false
+    });
+  }
+
+  return folder;
+}
+
+// Собираем все папки в дерево (рекурсивно)
+function collectAllFolders(folder, out) {
+  out.push(folder);
+  folder.children.forEach(c => collectAllFolders(c, out));
+}
+
+// ---- Создаём корневые папки «Мой компьютер» ----
+const rootFolders = [];
+for (let i = 0; i < TREE_FOLDERS; i++) {
+  rootFolders.push(makeFolder(pick(WORDS) + " " + randInt(1, 99), DEPTH));
+}
+
+// ---- Создаём папки рабочего стола ----
+const desktopFolders = [];
+for (let i = 0; i < DESKTOP_FOLDERS; i++) {
+  desktopFolders.push(makeFolder(pick(WORDS) + " " + randInt(1, 999), 2));
+}
+
+// ---- Прячем пароль в одной случайной папке ----
+const allFolders = [];
+rootFolders.forEach(f => collectAllFolders(f, allFolders));
+desktopFolders.forEach(f => collectAllFolders(f, allFolders));
+
+const secretFolder = pick(allFolders);
+secretFolder.files.push({
+  name: "секретный_ключ.key",
+  content: "Найден приватный ключ для расшифровки файлов:\n\nПароль: " + CORRECT_PASSWORD + "\n\nВведите его в окно подключения к серверу.",
+  isKey: true
 });
 
-// ---- ФОНАРИК ----
-async function toggleTorch(state) {
-  if (!videoTrack) {
-    logAlert('Фонарик: камера не запущена');
-    return;
+// Для наглядности: у «секретной» папки добавим пометку (не в UI, просто логика)
+
+/* =====================================================================
+   РАБОЧИЙ СТОЛ
+   ===================================================================== */
+
+const iconGrid = document.getElementById("iconGrid");
+
+// Иконка приложения-вымогателя
+const appIcon = document.createElement("div");
+appIcon.className = "icon locked";
+appIcon.innerHTML = '<div class="pic" style="background:#8b0000;border-color:#500;color:#fff">!</div><div class="name">README_ENCRYPTED</div>';
+appIcon.addEventListener("click", openRansom);
+iconGrid.appendChild(appIcon);
+
+// Папки на рабочем столе
+desktopFolders.forEach(folder => {
+  const el = document.createElement("div");
+  el.className = "icon folder";
+  el.innerHTML = '<div class="pic"></div><div class="name">' + escapeHtml(folder.name) + '</div>';
+  el.addEventListener("dblclick", () => openFolderInExplorer(folder));
+  el.addEventListener("click", () => {
+    // одиночный клик только выделяет; по двойному — открывает
+  });
+  iconGrid.appendChild(el);
+});
+
+/* =====================================================================
+   ПРОВОДНИК
+   ===================================================================== */
+
+const explorerWin  = document.getElementById("explorerWin");
+const treePane     = document.getElementById("treePane");
+const contentPane  = document.getElementById("contentPane");
+const pathBar      = document.getElementById("pathBar");
+const backBtn      = document.getElementById("backBtn");
+
+let currentFolder = null;     // объект папки (null = Мой компьютер)
+let history = [];             // стек назад
+let expandedIds = new Set();  // раскрытые папки в дереве
+
+function openExplorer() {
+  explorerWin.style.display = "block";
+  if (!currentFolder) {
+    renderHome();
+  } else {
+    renderExplorer();
   }
-  try {
-    const caps = videoTrack.getCapabilities ? videoTrack.getCapabilities() : {};
-    if (caps.torch) {
-      torchSupported = true;
-      await videoTrack.applyConstraints({ advanced: [{ torch: state }] });
-      torchState = state;
-      logAlert('Фонарик: ' + (state ? 'ВКЛ' : 'ВЫКЛ'));
+}
+
+function closeExplorer() { explorerWin.style.display = "none"; }
+
+function explorerHome() {
+  currentFolder = null;
+  history = [];
+  renderHome();
+}
+
+function explorerBack() {
+  if (history.length) {
+    currentFolder = history.pop();
+    renderExplorer();
+  } else {
+    explorerHome();
+  }
+}
+
+function refreshExplorer() {
+  if (currentFolder) renderExplorer();
+  else renderHome();
+}
+
+function openFolderInExplorer(folder) {
+  if (currentFolder) history.push(currentFolder);
+  currentFolder = folder;
+  openExplorer();
+  renderExplorer();
+}
+
+/* ---- Домашний вид (Мой компьютер) ---- */
+function renderHome() {
+  backBtn.disabled = true;
+  pathBar.textContent = "Мой компьютер";
+  contentPane.innerHTML = "";
+  treePane.innerHTML = "";
+
+  // Дерево: корневой уровень
+  rootFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
+  desktopFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
+
+  // Содержимое: корневые папки
+  rootFolders.forEach(f => {
+    contentPane.appendChild(makeContentItem(f, () => openFolderInExplorer(f)));
+  });
+  // и папки рабочего стола
+  desktopFolders.forEach(f => {
+    contentPane.appendChild(makeContentItem(f, () => openFolderInExplorer(f)));
+  });
+}
+
+/* ---- Вид папки ---- */
+function renderExplorer() {
+  if (!currentFolder) { renderHome(); return; }
+  backBtn.disabled = history.length === 0;
+  pathBar.textContent = buildPath(currentFolder);
+  contentPane.innerHTML = "";
+  treePane.innerHTML = "";
+
+  // дерево — показываем все корневые и текущую ветку
+  rootFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
+  desktopFolders.forEach(f => treePane.appendChild(makeTreeItem(f, 0)));
+
+  // содержимое — подпапки и файлы
+  currentFolder.children.forEach(sub => {
+    contentPane.appendChild(makeContentItem(sub, () => openFolderInExplorer(sub)));
+  });
+  currentFolder.files.forEach(file => {
+    contentPane.appendChild(makeFileItem(file));
+  });
+
+  if (currentFolder.children.length === 0 && currentFolder.files.length === 0) {
+    const empty = document.createElement("div");
+    empty.style.cssText = "padding:20px;color:#888;font-size:13px;grid-column:1/-1;";
+    empty.textContent = "Эта папка пуста.";
+    contentPane.appendChild(empty);
+  }
+}
+
+/* путь до папки */
+function buildPath(folder) {
+  // Ищем в корнях
+  const chains = [];
+  function find(node, path) {
+    if (node === folder) { chains.push(path); return; }
+    node.children.forEach(c => find(c, path.concat([node.name])));
+  }
+  rootFolders.forEach(f => find(f, []));
+  desktopFolders.forEach(f => find(f, []));
+  const chain = chains[0] || [];
+  return "Мой компьютер" + (chain.length ? " \\ " + chain.join(" \\ ") + " \\ " : " \\ ") + folder.name;
+}
+
+/* ---- элементы дерева ---- */
+function makeTreeItem(folder, level) {
+  const wrap = document.createElement("div");
+  const item = document.createElement("div");
+  item.className = "tree-item";
+  item.style.paddingLeft = (8 + level * 14) + "px";
+  const hasChildren = folder.children.length > 0;
+  const arrow = hasChildren ? (expandedIds.has(folder.id) ? "▼" : "▶") : "&nbsp;";
+  item.innerHTML = '<span class="arr">' + arrow + '</span>📁 ' + escapeHtml(folder.name);
+
+  item.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (folder === currentFolder) return;
+    if (hasChildren) {
+      if (expandedIds.has(folder.id)) expandedIds.delete(folder.id);
+      else expandedIds.add(folder.id);
+    }
+    openFolderInExplorer(folder);
+  });
+
+  wrap.appendChild(item);
+
+  if (hasChildren && expandedIds.has(folder.id)) {
+    const kids = document.createElement("div");
+    folder.children.forEach(c => kids.appendChild(makeTreeItem(c, level + 1)));
+    wrap.appendChild(kids);
+  }
+  return wrap;
+}
+
+/* ---- элементы контента ---- */
+function makeContentItem(folder, onClick) {
+  const el = document.createElement("div");
+  el.className = "citem folder";
+  el.innerHTML = '<div class="cpic">📁</div><div>' + escapeHtml(folder.name) + '</div>';
+  el.addEventListener("dblclick", onClick);
+  el.addEventListener("click", () => {}); // выделение
+  return el;
+}
+
+function makeFileItem(file) {
+  const el = document.createElement("div");
+  el.className = "citem file" + (file.isKey ? " key" : (file.name.endsWith(".txt") ? " txt" : ""));
+  const icon = file.isKey ? "🔑" : "📄";
+  el.innerHTML = '<div class="cpic">' + icon + '</div><div>' + escapeHtml(file.name) + '</div>';
+  el.addEventListener("dblclick", () => openFile(file));
+  el.addEventListener("click", () => {});
+  return el;
+}
+
+/* ---- окно файла ---- */
+const fileWin       = document.getElementById("fileWin");
+const fileWinTitle  = document.getElementById("fileWinTitle");
+const fileTitle     = document.getElementById("fileTitle");
+const fileContent   = document.getElementById("fileContent");
+
+function openFile(file) {
+  fileWin.style.display = "block";
+  fileWinTitle.textContent = file.name;
+  fileTitle.textContent = file.name;
+
+  if (file.isKey) {
+    // разбиваем на части, чтобы пароль был оформлен
+    const parts = file.content.split("Пароль: ");
+    if (parts.length === 2) {
+      fileContent.innerHTML = escapeHtml(parts[0]) +
+        '<span class="key">' + escapeHtml(parts[1].split("\n")[0]) + '</span>' +
+        escapeHtml(parts[1].split("\n").slice(1).join("\n"));
     } else {
-      torchSupported = false;
-      logAlert('Фонарик не поддерживается устройством');
-      torchManualEl.checked = false;
-      torchAutoEl.checked = false;
+      fileContent.textContent = file.content;
     }
-  } catch (e) {
-    logAlert('Ошибка фонарика: ' + e.message);
+  } else {
+    fileContent.textContent = file.content;
   }
 }
 
-torchManualEl.addEventListener('change', () => toggleTorch(torchManualEl.checked));
+function closeFile() { fileWin.style.display = "none"; }
 
-// ---- NTFY: ОТПРАВКА ----
-async function sendNtfyStatus(isMotion) {
-  const topic = ntfyTopicEl.value.trim() || 'moy_detektor_123';
-  if (!ntfyEnabledEl.checked) return;
+/* =====================================================================
+   ОКНО ВЫКУПА И ПАРОЛЬ
+   ===================================================================== */
 
-  const now = Date.now();
-  if (now - lastNtfyTime < 3000) return; // не чаще раза в 3 сек
-  lastNtfyTime = now;
+const ransomWin = document.getElementById("ransomWin");
+const passWin   = document.getElementById("passWin");
+const passInput = document.getElementById("passInput");
+const passMsg   = document.getElementById("passMsg");
+const finalScr  = document.getElementById("finalScreen");
 
-  const url = 'https://ntfy.sh/' + encodeURIComponent(topic);
-  const message = isMotion
-    ? 'ВНИМАНИЕ! ОБНАРУЖЕНО ДВИЖЕНИЕ!'
-    : 'Движение прекратилось. Обстановка спокойна.';
+let ransomTimerInterval = null;
+const TOTAL_RANSOM_SEC = 72 * 60 * 60;
+let ransomLeft = TOTAL_RANSOM_SEC;
 
-  try {
-    await fetch(url, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Title': 'Detector',
-        'Priority': isMotion ? 'high' : 'default',
-        'Tags': isMotion ? 'warning' : 'white_check_mark'
-      },
-      body: message
-    });
-    logAlert(isMotion ? 'ntfy: отправлено (движение)' : 'ntfy: отправлено (покой)');
-  } catch (err) {
-    logAlert('ntfy ошибка: ' + err.message);
+function openRansom() {
+  ransomWin.style.display = "block";
+  passWin.style.display = "none";
+  startRansomTimer();
+}
+function closeRansom() {
+  ransomWin.style.display = "none";
+  stopRansomTimer();
+}
+function fmtTimer(sec) {
+  const h = Math.floor(sec / 3600).toString().padStart(2,'0');
+  const m = Math.floor((sec % 3600) / 60).toString().padStart(2,'0');
+  const s = (sec % 60).toString().padStart(2,'0');
+  return `${h}:${m}:${s}`;
+}
+function startRansomTimer() {
+  stopRansomTimer();
+  document.getElementById('ransomTimer').textContent = fmtTimer(ransomLeft);
+  ransomTimerInterval = setInterval(() => {
+    ransomLeft--;
+    if (ransomLeft < 0) ransomLeft = 0;
+    document.getElementById('ransomTimer').textContent = fmtTimer(ransomLeft);
+  }, 1000);
+}
+function stopRansomTimer() {
+  if (ransomTimerInterval) clearInterval(ransomTimerInterval);
+  ransomTimerInterval = null;
+}
+
+function showFilesInfo() {
+  alert("Список зашифрованных файлов недоступен без подключения к серверу.\nНайдите секретный ключ в папках и нажмите «Далее».");
+}
+
+function openPasswordWindow() {
+  passWin.style.display = "block";
+  passInput.value = "";
+  passMsg.textContent = "";
+  passMsg.classList.remove("ok");
+  setTimeout(() => passInput.focus(), 100);
+}
+function closePass() { passWin.style.display = "none"; }
+
+function checkPassword() {
+  const val = passInput.value.trim();
+  if (val === CORRECT_PASSWORD) {
+    passMsg.textContent = "Ключ принят. Подключение к серверу...";
+    passMsg.classList.add("ok");
+    setTimeout(() => {
+      passWin.style.display = "none";
+      ransomWin.style.display = "none";
+      stopRansomTimer();
+      finalScr.style.display = "flex";
+    }, 900);
+  } else {
+    passMsg.textContent = "Неверный ключ. Попробуйте ещё раз.";
+    passMsg.classList.remove("ok");
+    passInput.value = "";
+    passInput.focus();
   }
 }
 
-// ---- NTFY: ПРИЁМ КОМАНД (SSE) ----
-function startNtfyListener() {
-  const topic = ntfyTopicEl.value.trim() || 'moy_detektor_123';
-  const url = 'https://ntfy.sh/' + encodeURIComponent(topic) + '/sse';
-
-  if (ntfySse) { try { ntfySse.close(); } catch (e) {} ntfySse = null; }
-
-  if (!listenEnabledEl.checked) {
-    logAlert('Приём команд отключён');
-    return;
-  }
-
-  try {
-    ntfySse = new EventSource(url);
-    logAlert('Слушаю команды в теме: ' + topic);
-
-    ntfySse.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        // Игнорируем собственные сообщения (мы отправляли их как "Detector")
-        const title = (data.title || '').toString().toLowerCase();
-        if (title === 'detector') return;
-
-        const text = (data.message || '').toString().trim();
-        if (text === '1') {
-          toggleTorch(true);
-          torchManualEl.checked = true;
-          logAlert('Удалённая команда: фонарик ВКЛ');
-        } else if (text === '2') {
-          toggleTorch(false);
-          torchManualEl.checked = false;
-          logAlert('Удалённая команда: фонарик ВЫКЛ');
-        } else if (text.length > 0) {
-          logAlert('Команда получена, неизвестная: ' + text);
-        }
-      } catch (e) {
-        logAlert('Ошибка обработки команды: ' + e.message);
-      }
-    };
-
-    ntfySse.onerror = () => {
-      logAlert('Потеря связи с ntfy. Переподключение...');
-      // EventSource переподключается сам, но на всякий случай
-    };
-  } catch (e) {
-    logAlert('Не удалось запустить приём: ' + e.message);
-  }
-}
-
-function stopNtfyListener() {
-  if (ntfySse) { try { ntfySse.close(); } catch (e) {} ntfySse = null; }
-  logAlert('Приём команд остановлен');
-}
-
-listenEnabledEl.addEventListener('change', () => {
-  if (listenEnabledEl.checked) startNtfyListener();
-  else stopNtfyListener();
+passInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") checkPassword();
+  if (e.key === "Escape") closePass();
 });
 
-ntfyTopicEl.addEventListener('change', () => {
-  if (listenEnabledEl.checked) startNtfyListener();
-});
+/* =====================================================================
+   ВСПОМОГАТЕЛЬНОЕ
+   ===================================================================== */
 
-// ---- ЗВУК ----
-function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
-function startAlarmSound() {
-  if (!soundEnabledEl.checked) return;
-  initAudio();
-  stopAlarmSound();
+/* ---------- часы ---------- */
+function updateClock() {
+  const d = new Date();
+  document.getElementById("clock").textContent =
+    d.getHours().toString().padStart(2,'0') + ":" +
+    d.getMinutes().toString().padStart(2,'0');
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-  alarmGain = audioCtx.createGain();
-  alarmGain.gain.value = 0;
-  alarmGain.connect(audioCtx.destination);
+/* ---------- перетаскивание окон ---------- */
+function makeDraggable(win) {
+  const titlebar = win.querySelector(".titlebar");
+  let dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
 
-  alarmOscillator = audioCtx.createOscillator();
-  alarmOscillator.type = 'sawtooth';
-  alarmOscillator.connect(alarmGain);
-  alarmOscillator.start();
+  titlebar.addEventListener("mousedown", (e) => {
+    if (e.target.tagName === "BUTTON") return;
+    const rect = win.getBoundingClientRect();
+    win.style.transform = "none";
+    win.style.left = rect.left + "px";
+    win.style.top  = rect.top  + "px";
+    dragging = true;
+    startX = e.clientX; startY = e.clientY;
+    origLeft = rect.left; origTop = rect.top;
+    e.preventDefault();
+  });
 
-  const vol = parseFloat(volumeEl.value) / 100;
-  alarmGain.gain.setTargetAtTime(vol * 0.35, audioCtx.currentTime, 0.05);
+  document.addEventListener("mousemove", (e) => {
+    if (!dragging) return;
+    win.style.left = (origLeft + e.clientX - startX) + "px";
+    win.style.top  = (origTop  + e.clientY - startY) + "px";
+  });
 
-  playSirenPattern();
+  document.addEventListener("mouseup", () => { dragging = false; });
 }
 
-function playSirenPattern() {
-  if (alarmInterval) clearInterval(alarmInterval);
-  const type = alarmTypeEl.value;
-  const now = () => audioCtx.currentTime;
-
-  switch (type) {
-    case 'classic':
-      alarmOscillator.type = 'sawtooth';
-      alarmInterval = setInterval(() => {
-        if (!alarmActive || !alarmOscillator) return;
-        const t = now();
-        alarmOscillator.frequency.setValueAtTime(600, t);
-        alarmOscillator.frequency.linearRampToValueAtTime(1200, t + 0.4);
-      }, 400);
-      break;
-    case 'police': {
-      alarmOscillator.type = 'square';
-      let hiLo = false;
-      alarmInterval = setInterval(() => {
-        if (!alarmActive || !alarmOscillator) return;
-        alarmOscillator.frequency.setValueAtTime(hiLo ? 900 : 1400, now());
-        hiLo = !hiLo;
-      }, 300);
-      break;
-    }
-    case 'ambulance':
-      alarmOscillator.type = 'sine';
-      alarmInterval = setInterval(() => {
-        if (!alarmActive || !alarmOscillator) return;
-        const t = now();
-        alarmOscillator.frequency.setValueAtTime(1800, t);
-        alarmOscillator.frequency.linearRampToValueAtTime(2200, t + 0.2);
-        alarmOscillator.frequency.linearRampToValueAtTime(1800, t + 0.4);
-      }, 500);
-      break;
-    case 'buzzer':
-      alarmOscillator.type = 'square';
-      alarmInterval = setInterval(() => {
-        if (!alarmActive || !alarmOscillator) return;
-        alarmOscillator.frequency.setValueAtTime(150, now());
-      }, 100);
-      break;
-    case 'scream':
-      alarmOscillator.type = 'sawtooth';
-      alarmInterval = setInterval(() => {
-        if (!alarmActive || !alarmOscillator) return;
-        alarmOscillator.frequency.setValueAtTime(400 + Math.random() * 1600, now());
-      }, 50);
-      break;
-    case 'beep': {
-      alarmOscillator.type = 'sine';
-      let beepOn = false;
-      alarmInterval = setInterval(() => {
-        if (!alarmActive || !alarmGain) return;
-        beepOn = !beepOn;
-        const vol = parseFloat(volumeEl.value) / 100;
-        alarmGain.gain.setTargetAtTime(beepOn ? vol * 0.4 : 0.001, now(), 0.01);
-      }, 150);
-      break;
-    }
-  }
-}
-
-function stopAlarmSound() {
-  if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
-  if (alarmOscillator) { try { alarmOscillator.stop(); alarmOscillator.disconnect(); } catch (e) {} alarmOscillator = null; }
-  if (alarmGain) { try { alarmGain.disconnect(); } catch (e) {} alarmGain = null; }
-}
-
-function startFlash() {
-  if (!flashEnabledEl.checked) return;
-  if (flashInterval) clearInterval(flashInterval);
-  let on = false;
-  flashInterval = setInterval(() => {
-    if (!alarmActive) { flashOverlay.style.opacity = '0'; clearInterval(flashInterval); flashInterval = null; return; }
-    on = !on;
-    flashOverlay.style.opacity = on ? '0.25' : '0';
-  }, 250);
-}
-
-// ---- ДЕТЕКТОР ----
-function triggerAlarm() {
-  lastMotionTime = Date.now();
-  if (alarmActive) return;
-
-  alarmActive = true;
-  cameraWrap.classList.add('alarm');
-  statusDot.classList.add('alarm');
-  statusDot.classList.remove('active');
-  statusText.textContent = 'ДВИЖЕНИЕ';
-  alarmBanner.classList.add('active');
-
-  startAlarmSound();
-  startFlash();
-
-  if (torchAutoEl.checked && torchSupported && !torchState) toggleTorch(true);
-
-  sendNtfyStatus(true);
-
-  if (vibrateEnabledEl.checked && navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
-  logAlert('Движение. Срабатывание');
-}
-
-function clearAlarm() {
-  if (!alarmActive) return;
-  alarmActive = false;
-  cameraWrap.classList.remove('alarm');
-  statusDot.classList.remove('alarm');
-  if (running) { statusDot.classList.add('active'); statusText.textContent = 'Наблюдение'; }
-  else { statusText.textContent = 'Не активна'; }
-  alarmBanner.classList.remove('active');
-
-  stopAlarmSound();
-  flashOverlay.style.opacity = '0';
-  if (flashInterval) { clearInterval(flashInterval); flashInterval = null; }
-
-  // Не гасим фонарик, если пользователь включил его вручную (или по команде 1)
-  if (torchAutoEl.checked && torchSupported && !torchManualEl.checked && torchState) {
-    toggleTorch(false);
-  }
-
-  sendNtfyStatus(false);
-}
-
-function logAlert(msg) {
-  const time = new Date().toLocaleTimeString('ru-RU');
-  const div = document.createElement('div');
-  div.textContent = '[' + time + '] ' + msg;
-  alertLog.prepend(div);
-  while (alertLog.children.length > 30) alertLog.removeChild(alertLog.lastChild);
-}
-
-// ---- КАДРЫ ----
-const smallCanvas = document.createElement('canvas');
-const smallCtx = smallCanvas.getContext('2d', { willReadFrequently: true });
-const GRID_W = 32;
-const GRID_H = 24;
-smallCanvas.width = GRID_W;
-smallCanvas.height = GRID_H;
-
-function processFrame() {
-  if (!running) return;
-  requestAnimationFrame(processFrame);
-  if (!video.videoWidth) return;
-
-  const now = performance.now();
-  if (now - lastFrameTime < frameInterval) return;
-  lastFrameTime = now;
-
-  const vw = video.videoWidth;
-  const vh = video.videoHeight;
-
-  if (overlay.width !== vw || overlay.height !== vh) {
-    overlay.width = vw;
-    overlay.height = vh;
-  }
-
-  smallCtx.drawImage(video, 0, 0, GRID_W, GRID_H);
-  const frameData = smallCtx.getImageData(0, 0, GRID_W, GRID_H);
-  const pixels = frameData.data;
-  const threshold = parseFloat(sensitivityEl.value) * 2.55;
-
-  ctx.clearRect(0, 0, overlay.width, overlay.height);
-
-  if (previousFrame) {
-    const prevPixels = previousFrame;
-    let motionPixels = 0;
-    const totalPixels = GRID_W * GRID_H;
-
-    for (let y = 0; y < GRID_H; y++) {
-      for (let x = 0; x < GRID_W; x++) {
-        const i = (y * GRID_W + x) * 4;
-        const dr = Math.abs(pixels[i] - prevPixels[i]);
-        const dg = Math.abs(pixels[i + 1] - prevPixels[i + 1]);
-        const db = Math.abs(pixels[i + 2] - prevPixels[i + 2]);
-        const diff = (dr + dg + db) / 3;
-
-        if (diff > threshold) {
-          motionPixels++;
-          if (showZonesEl.checked) {
-            const px = (x / GRID_W) * vw;
-            const py = (y / GRID_H) * vh;
-            const pw = vw / GRID_W;
-            const ph = vh / GRID_H;
-            ctx.fillStyle = 'rgba(255, 0, 51, 0.4)';
-            ctx.fillRect(px, py, pw, ph);
-          }
-        }
-      }
-    }
-
-    const motionPercent = (motionPixels / totalPixels) * 100;
-    motionScoreEl.textContent = motionPercent.toFixed(1) + '%';
-    motionFill.style.width = Math.min(100, motionPercent * 3) + '%';
-
-    if (motionPercent > 0.5) triggerAlarm();
-  }
-
-  previousFrame = new Uint8ClampedArray(pixels);
-
-  if (alarmActive) {
-    const silenceDelay = parseFloat(silenceDelayEl.value) * 1000;
-    const timeSinceMotion = Date.now() - lastMotionTime;
-    if (timeSinceMotion > silenceDelay + 500) clearAlarm();
-  }
-}
-
-// ---- КАМЕРА ----
-async function startCamera() {
-  try {
-    initAudio();
-    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
-      });
-    } catch (e1) {
-      logAlert('Задняя камера недоступна, берём фронтальную');
-      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    }
-
-    video.srcObject = stream;
-    videoTrack = stream.getVideoTracks()[0];
-
-    const caps = videoTrack.getCapabilities ? videoTrack.getCapabilities() : {};
-    torchSupported = !!caps.torch;
-    if (!torchSupported) {
-      logAlert('Фонарик не поддерживается');
-      torchAutoEl.checked = false;
-      torchManualEl.checked = false;
-    }
-
-    await new Promise((resolve) => {
-      if (video.readyState >= 2) return resolve();
-      video.onloadedmetadata = () => resolve();
-    });
-
-    running = true;
-    previousFrame = null;
-    btnStart.disabled = true;
-    btnStop.disabled = false;
-    statusText.textContent = 'Наблюдение';
-    statusDot.classList.add('active');
-    logAlert('Камера запущена. ' + video.videoWidth + 'x' + video.videoHeight);
-
-    // Запускаем приём команд сразу после старта камеры
-    if (listenEnabledEl.checked) startNtfyListener();
-
-    lastFrameTime = 0;
-    requestAnimationFrame(processFrame);
-  } catch (err) {
-    logAlert('Ошибка камеры: ' + err.message);
-    statusText.textContent = 'Ошибка камеры';
-    statusDot.classList.remove('active');
-    alert('Не удалось получить доступ к камере.\n\n' + err.message +
-      '\n\nПроверьте:\n1) Разрешён ли доступ к камере в браузере\n2) Открыта ли страница по HTTPS\n3) Не занята ли камера другим приложением');
-  }
-}
-
-function stopCamera() {
-  running = false;
-  clearAlarm();
-  stopAlarmSound();
-  stopNtfyListener();
-  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-  video.srcObject = null;
-  videoTrack = null;
-  previousFrame = null;
-
-  ctx.clearRect(0, 0, overlay.width, overlay.height);
-  motionScoreEl.textContent = '0%';
-  motionFill.style.width = '0%';
-  btnStart.disabled = false;
-  btnStop.disabled = true;
-  statusText.textContent = 'Не активна';
-  statusDot.classList.remove('active', 'alarm');
-  logAlert('Камера остановлена');
-}
-
-// ---- UI ----
-sensitivityEl.addEventListener('input', () => { sensitivityVal.textContent = sensitivityEl.value + '%'; });
-volumeEl.addEventListener('input', () => {
-  volVal.textContent = volumeEl.value + '%';
-  if (alarmGain && alarmActive) alarmGain.gain.setTargetAtTime((parseFloat(volumeEl.value) / 100) * 0.35, audioCtx.currentTime, 0.05);
-});
-silenceDelayEl.addEventListener('input', () => { delayVal.textContent = silenceDelayEl.value + 'с'; });
-alarmTypeEl.addEventListener('change', () => { if (alarmActive) { stopAlarmSound(); setTimeout(startAlarmSound, 100); } });
-
-btnStart.addEventListener('click', () => { initAudio(); startCamera(); });
-btnStop.addEventListener('click', stopCamera);
-btnTest.addEventListener('click', () => { initAudio(); triggerAlarm(); setTimeout(clearAlarm, 3000); logAlert('Тест сирены'); });
-btnClearLog.addEventListener('click', () => { alertLog.innerHTML = '<div>Журнал очищен</div>'; });
-
-// ---- СТАРТ ----
-logAlert('Готов. Тема ntfy: moy_detektor_123');
+[ransomWin, passWin, explorerWin, fileWin].forEach(makeDraggable);
 </script>
 </body>
 </html>
